@@ -35,6 +35,8 @@
 #include "num.h"
 #include "quatcompress.h"
 #include "FreeRTOS.h"
+#include "console.h"
+#include "droneComm.h"
 
 /* The generic commander format contains a packet type and data that has to be
  * decoded into a setpoint_t structure. The aim is to make it future-proof
@@ -70,7 +72,6 @@ enum packet_type {
   altHoldType       = 4,
   hoverType         = 5,
   fullStateType     = 6,
-  positionType      = 7,
 };
 
 /* ---===== 2 - Decoding functions =====--- */
@@ -277,7 +278,8 @@ struct hoverPacket_s {
 static void hoverDecoder(setpoint_t *setpoint, uint8_t type, const void *data, size_t datalen)
 {
   const struct hoverPacket_s *values = data;
-
+  consolePuts("~Console port~");
+  droneCommPuts("~Drone port~");
   ASSERT(datalen == sizeof(struct velocityPacket_s));
 
   setpoint->mode.z = modeAbs;
@@ -340,33 +342,6 @@ static void fullStateDecoder(setpoint_t *setpoint, uint8_t type, const void *dat
   setpoint->mode.yaw = modeDisable;
 }
 
-/* positionDecoder
- * Set the absolute postition and orientation
- */
- struct positionPacket_s {
-   float x;     // Position in m
-   float y;
-   float z;
-   float yaw;   // Orientation in degree
- } __attribute__((packed));
-static void positionDecoder(setpoint_t *setpoint, uint8_t type, const void *data, size_t datalen)
-{
-  const struct positionPacket_s *values = data;
-
-  setpoint->mode.x = modeAbs;
-  setpoint->mode.y = modeAbs;
-  setpoint->mode.z = modeAbs;
-
-  setpoint->position.x = values->x;
-  setpoint->position.y = values->y;
-  setpoint->position.z = values->z;
-
-
-  setpoint->mode.yaw = modeAbs;
-
-  setpoint->attitude.yaw = values->yaw;
-}
-
  /* ---===== 3 - packetDecoders array =====--- */
 const static packetDecoder_t packetDecoders[] = {
   [stopType]          = stopDecoder,
@@ -376,7 +351,6 @@ const static packetDecoder_t packetDecoders[] = {
   [altHoldType]       = altHoldDecoder,
   [hoverType]         = hoverDecoder,
   [fullStateType]     = fullStateDecoder,
-  [positionType]      = positionDecoder,
 };
 
 /* Decoder switch */

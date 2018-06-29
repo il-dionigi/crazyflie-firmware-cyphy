@@ -53,6 +53,7 @@
 #include "stabilizer.h"
 #include "commander.h"
 #include "console.h"
+#include "droneComm.h"
 #include "usblink.h"
 #include "mem.h"
 #include "proximity.h"
@@ -99,6 +100,7 @@ void systemInit(void)
   /* Initialized hear and early so that DEBUG_PRINT (buffered) can be used early */
   crtpInit();
   consoleInit();
+  droneCommInit();
 
   DEBUG_PRINT("----------------------------\n");
   DEBUG_PRINT(P_NAME " is up and running!\n");

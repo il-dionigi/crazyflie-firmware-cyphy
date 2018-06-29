@@ -31,16 +31,13 @@
 
 #include "commander.h"
 #include "crtp_commander.h"
-#include "crtp_commander_high_level.h"
-
-#include "param.h"
+#include "droneComm.h"
 
 static bool isInit;
 const static setpoint_t nullSetpoint;
 const static int priorityDisable = COMMANDER_PRIORITY_DISABLE;
 
 static uint32_t lastUpdate;
-static bool enableHighLevel = false;
 
 QueueHandle_t setpointQueue;
 QueueHandle_t priorityQueue;
@@ -57,7 +54,6 @@ void commanderInit(void)
   xQueueSend(priorityQueue, &priorityDisable, 0);
 
   crtpCommanderInit();
-  crtpCommanderHighLevelInit();
   lastUpdate = xTaskGetTickCount();
 
   isInit = true;
@@ -65,9 +61,9 @@ void commanderInit(void)
 
 void commanderSetSetpoint(setpoint_t *setpoint, int priority)
 {
+
   int currentPriority;
   xQueuePeek(priorityQueue, &currentPriority, 0);
-
   if (priority >= currentPriority) {
     setpoint->timestamp = xTaskGetTickCount();
     // This is a potential race but without effect on functionality
@@ -83,12 +79,7 @@ void commanderGetSetpoint(setpoint_t *setpoint, const state_t *state)
   uint32_t currentTime = xTaskGetTickCount();
 
   if ((currentTime - setpoint->timestamp) > COMMANDER_WDT_TIMEOUT_SHUTDOWN) {
-    if (enableHighLevel) {
-      crtpCommanderHighLevelGetSetpoint(setpoint, state);
-    }
-    if (!enableHighLevel || crtpCommanderHighLevelIsStopped()) {
-      memcpy(setpoint, &nullSetpoint, sizeof(nullSetpoint));
-    }
+    memcpy(setpoint, &nullSetpoint, sizeof(nullSetpoint));
   } else if ((currentTime - setpoint->timestamp) > COMMANDER_WDT_TIMEOUT_STABILIZE) {
     xQueueOverwrite(priorityQueue, &priorityDisable);
     // Leveling ...
@@ -120,7 +111,3 @@ int commanderGetActivePriority(void)
   xQueuePeek(priorityQueue, &priority, 0);
   return priority;
 }
-
-PARAM_GROUP_START(commander)
-PARAM_ADD(PARAM_UINT8, enHighLevel, &enableHighLevel)
-PARAM_GROUP_STOP(commander)
