@@ -88,6 +88,7 @@
 #define LOG_TASK_PRI            1
 #define MEM_TASK_PRI            1
 #define PARAM_TASK_PRI          1
+#define DRONE_COMM_TASK_PRI     1 //~CYPHY~
 #define PROXIMITY_TASK_PRI      0
 #define PM_TASK_PRI             0
 #define USDLOG_TASK_PRI         1
@@ -115,6 +116,7 @@
 #define LOG_TASK_NAME           "LOG"
 #define MEM_TASK_NAME           "MEM"
 #define PARAM_TASK_NAME         "PARAM"
+#define DRONE_COMM_TASK_NAME    "DRONE_COMM" //~CYPHY~
 #define SENSORS_TASK_NAME       "SENSORS"
 #define STABILIZER_TASK_NAME    "STABILIZER"
 #define NRF24LINK_TASK_NAME     "NRF24LINK"
@@ -142,6 +144,7 @@
 #define LOG_TASK_STACKSIZE            configMINIMAL_STACK_SIZE
 #define MEM_TASK_STACKSIZE            configMINIMAL_STACK_SIZE
 #define PARAM_TASK_STACKSIZE          configMINIMAL_STACK_SIZE
+#define DRONE_COMM_TASK_STACKSIZE     configMINIMAL_STACK_SIZE //~CYPHY~
 #define SENSORS_TASK_STACKSIZE        (2 * configMINIMAL_STACK_SIZE)
 #define STABILIZER_TASK_STACKSIZE     (3 * configMINIMAL_STACK_SIZE)
 #define NRF24LINK_TASK_STACKSIZE      configMINIMAL_STACK_SIZE

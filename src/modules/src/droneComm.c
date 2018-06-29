@@ -28,16 +28,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * droneComm.c - Used to send drone data to drone(?) Currently send to client
+ *
  */
-
+//droneComm.c - Used to send drone data to drone(?) Currently send to client
 #include <stdbool.h>
+#include <string.h>
+#include <errno.h>
 
 /*FreeRtos includes*/
 #include "FreeRTOS.h"
 #include "semphr.h"
+#include "task.h"
 
 #include "crtp.h"
+#include "crc.h"
+#include "config.h"
 
 #ifdef STM32F40_41xxx
 #include "stm32f4xx.h"
@@ -48,6 +53,9 @@
 #endif
 #endif
 
+static void droneCommTask(void * prm);
+
+static CRTPPacket messageReceived;
 CRTPPacket messageToPrint;
 static xSemaphoreHandle droneLock;
 
@@ -81,7 +89,8 @@ void droneCommInit()
   messageToPrint.size = 0;
   messageToPrint.header = CRTP_HEADER(CRTP_PORT_DRONE, 0);
   vSemaphoreCreateBinary(droneLock);
-
+  xTaskCreate(droneCommTask, DRONE_COMM_TASK_NAME,
+  			DRONE_COMM_TASK_STACKSIZE, NULL, DRONE_COMM_TASK_PRI, NULL);
   isInit = true;
 }
 
@@ -150,7 +159,6 @@ int droneCommPuts(char *str)
   while(*str)
     ret |= droneCommPutchar(*str++);
 
-  droneCommFlush();
   return ret;
 }
 
@@ -163,3 +171,61 @@ void droneCommFlush(void)
   }
 }
 
+//SEND CODE ABOVE. RECEIVE CODE BELOW
+
+void droneCommTask(void * prm)
+{
+	crtpInitTaskQueue(CRTP_PORT_DRONE);
+
+	while(1) {
+		crtpReceivePacketBlock(CRTP_PORT_DRONE, &messageReceived);
+
+		if (messageReceived.channel==0){
+			// currently this is data from the PC
+			//as a test, send this data back
+		  droneCommFlush();
+		  droneCommPuts("CYPHY");
+		  //messsageReceived.data is uint8_t, want to typecast to char.
+		  char buf[CRTP_MAX_DATA_SIZE];
+		  int index = 0;
+		  for (index = 0; index < CRTP_MAX_DATA_SIZE; index++){
+			  buf[index] = messageReceived.data[index];
+		  }
+		  droneCommPuts(buf);
+		  droneCommFlush();
+		}/*
+	  else if (p.channel==READ_CH)
+		  paramReadProcess(p.data[0]);
+		else if (p.channel==WRITE_CH)
+		  paramWriteProcess(p.data[0], &p.data[1]);
+    else if (p.channel==MISC_CH) {
+      if (p.data[0] == MISC_SETBYNAME) {
+        int i, nzero = 0;
+        char *group;
+        char *name;
+        uint8_t type;
+        void * valPtr;
+        int error;
+
+        // If the packet contains at least 2 zeros in the first 28 bytes
+        // The packet decoding algorithm will not crash
+        for (i=0; i<CRTP_MAX_DATA_SIZE; i++) {
+          if (p.data[i] == '\0') nzero++;
+        }
+
+        if (nzero < 2) return;
+
+        group = (char*)&p.data[1];
+        name = (char*)&p.data[1+strlen(group)+1];
+        type = p.data[1+strlen(group)+1+strlen(name)+1];
+        valPtr = &p.data[1+strlen(group)+1+strlen(name)+2];
+
+        error = paramWriteByNameProcess(group, name, type, valPtr);
+
+        p.data[1+strlen(group)+1+strlen(name)+1] = error;
+        p.size = 1+strlen(group)+1+strlen(name)+1+1;
+        crtpSendPacket(&p);
+      }
+    }*/
+	}
+}
