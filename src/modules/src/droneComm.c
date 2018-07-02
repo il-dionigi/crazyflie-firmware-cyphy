@@ -32,6 +32,7 @@
  */
 //droneComm.c - Used to send drone data to drone(?) Currently send to client
 #include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
 #include <errno.h>
 
@@ -171,6 +172,12 @@ void droneCommFlush(void)
   }
 }
 
+void droneCommPflush(char * str)
+{
+	droneCommPuts(str);
+	droneCommFlush();
+}
+
 //SEND CODE ABOVE. RECEIVE CODE BELOW
 
 void droneCommTask(void * prm)
@@ -186,14 +193,9 @@ void droneCommTask(void * prm)
 		  droneCommFlush();
 		  droneCommPuts("CYPHY");
 		  //messsageReceived.data is uint8_t, want to typecast to char.
-		  char buf[CRTP_MAX_DATA_SIZE];
-		  int index = 0;
-		  for (index = 0; index < CRTP_MAX_DATA_SIZE; index++){
-			  buf[index] = messageReceived.data[index];
-		  }
-		  droneCommPuts(buf);
-		  droneCommFlush();
-		}/*
+		  droneCommPflush((char*)(messageReceived.data));
+		}
+		/*
 	  else if (p.channel==READ_CH)
 		  paramReadProcess(p.data[0]);
 		else if (p.channel==WRITE_CH)

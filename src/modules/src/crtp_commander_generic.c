@@ -278,8 +278,6 @@ struct hoverPacket_s {
 static void hoverDecoder(setpoint_t *setpoint, uint8_t type, const void *data, size_t datalen)
 {
   const struct hoverPacket_s *values = data;
-  consolePuts("~Console port~");
-  droneCommPuts("~Drone port~");
   ASSERT(datalen == sizeof(struct velocityPacket_s));
 
   setpoint->mode.z = modeAbs;
