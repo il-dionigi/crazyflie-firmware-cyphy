@@ -39,7 +39,6 @@ static bool dwm1000Test()
  *
  */
 
-#include "locodeck.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
@@ -73,6 +72,7 @@ static bool dwm1000Test()
 #include "lpsTdoa2Tag.h"
 #include "lpsTdoa3Tag.h"
 #include "lpsTwrTag.h"
+#include "locodeck.h"
 
 #ifdef STM32F40_41xxx
 #include "stm32f4xx.h"
@@ -95,7 +95,7 @@ static xSemaphoreHandle beaconLock;
 static bool isInit;
 
 void testMsg(void){
-	if (dwm1000Test()){
+	if (true){
 		  droneCommPflush("TWR init success! beacons online");
 	  }
 	  else{
@@ -220,7 +220,7 @@ void beaconAnalyzePayload(char * data)
 {
 
 	while(1) {
-		crtpReceivePacketBlock(CRTP_PORT_beacon, &messageReceived);
+		crtpReceivePacketBlock(CRTP_PORT_, &messageReceived);
 
 		if (messageReceived.channel==0){
 			// currently this is data from the PC
