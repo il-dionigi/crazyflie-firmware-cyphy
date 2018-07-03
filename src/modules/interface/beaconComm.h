@@ -25,29 +25,29 @@
  * ~CYPHY~
  */
 
-#ifndef droneComm_H_
-#define droneComm_H_
+#ifndef beaconComm_H_
+#define beaconComm_H_
 
 #include <stdbool.h>
 #include "eprintf.h"
 
 /**
- * Initialize the droneComm
+ * Initialize the beaconComm
  */
-void droneCommInit(void);
+void beaconCommInit(void);
 
-bool droneCommTest(void);
+bool beaconCommTest(void);
 
 /**
- * Put a character to the droneComm buffer
+ * Put a character to the beaconComm buffer
  *
  * @param ch character that shall be printed
  * @return The character casted to unsigned int or EOF in case of error
  */
-int droneCommPutchar(int ch);
+int beaconCommPutchar(int ch);
 
 /**
- * Put a character to the droneComm buffer
+ * Put a character to the beaconComm buffer
  *
  * @param ch character that shall be printed
  * @return The character casted to unsigned int or EOF in case of error
@@ -56,30 +56,35 @@ int droneCommPutchar(int ch);
  * buffer is going to be used. If a task currently is printing or if the
  * interrupts prints too much the data will be ignored.
  */
-int droneCommPutcharFromISR(int ch);
+int beaconCommPutcharFromISR(int ch);
 
 /**
- * Put a null-terminated string on the droneComm buffer
+ * Put a null-terminated string on the beaconComm buffer
  *
  * @param str Null terminated string
  * @return a nonnegative number on success, or EOF on error.
  */
-int droneCommPuts(char *str);
+int beaconCommPuts(char *str);
 
 /**
- * Flush the droneComm buffer
+ * Flush the beaconComm buffer
  */
-void droneCommFlush(void);
+void beaconCommFlush(void);
+
 
 //puts + flush
-void droneCommPflush(char *);
+void beaconCommPflush(char *);
+
+//pass in data from  beacon, interpret it here
+void beaconAnalyzePayload(char * data);
 
 /**
- * Macro implementing droneCommPrintf with eprintf
+ * Macro implementing beaconCommPrintf with eprintf
  *
  * @param FMT String format
  * @patam ... Parameters to print
  */
-#define droneCommPrintf(FMT, ...) eprintf(droneCommPutchar, FMT, ## __VA_ARGS__)
 
-#endif /*droneComm_H_*/
+#define beaconCommPrintf(FMT, ...) eprintf(beaconCommPutchar, FMT, ## __VA_ARGS__)
+
+#endif /*beaconComm_H_*/

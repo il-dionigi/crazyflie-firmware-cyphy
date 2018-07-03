@@ -41,6 +41,9 @@
 #include "estimator_kalman.h"
 #include "arm_math.h"
 
+//CYPHY
+#include "beaconComm.h"
+
 // Outlier rejection
 #define RANGING_HISTORY_LENGTH 32
 #define OUTLIER_TH 4
@@ -118,7 +121,7 @@ static uint32_t rxcallback(dwDevice_t *dev) {
 
   txPacket.destAddress = rxPacket.sourceAddress;
   txPacket.sourceAddress = rxPacket.destAddress;
-
+  //CYPHY, last case statement
   switch(rxPacket.payload[LPS_TWR_TYPE]) {
     // Tag received messages
     case LPS_TWR_ANSWER:
@@ -219,6 +222,10 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       return 0;
       break;
     }
+    //CYPHY
+    case LPS_TWR_RELAY:
+    	beaconAnalyzePayload((char*)rxPacket.payload);
+
   }
   return MAX_TIMEOUT;
 }

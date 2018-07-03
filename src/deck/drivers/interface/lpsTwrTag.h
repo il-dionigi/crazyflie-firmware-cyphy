@@ -10,6 +10,7 @@
 #define LPS_TWR_ANSWER 0x02
 #define LPS_TWR_FINAL 0x03
 #define LPS_TWR_REPORT 0x04 // Report contains all measurement from the anchor
+#define LPS_TWR_RELAY 0x05 //CYPHY
 
 #define LPS_TWR_LPP_SHORT 0xF0
 

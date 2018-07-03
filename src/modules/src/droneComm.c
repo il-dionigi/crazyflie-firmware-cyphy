@@ -195,39 +195,5 @@ void droneCommTask(void * prm)
 		  //messsageReceived.data is uint8_t, want to typecast to char.
 		  droneCommPflush((char*)(messageReceived.data));
 		}
-		/*
-	  else if (p.channel==READ_CH)
-		  paramReadProcess(p.data[0]);
-		else if (p.channel==WRITE_CH)
-		  paramWriteProcess(p.data[0], &p.data[1]);
-    else if (p.channel==MISC_CH) {
-      if (p.data[0] == MISC_SETBYNAME) {
-        int i, nzero = 0;
-        char *group;
-        char *name;
-        uint8_t type;
-        void * valPtr;
-        int error;
-
-        // If the packet contains at least 2 zeros in the first 28 bytes
-        // The packet decoding algorithm will not crash
-        for (i=0; i<CRTP_MAX_DATA_SIZE; i++) {
-          if (p.data[i] == '\0') nzero++;
-        }
-
-        if (nzero < 2) return;
-
-        group = (char*)&p.data[1];
-        name = (char*)&p.data[1+strlen(group)+1];
-        type = p.data[1+strlen(group)+1+strlen(name)+1];
-        valPtr = &p.data[1+strlen(group)+1+strlen(name)+2];
-
-        error = paramWriteByNameProcess(group, name, type, valPtr);
-
-        p.data[1+strlen(group)+1+strlen(name)+1] = error;
-        p.size = 1+strlen(group)+1+strlen(name)+1+1;
-        crtpSendPacket(&p);
-      }
-    }*/
 	}
 }

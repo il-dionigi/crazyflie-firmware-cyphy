@@ -137,7 +137,7 @@ PROJ_OBJ_CF2 +=  sensors_$(SENSORS).o
 PROJ_OBJ_CF2 += libdw1000.o libdw1000Spi.o
 
 # Modules
-PROJ_OBJ += system.o comm.o console.o droneComm.o pid.o crtpservice.o param.o
+PROJ_OBJ += system.o comm.o console.o droneComm.o beaconComm.o pid.o crtpservice.o param.o
 PROJ_OBJ += log.o worker.o trigger.o sitaw.o queuemonitor.o msp.o
 PROJ_OBJ_CF2 += platformservice.o sound_cf2.o extrx.o sysload.o mem_cf2.o
 
