@@ -85,6 +85,7 @@ static bool dwm1000Test()
 #define LPS_MAX_DATA_SIZE 30
 
 uint8_t destId;
+uint8_t num = 0;
 char message[LPS_MAX_DATA_SIZE];
 size_t messageLength;
 
@@ -221,9 +222,16 @@ void beaconCommPflush(char * str)
 void beaconAnalyzePayload(char * data)
 {
 	//for now, send this data through droneComm
-	droneCommPflush("Got beacon relay msg");
+	droneCommPflush("Received msg from beacon:");
 	droneCommPflush(data);
-	beaconCommPflush("Test");
+	droneCommPflush("Sending msg to beacon:");
+	droneCommPuts("msg::");
+	droneCommPutchar(num+'0');
+	droneCommFlush();
+	beaconCommPuts("msg::");
+	beaconCommPutchar(num+'0');
+	beaconCommFlush();
+	num = (num + 1 ) % 10;
 }
 
 

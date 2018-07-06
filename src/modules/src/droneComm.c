@@ -196,14 +196,17 @@ void droneCommTask(void * prm)
 			// currently this is data from the PC
 			//as a test, send this data back
 		  droneCommFlush();
-		  droneCommPuts("CYPHY");
+		  droneCommPuts("got message from pc: ");
 		  //messsageReceived.data is uint8_t, want to typecast to char.
 		  droneCommPflush((char*)(messageReceived.data));
 		  if (messageReceived.data[0] == '~'){
-			  droneCommPflush("Got ~, send to beacon");
+			  droneCommPflush("Sending to beacon; port,message:");
+			  droneCommPutchar(messageReceived.data[1]);
+			  droneCommPutchar(',');
+			  droneCommPflush((char*)(messageReceived.data+2));
 			  uint8_t newID = (messageReceived.data[1]) - 48;//48 is '0' in ascii. 48+x is 'x'
 			  beaconCommChangeID(newID);
-			  beaconCommPflush("Test");
+			  beaconCommPflush((char*)(messageReceived.data+2));
 		  }
 		}
 	}

@@ -229,14 +229,12 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       }
 
       ranging_complete = true;
-      beaconCommPflush("TestReport");//CYPHY
       return 0;
       break;
     }
     //CYPHY
     case LPS_TWR_RELAY:
     {
-    	droneCommPflush("RELAY");
     	beaconAnalyzePayload((char*)rxPacket.payload);
     	return 0;
     	break;
