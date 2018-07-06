@@ -221,7 +221,7 @@ void beaconCommPflush(char * str)
 void beaconAnalyzePayload(char * data)
 {
 	//for now, send this data through droneComm
-	droneCommPflush("Got beacon relaymsg");
+	droneCommPflush("Got beacon relay msg");
 	droneCommPflush(data);
 	beaconCommPflush("Test");
 }

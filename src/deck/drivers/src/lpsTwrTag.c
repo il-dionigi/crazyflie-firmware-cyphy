@@ -235,9 +235,12 @@ static uint32_t rxcallback(dwDevice_t *dev) {
     }
     //CYPHY
     case LPS_TWR_RELAY:
+    {
     	droneCommPflush("RELAY");
     	beaconAnalyzePayload((char*)rxPacket.payload);
-
+    	return 0;
+    	break;
+    }
   }
   return MAX_TIMEOUT;
 }
@@ -296,7 +299,6 @@ static dwTime_t transmitTimeForSlot(int slot)
 
 static void initiateRanging(dwDevice_t *dev)
 {
-	droneCommPflush("initiateRanging");
   if (!options->useTdma || tdmaSynchronized) {
     if (options->useTdma) {
       // go to next TDMA frame
