@@ -124,10 +124,17 @@ static uint32_t rxcallback(dwDevice_t *dev) {
   txPacket.destAddress = rxPacket.sourceAddress;
   txPacket.sourceAddress = rxPacket.destAddress;
   //CYPHY, last case statement
-  beaconAnalyzePayload((char*)rxPacket.payload);
+  //beaconAnalyzePayload((char*)rxPacket.payload);
+  //Print header;
+  char hdr[2];
+  hdr[0] = rxPacket.payload[LPS_TWR_TYPE] + '0';
+  hdr[1] = '\0';
+  droneCommPflush("beaconDataHeader:");
+  droneCommPflush(hdr);
   switch(rxPacket.payload[LPS_TWR_TYPE]) {
     // Tag received messages
     case LPS_TWR_ANSWER:
+    	droneCommPflush("ANSWER"); //CYPHY
       if (rxPacket.payload[LPS_TWR_SEQ] != curr_seq) {
         return 0;
       }
@@ -166,6 +173,7 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       break;
     case LPS_TWR_REPORT:
     {
+      droneCommPflush("REPORT"); //CYPHY
       lpsTwrTagReportPayload_t *report = (lpsTwrTagReportPayload_t *)(rxPacket.payload+2);
       double tround1, treply1, treply2, tround2, tprop_ctn, tprop;
 
@@ -221,12 +229,13 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       }
 
       ranging_complete = true;
-
+      beaconCommPflush("TestReport");//CYPHY
       return 0;
       break;
     }
     //CYPHY
     case LPS_TWR_RELAY:
+    	droneCommPflush("RELAY");
     	beaconAnalyzePayload((char*)rxPacket.payload);
 
   }
@@ -287,6 +296,7 @@ static dwTime_t transmitTimeForSlot(int slot)
 
 static void initiateRanging(dwDevice_t *dev)
 {
+	droneCommPflush("initiateRanging");
   if (!options->useTdma || tdmaSynchronized) {
     if (options->useTdma) {
       // go to next TDMA frame
@@ -325,7 +335,6 @@ static void initiateRanging(dwDevice_t *dev)
 static void sendLppShort(dwDevice_t *dev, lpsLppShortPacket_t *packet)
 {
   dwIdle(dev);
-  droneCommPflush("sendLppShort"); //CYPHY
 
   txPacket.payload[LPS_TWR_TYPE] = LPS_TWR_LPP_SHORT;
   memcpy(&txPacket.payload[LPS_TWR_SEND_LPP_PAYLOAD], packet->data, packet->length);

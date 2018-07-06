@@ -291,7 +291,6 @@ static lpsLppShortPacket_t lppShortPacket;
 
 bool lpsSendLppShort(uint8_t destId, void* data, size_t length)
 {
-	droneCommPflush("locodeck lpsSend"); //CYPHY
   bool result = false;
 
   if (isInit)
