@@ -47,7 +47,7 @@ typedef enum {
   CRTP_PORT_SETPOINT_HL      = 0x08,
   CRTP_PORT_PLATFORM         = 0x0D,
   CRTP_PORT_LINK             = 0x0F,
-  CRTP_PORT_DRONE			 = 0x2D,   //~CYPHY~
+  CRTP_PORT_DRONE			 = 0x09,   //~CYPHY~
 } CRTPPort;
 
 typedef struct _CRTPPacket

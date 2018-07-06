@@ -41,6 +41,7 @@
 #include "locodeck.h"
 
 #include "estimator_kalman.h"
+#include "droneComm.h"
 
 #define NBR_OF_RANGES_IN_PACKET   5
 #define DEFAULT_EMERGENCY_STOP_TIMEOUT (1 * RATE_MAIN_LOOP)
@@ -116,6 +117,7 @@ static void locSrvCrtpCB(CRTPPacket* pk)
       break;
     case GENERIC_TYPE:
       genericLocHandle(pk);
+      droneCommPflush("genericLocHandle"); //CYPHY
     case EXT_POSITION_PACKED:
       extPositionPackedHandler(pk);
     default:

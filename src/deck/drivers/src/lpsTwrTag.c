@@ -43,6 +43,7 @@
 
 //CYPHY
 #include "beaconComm.h"
+#include "droneComm.h"
 
 // Outlier rejection
 #define RANGING_HISTORY_LENGTH 32
@@ -84,6 +85,8 @@ static dwTime_t frameStart;
 
 static bool rangingOk;
 
+
+
 static void txcallback(dwDevice_t *dev)
 {
   dwTime_t departure;
@@ -99,7 +102,6 @@ static void txcallback(dwDevice_t *dev)
       break;
   }
 }
-
 
 static uint32_t rxcallback(dwDevice_t *dev) {
   dwTime_t arival = { .full=0 };
@@ -122,6 +124,7 @@ static uint32_t rxcallback(dwDevice_t *dev) {
   txPacket.destAddress = rxPacket.sourceAddress;
   txPacket.sourceAddress = rxPacket.destAddress;
   //CYPHY, last case statement
+  beaconAnalyzePayload((char*)rxPacket.payload);
   switch(rxPacket.payload[LPS_TWR_TYPE]) {
     // Tag received messages
     case LPS_TWR_ANSWER:
@@ -250,6 +253,38 @@ static dwTime_t transmitTimeForSlot(int slot)
   return transmitTime;
 }
 
+//CYPHY
+/*static void initiateCommunication(dwDevice_t *dev) //CYPHY
+{
+  if (!options->useTdma || tdmaSynchronized) {
+    if (options->useTdma) {
+      // go to next TDMA frame
+      frameStart.full += TDMA_FRAME_LEN;
+    }
+
+  dwIdle(dev);
+
+  txPacket.payload[LPS_TWR_TYPE] = LPS_TWR_RELAY;
+  txPacket.payload[LPS_TWR_SEQ] = ++curr_seq;
+
+  txPacket.sourceAddress = options->tagAddress;
+  // Currently hardcoded
+  txPacket.destAddress = options->anchorAddress[7];
+
+  dwNewTransmit(dev);
+  dwSetDefaults(dev);
+  dwSetData(dev, (uint8_t*)&txPacket, MAC802154_HEADER_LENGTH+2);
+
+  if (options->useTdma && tdmaSynchronized) {
+    dwTime_t txTime = transmitTimeForSlot(options->tdmaSlot);
+    dwSetTxRxTime(dev, txTime);
+  }
+
+  dwWaitForResponse(dev, true);
+  dwStartTransmit(dev);
+}
+}*/
+
 static void initiateRanging(dwDevice_t *dev)
 {
   if (!options->useTdma || tdmaSynchronized) {
@@ -290,6 +325,7 @@ static void initiateRanging(dwDevice_t *dev)
 static void sendLppShort(dwDevice_t *dev, lpsLppShortPacket_t *packet)
 {
   dwIdle(dev);
+  droneCommPflush("sendLppShort"); //CYPHY
 
   txPacket.payload[LPS_TWR_TYPE] = LPS_TWR_LPP_SHORT;
   memcpy(&txPacket.payload[LPS_TWR_SEND_LPP_PAYLOAD], packet->data, packet->length);
@@ -368,6 +404,7 @@ static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
         lpp_transaction = false;
         ranging_complete = false;
         initiateRanging(dev);
+        //initiateCommunication(dev);
       }
       return MAX_TIMEOUT;
       break;

@@ -30,6 +30,7 @@
 
 #include <stdbool.h>
 #include "eprintf.h"
+#include <stdint.h>
 
 /**
  * Initialize the beaconComm
@@ -37,6 +38,8 @@
 void beaconCommInit(void);
 
 bool beaconCommTest(void);
+
+void beaconCommChangeID(uint8_t id);
 
 /**
  * Put a character to the beaconComm buffer

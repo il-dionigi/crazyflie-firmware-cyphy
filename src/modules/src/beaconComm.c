@@ -108,7 +108,7 @@ static bool beaconCommSendMessage(void)
 
   if (lpsSendLppShort(destId, (void*)(message), messageLength))
   {
-    messageLength = 0;
+    messageLength = 1;
   }
   else
   {
@@ -123,7 +123,8 @@ void beaconCommInit()
   if (isInit)
     return;
 
-  messageLength = 0;
+  messageLength = 1;
+  message[0] = LPS_TWR_RELAY;
   vSemaphoreCreateBinary(beaconLock);
   //xTaskCreate(beaconCommTask, BEACON_COMM_TASK_NAME,BEACON_COMM_TASK_STACKSIZE, NULL, BEACON_COMM_TASK_PRI, NULL);
   isInit = true;
@@ -134,6 +135,13 @@ bool beaconCommTest(void)
 {
   return isInit;
 }
+
+void beaconCommChangeID(uint8_t id)
+{
+  destId = id;
+  return ;
+}
+
 
 int beaconCommPutcharFromISR(int ch) {
   BaseType_t higherPriorityTaskWoken;
@@ -213,24 +221,8 @@ void beaconCommPflush(char * str)
 void beaconAnalyzePayload(char * data)
 {
 	//for now, send this data through droneComm
+	droneCommPflush("Got beacon data");
 	droneCommPflush(data);
 }
-
-/*void beaconCommTask(void * prm)
-{
-
-	while(1) {
-		crtpReceivePacketBlock(CRTP_PORT_, &messageReceived);
-
-		if (messageReceived.channel==0){
-			// currently this is data from the PC
-			//as a test, send this data back
-		  beaconCommFlush();
-		  beaconCommPuts("CYPHY");
-		  //messsageReceived.data is uint8_t, want to typecast to char.
-		  beaconCommPflush((char*)(messageReceived.data));
-		}
-	}
-}*/
 
 

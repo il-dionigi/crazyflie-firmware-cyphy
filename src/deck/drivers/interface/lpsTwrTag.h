@@ -37,5 +37,4 @@ typedef struct {
 } __attribute__((packed)) lpsTwrTagReportPayload_t;
 
 #define TWR_RECEIVE_TIMEOUT 1000
-
 #endif // __LPS_TWR_TAG_H__

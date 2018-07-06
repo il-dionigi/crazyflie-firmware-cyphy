@@ -57,6 +57,7 @@
 #include "lpsTdoa2Tag.h"
 #include "lpsTdoa3Tag.h"
 #include "lpsTwrTag.h"
+#include "droneComm.h"
 
 
 #define CS_PIN DECK_GPIO_IO1
@@ -290,6 +291,7 @@ static lpsLppShortPacket_t lppShortPacket;
 
 bool lpsSendLppShort(uint8_t destId, void* data, size_t length)
 {
+	droneCommPflush("locodeck lpsSend"); //CYPHY
   bool result = false;
 
   if (isInit)

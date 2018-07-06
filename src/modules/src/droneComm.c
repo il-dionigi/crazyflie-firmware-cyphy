@@ -36,6 +36,8 @@
 #include <string.h>
 #include <errno.h>
 
+#include "beaconComm.h"
+
 /*FreeRtos includes*/
 #include "FreeRTOS.h"
 #include "semphr.h"
@@ -82,18 +84,6 @@ static bool droneCommSendMessage(void)
   return true;
 }
 
-void droneCommInit()
-{
-  if (isInit)
-    return;
-
-  messageToPrint.size = 0;
-  messageToPrint.header = CRTP_HEADER(CRTP_PORT_DRONE, 0);
-  vSemaphoreCreateBinary(droneLock);
-  xTaskCreate(droneCommTask, DRONE_COMM_TASK_NAME,
-  			DRONE_COMM_TASK_STACKSIZE, NULL, DRONE_COMM_TASK_PRI, NULL);
-  isInit = true;
-}
 
 bool droneCommTest(void)
 {
@@ -178,6 +168,21 @@ void droneCommPflush(char * str)
 	droneCommFlush();
 }
 
+void droneCommInit()
+{
+  if (isInit)
+    return;
+
+  messageToPrint.size = 0;
+  messageToPrint.header = CRTP_HEADER(CRTP_PORT_DRONE, 0);
+  vSemaphoreCreateBinary(droneLock);
+  xTaskCreate(droneCommTask, DRONE_COMM_TASK_NAME,
+  			DRONE_COMM_TASK_STACKSIZE, NULL, DRONE_COMM_TASK_PRI, NULL);
+  isInit = true;
+  droneCommPflush("drone comm init!");
+}
+
+
 //SEND CODE ABOVE. RECEIVE CODE BELOW
 
 void droneCommTask(void * prm)
@@ -194,6 +199,12 @@ void droneCommTask(void * prm)
 		  droneCommPuts("CYPHY");
 		  //messsageReceived.data is uint8_t, want to typecast to char.
 		  droneCommPflush((char*)(messageReceived.data));
+		  if (messageReceived.data[0] == '~'){
+			  droneCommPflush("Got ~, send to beacon");
+			  uint8_t newID = (messageReceived.data[1]) - 48;//48 is '0' in ascii. 48+x is 'x'
+			  beaconCommChangeID(newID);
+			  beaconCommPflush("Test");
+		  }
 		}
 	}
 }
