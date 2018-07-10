@@ -57,7 +57,6 @@
 #include "lpsTdoa2Tag.h"
 #include "lpsTdoa3Tag.h"
 #include "lpsTwrTag.h"
-#include "droneComm.h"
 
 
 #define CS_PIN DECK_GPIO_IO1

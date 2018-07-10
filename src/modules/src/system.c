@@ -53,8 +53,9 @@
 #include "stabilizer.h"
 #include "commander.h"
 #include "console.h"
-#include "droneComm.h"
+#include "droneComm.h" //CYPHY
 #include "beaconComm.h"
+#include "consoleComm.h"
 #include "usblink.h"
 #include "mem.h"
 #include "proximity.h"
@@ -103,7 +104,7 @@ void systemInit(void)
   consoleInit();
   //CYPHY
   droneCommInit();
-
+  consoleCommInit();
 
   DEBUG_PRINT("----------------------------\n");
   DEBUG_PRINT(P_NAME " is up and running!\n");
