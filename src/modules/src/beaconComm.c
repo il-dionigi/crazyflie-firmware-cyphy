@@ -106,17 +106,10 @@ void testMsg(void){
 
 static bool beaconCommSendMessage(void)
 {
-  if (lpsSendLppShort(destId, (void*)(message), messageLength))
-  {
-	droneCommPflush("this msg sent to beacon:");
+	sendMessageToBeacon(message);
+	droneCommPflush("2! this msg sent to beacon:");
 	droneCommPflush(message);
-    messageLength = 1;
-
-  }
-  else
-  {
-    return false;
-  }
+    messageLength = 2;
 
   return true;
 }
@@ -126,8 +119,9 @@ void beaconCommInit()
   if (isInit)
     return;
 
-  messageLength = 1;
+  messageLength = 2;
   message[0] = LPS_TWR_RELAY_D2B;
+  message[1] = LPS_TWR_RELAY_D2B;
   vSemaphoreCreateBinary(beaconLock);
   //xTaskCreate(beaconCommTask, BEACON_COMM_TASK_NAME,BEACON_COMM_TASK_STACKSIZE, NULL, BEACON_COMM_TASK_PRI, NULL);
   isInit = true;
@@ -224,16 +218,16 @@ void beaconCommPflush(char * str)
 void beaconAnalyzePayload(char * data)
 {
 	//for now, send this data through droneComm
-	droneCommPflush("Received msg from beacon:");
+	droneCommPflush("5! Received msg from beacon:");
 	droneCommPflush(data);
 	//droneCommPflush("Sending this to beacon:");
 	//droneCommPuts("message:num:");
 	//droneCommPutchar(num+'0');
 	//droneCommFlush();
-	beaconCommPuts("message:num:");
-	beaconCommPutchar(num+'0');
-	beaconCommFlush();
-	num = (num + 1 ) % 10;
+	//beaconCommPuts("message:num:");
+	//beaconCommPutchar(num+'0');
+	//beaconCommFlush();
+	//num = (num + 1 ) % 10;
 }
 
 

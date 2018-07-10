@@ -48,6 +48,8 @@
 // Outlier rejection
 #define RANGING_HISTORY_LENGTH 32
 #define OUTLIER_TH 4
+#define LPS_MAX_DATA_SIZE 30
+
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
   size_t ptr;
@@ -87,17 +89,14 @@ static bool rangingOk;
 
 static int messageExpected = 0;
 static int messageToSend = 0;
+static char message[LPS_MAX_DATA_SIZE];
 
 
-void changeSeq(int on){
-	messageToSend = on;
-	if (on){
-		droneCommPflush("messaging initiated");
-
-	}
-	else{
-		droneCommPflush("messaging un-initiated");
-	}
+void sendMessageToBeacon(char * msg){
+	messageToSend = 1;
+	droneCommPflush("3! About to send this to beacon:");
+	droneCommPflush(msg);
+	memcpy(message, msg, LPS_MAX_DATA_SIZE);
 }
 
 static void txcallback(dwDevice_t *dev)
@@ -116,6 +115,7 @@ static void txcallback(dwDevice_t *dev)
   }
 }
 
+//CYPHY changed
 static uint32_t rxcallback(dwDevice_t *dev) {
   dwTime_t arival = { .full=0 };
   int dataLength = dwGetDataLength(dev);
@@ -140,18 +140,22 @@ static uint32_t rxcallback(dwDevice_t *dev) {
   //beaconAnalyzePayload((char*)rxPacket.payload);
   //Print header;
   char hdr[2];
-  hdr[0] = rxPacket.payload[LPS_TWR_TYPE] + '0';
+  hdr[0] = rxPacket.payload[LPS_TWR_TYPE];
   hdr[1] = '\0';
-  droneCommPflush("beaconDataHeader:");
-  droneCommPflush(hdr);
+  //droneCommPflush("beaconDataHeader:");
+  //droneCommPflush(hdr);
   if (messageExpected && (rxPacket.payload[LPS_TWR_TYPE] != LPS_TWR_RELAY_B2D)){
-	  droneCommPflush("expected B2D.");
+	  droneCommPflush("expected B2D(5)");
 	  return 0;
+  }
+  else if (hdr[0] > 4){
+	  hdr[0] += '0';
+	  droneCommPflush("beaconDataHeader:");
+	  droneCommPflush(hdr);
   }
   switch(rxPacket.payload[LPS_TWR_TYPE]) {
     // Tag received messages
     case LPS_TWR_ANSWER:
-    	droneCommPflush("ANSWER"); //CYPHY
       if (rxPacket.payload[LPS_TWR_SEQ] != curr_seq) {
         return 0;
       }
@@ -190,7 +194,6 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       break;
     case LPS_TWR_REPORT:
     {
-      droneCommPflush("REPORT"); //CYPHY
       lpsTwrTagReportPayload_t *report = (lpsTwrTagReportPayload_t *)(rxPacket.payload+2);
       double tround1, treply1, treply2, tround2, tprop_ctn, tprop;
 
@@ -244,27 +247,7 @@ static uint32_t rxcallback(dwDevice_t *dev) {
         frameStart.full = TDMA_LAST_FRAME(final_rx.full) + offset.full;
         tdmaSynchronized = true;
       }
-      if (messageExpected || messageToSend){
-    	  droneCommPflush("sending tmz to beacon");
-		  txPacket.payload[LPS_TWR_TYPE] = LPS_TWR_RELAY_D2B;
-		  txPacket.payload[LPS_TWR_SEQ] = rxPacket.payload[LPS_TWR_SEQ];
-		  txPacket.payload[2] = 't';
-		  txPacket.payload[3] = 'm';
-		  txPacket.payload[4] = 'z';
-		  txPacket.payload[5] = 0;
-		  messageExpected = 1;
-		  messageToSend = 0;
-		  dwNewTransmit(dev);
-		dwSetData(dev, (uint8_t*)&txPacket, MAC802154_HEADER_LENGTH+2+28);
-
-		dwWaitForResponse(dev, true);
-		dwStartTransmit(dev);
-
-      }
-      else{
-		  ranging_complete = true;
-		  droneCommPflush("ranging complete;report");
-      }
+      ranging_complete = true;
       return 0;
       break;
     }
@@ -273,7 +256,9 @@ static uint32_t rxcallback(dwDevice_t *dev) {
     {
     	beaconAnalyzePayload((char*)rxPacket.payload);
     	ranging_complete = true;
-    	 droneCommPflush("ranGING comPLEte;RELAY");
+    	 droneCommPflush("6! ranGING comPLEte;RELAY");
+    	 messageToSend = 0;
+    	 messageExpected = 0;
     	return 0;
     	break;
     }
@@ -333,6 +318,7 @@ static dwTime_t transmitTimeForSlot(int slot)
 }
 }*/
 
+//CYPHY changed
 static void initiateRanging(dwDevice_t *dev)
 {
   if (!options->useTdma || tdmaSynchronized) {
@@ -350,8 +336,16 @@ static void initiateRanging(dwDevice_t *dev)
   }
 
   dwIdle(dev);
+  if (messageToSend){
+	  messageExpected = 1;
+	  memcpy(txPacket.payload, message, LPS_MAX_DATA_SIZE);
+	  txPacket.payload[LPS_TWR_TYPE] =  LPS_TWR_RELAY_D2B;
+	  droneCommPflush("4! Sending message now!");
 
-  txPacket.payload[LPS_TWR_TYPE] = LPS_TWR_POLL;
+  }
+  else{
+	  txPacket.payload[LPS_TWR_TYPE] =  LPS_TWR_POLL;
+  }
   txPacket.payload[LPS_TWR_SEQ] = ++curr_seq;
 
   txPacket.sourceAddress = options->tagAddress;
@@ -359,7 +353,7 @@ static void initiateRanging(dwDevice_t *dev)
 
   dwNewTransmit(dev);
   dwSetDefaults(dev);
-  dwSetData(dev, (uint8_t*)&txPacket, MAC802154_HEADER_LENGTH+2);
+  dwSetData(dev, (uint8_t*)&txPacket, MAC802154_HEADER_LENGTH+2+28);
 
   if (options->useTdma && tdmaSynchronized) {
     dwTime_t txTime = transmitTimeForSlot(options->tdmaSlot);

@@ -26,8 +26,7 @@
 
 extern uwbAlgorithm_t uwbTwrTagAlgorithm;
 
-void changeSeq(int on);
-
+void sendMessageToBeacon(char * msg);
 
 typedef struct {
   uint8_t pollRx[5];
