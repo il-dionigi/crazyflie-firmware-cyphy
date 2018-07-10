@@ -85,7 +85,20 @@ static dwTime_t frameStart;
 
 static bool rangingOk;
 
+static int messageExpected = 0;
+static int messageToSend = 0;
 
+
+void changeSeq(int on){
+	messageToSend = on;
+	if (on){
+		droneCommPflush("messaging initiated");
+
+	}
+	else{
+		droneCommPflush("messaging un-initiated");
+	}
+}
 
 static void txcallback(dwDevice_t *dev)
 {
@@ -131,6 +144,10 @@ static uint32_t rxcallback(dwDevice_t *dev) {
   hdr[1] = '\0';
   droneCommPflush("beaconDataHeader:");
   droneCommPflush(hdr);
+  if (messageExpected && (rxPacket.payload[LPS_TWR_TYPE] != LPS_TWR_RELAY_B2D)){
+	  droneCommPflush("expected B2D.");
+	  return 0;
+  }
   switch(rxPacket.payload[LPS_TWR_TYPE]) {
     // Tag received messages
     case LPS_TWR_ANSWER:
@@ -227,15 +244,36 @@ static uint32_t rxcallback(dwDevice_t *dev) {
         frameStart.full = TDMA_LAST_FRAME(final_rx.full) + offset.full;
         tdmaSynchronized = true;
       }
+      if (messageExpected || messageToSend){
+    	  droneCommPflush("sending tmz to beacon");
+		  txPacket.payload[LPS_TWR_TYPE] = LPS_TWR_RELAY_D2B;
+		  txPacket.payload[LPS_TWR_SEQ] = rxPacket.payload[LPS_TWR_SEQ];
+		  txPacket.payload[2] = 't';
+		  txPacket.payload[3] = 'm';
+		  txPacket.payload[4] = 'z';
+		  txPacket.payload[5] = 0;
+		  messageExpected = 1;
+		  messageToSend = 0;
+		  dwNewTransmit(dev);
+		dwSetData(dev, (uint8_t*)&txPacket, MAC802154_HEADER_LENGTH+2+28);
 
-      ranging_complete = true;
+		dwWaitForResponse(dev, true);
+		dwStartTransmit(dev);
+
+      }
+      else{
+		  ranging_complete = true;
+		  droneCommPflush("ranging complete;report");
+      }
       return 0;
       break;
     }
     //CYPHY
-    case LPS_TWR_RELAY:
+    case LPS_TWR_RELAY_B2D:
     {
     	beaconAnalyzePayload((char*)rxPacket.payload);
+    	ranging_complete = true;
+    	 droneCommPflush("ranGING comPLEte;RELAY");
     	return 0;
     	break;
     }

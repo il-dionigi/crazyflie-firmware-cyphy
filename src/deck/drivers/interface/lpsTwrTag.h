@@ -10,7 +10,8 @@
 #define LPS_TWR_ANSWER 0x02
 #define LPS_TWR_FINAL 0x03
 #define LPS_TWR_REPORT 0x04 // Report contains all measurement from the anchor
-#define LPS_TWR_RELAY 0x05 //CYPHY
+#define LPS_TWR_RELAY_D2B 0x05 //CYPHY, from drone to beacon
+#define LPS_TWR_RELAY_B2D 0x06 //CYPHY, from beacon to drone
 
 #define LPS_TWR_LPP_SHORT 0xF0
 
@@ -24,6 +25,9 @@
 #define LPS_TWR_SEND_LPP_PAYLOAD 1
 
 extern uwbAlgorithm_t uwbTwrTagAlgorithm;
+
+void changeSeq(int on);
+
 
 typedef struct {
   uint8_t pollRx[5];
