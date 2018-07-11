@@ -37,6 +37,7 @@
 #include <errno.h>
 
 #include "beaconComm.h"
+#include "droneComm.h"
 #include "lpsTwrTag.h"
 
 /*FreeRtos includes*/
@@ -210,7 +211,8 @@ void consoleCommTask(void * prm)
 			  beaconCommPflush((char*)(messageReceived.data+2));
 		  }
 		  else if (messageReceived.data[0] == '@'){
-			  consoleCommPflush("1! Sending to drone!?");
+			  consoleCommPflush("1! Sending to drone to send to other drone!?");
+			  droneCommPflush("TEst?!");
 		  }
 		}
 	}

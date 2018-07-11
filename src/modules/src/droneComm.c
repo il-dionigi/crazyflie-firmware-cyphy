@@ -37,6 +37,7 @@
 #include <errno.h>
 
 #include "beaconComm.h"
+#include "consoleComm.h"
 #include "lpsTwrTag.h"
 
 /*FreeRtos includes*/
