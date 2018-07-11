@@ -1,3 +1,4 @@
+
 /*
  *    ||          ____  _ __
  * +------+      / __ )(_) /_______________ _____  ___
@@ -53,7 +54,7 @@
 #include "stabilizer.h"
 #include "commander.h"
 #include "console.h"
-#include "droneComm.h"
+#include "../interface/consoleComm.h"
 #include "beaconComm.h"
 #include "usblink.h"
 #include "mem.h"
@@ -102,7 +103,7 @@ void systemInit(void)
   crtpInit();
   consoleInit();
   //CYPHY
-  droneCommInit();
+  consoleCommInit();
 
 
   DEBUG_PRINT("----------------------------\n");

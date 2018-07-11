@@ -36,7 +36,7 @@
 #include "quatcompress.h"
 #include "FreeRTOS.h"
 #include "console.h"
-#include "droneComm.h"
+#include "consoleComm.h"
 
 /* The generic commander format contains a packet type and data that has to be
  * decoded into a setpoint_t structure. The aim is to make it future-proof

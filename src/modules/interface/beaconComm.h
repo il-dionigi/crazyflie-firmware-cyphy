@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * droneComm.h - Used to send drone data to the client (will soon go to other drone)
+ * beaconComm.h - Used to send drone data to the client (will soon go to other drone)
  * ~CYPHY~
  */
 

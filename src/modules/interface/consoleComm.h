@@ -21,33 +21,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * droneComm.h - Used to send drone data to the client (will soon go to other drone)
+ * consoleComm.h - Used to send drone data to the client (will soon go to other drone)
  * ~CYPHY~
  */
 
-#ifndef droneComm_H_
-#define droneComm_H_
+#ifndef consoleComm_H_
+#define consoleComm_H_
 
 #include <stdbool.h>
 #include "eprintf.h"
 
 /**
- * Initialize the droneComm
+ * Initialize the consoleComm
  */
-void droneCommInit(void);
+void consoleCommInit(void);
 
-bool droneCommTest(void);
+bool consoleCommTest(void);
 
 /**
- * Put a character to the droneComm buffer
+ * Put a character to the consoleComm buffer
  *
  * @param ch character that shall be printed
  * @return The character casted to unsigned int or EOF in case of error
  */
-int droneCommPutchar(int ch);
+int consoleCommPutchar(int ch);
 
 /**
- * Put a character to the droneComm buffer
+ * Put a character to the consoleComm buffer
  *
  * @param ch character that shall be printed
  * @return The character casted to unsigned int or EOF in case of error
@@ -56,30 +56,30 @@ int droneCommPutchar(int ch);
  * buffer is going to be used. If a task currently is printing or if the
  * interrupts prints too much the data will be ignored.
  */
-int droneCommPutcharFromISR(int ch);
+int consoleCommPutcharFromISR(int ch);
 
 /**
- * Put a null-terminated string on the droneComm buffer
+ * Put a null-terminated string on the consoleComm buffer
  *
  * @param str Null terminated string
  * @return a nonnegative number on success, or EOF on error.
  */
-int droneCommPuts(char *str);
+int consoleCommPuts(char *str);
 
 /**
- * Flush the droneComm buffer
+ * Flush the consoleComm buffer
  */
-void droneCommFlush(void);
+void consoleCommFlush(void);
 
 //puts + flush
-void droneCommPflush(char *);
+void consoleCommPflush(char *);
 
 /**
- * Macro implementing droneCommPrintf with eprintf
+ * Macro implementing consoleCommPrintf with eprintf
  *
  * @param FMT String format
  * @patam ... Parameters to print
  */
-#define droneCommPrintf(FMT, ...) eprintf(droneCommPutchar, FMT, ## __VA_ARGS__)
+#define consoleCommPrintf(FMT, ...) eprintf(consoleCommPutchar, FMT, ## __VA_ARGS__)
 
-#endif /*droneComm_H_*/
+#endif /*consoleComm_H_*/

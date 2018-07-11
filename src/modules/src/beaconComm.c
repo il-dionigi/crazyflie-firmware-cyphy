@@ -52,7 +52,7 @@ static bool dwm1000Test()
 #include "crtp.h"
 #include "crc.h"
 #include "config.h"
-#include "droneComm.h"
+#include "consoleComm.h"
 
 #define DEBUG_MODULE "DWM"
 
@@ -97,18 +97,18 @@ static bool isInit;
 
 void testMsg(void){
 	if (true){
-		  droneCommPflush("TWR init success! beacons online");
+		  consoleCommPflush("TWR init success! beacons online");
 	  }
 	  else{
-		  droneCommPflush("beacon bad init");
+		  consoleCommPflush("beacon bad init");
 	  }
 }
 
 static bool beaconCommSendMessage(void)
 {
 	sendMessageToBeacon(message);
-	droneCommPflush("2! this msg sent to beacon:");
-	droneCommPflush(message);
+	consoleCommPflush("2! this msg sent to beacon:");
+	consoleCommPflush(message);
     messageLength = 2;
 
   return true;
@@ -217,13 +217,13 @@ void beaconCommPflush(char * str)
 
 void beaconAnalyzePayload(char * data)
 {
-	//for now, send this data through droneComm
-	droneCommPflush("5! Received msg from beacon:");
-	droneCommPflush(data);
-	//droneCommPflush("Sending this to beacon:");
-	//droneCommPuts("message:num:");
-	//droneCommPutchar(num+'0');
-	//droneCommFlush();
+	//for now, send this data through consoleComm
+	consoleCommPflush("5! Received msg from beacon:");
+	consoleCommPflush(data);
+	//consoleCommPflush("Sending this to beacon:");
+	//consoleCommPuts("message:num:");
+	//consoleCommPutchar(num+'0');
+	//consoleCommFlush();
 	//beaconCommPuts("message:num:");
 	//beaconCommPutchar(num+'0');
 	//beaconCommFlush();

@@ -31,7 +31,7 @@
 
 #include "commander.h"
 #include "crtp_commander.h"
-#include "droneComm.h"
+#include "consoleComm.h"
 
 static bool isInit;
 const static setpoint_t nullSetpoint;

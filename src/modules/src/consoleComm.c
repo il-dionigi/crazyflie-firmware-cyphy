@@ -1,5 +1,5 @@
 /*
- * droneComm.c
+ * consoleComm.c
  *
  *  Created on: Jun 29, 2018
  *      Author: bitcraze
@@ -19,7 +19,7 @@
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, in version 3.
- *
+ * consoleComm
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -30,7 +30,7 @@
  *
  *
  */
-//droneComm.c - Used to send drone data to drone(?) Currently send to client
+//consoleComm.c - Used to send drone data to console
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
@@ -57,11 +57,11 @@
 #endif
 #endif
 
-static void droneCommTask(void * prm);
+static void consoleCommTask(void * prm);
 
 static CRTPPacket messageReceived;
 CRTPPacket messageToPrint;
-static xSemaphoreHandle droneLock;
+static xSemaphoreHandle consoleLock;
 
 static const char fullMsg[] = "<F>\n";
 static bool isInit;
@@ -70,7 +70,7 @@ static bool isInit;
  * Send the data to the client
  * returns TRUE if successful otherwise FALSE
  */
-static bool droneCommSendMessage(void)
+static bool consoleCommSendMessage(void)
 {
 
   if (crtpSendPacket(&messageToPrint) == pdTRUE)
@@ -86,27 +86,27 @@ static bool droneCommSendMessage(void)
 }
 
 
-bool droneCommTest(void)
+bool consoleCommTest(void)
 {
   return isInit;
 }
 
-int droneCommPutcharFromISR(int ch) {
+int consoleCommPutcharFromISR(int ch) {
   BaseType_t higherPriorityTaskWoken;
 
-  if (xSemaphoreTakeFromISR(droneLock, &higherPriorityTaskWoken) == pdTRUE) {
+  if (xSemaphoreTakeFromISR(consoleLock, &higherPriorityTaskWoken) == pdTRUE) {
     if (messageToPrint.size < CRTP_MAX_DATA_SIZE)
     {
       messageToPrint.data[messageToPrint.size] = (unsigned char)ch;
       messageToPrint.size++;
     }
-    xSemaphoreGiveFromISR(droneLock, &higherPriorityTaskWoken);
+    xSemaphoreGiveFromISR(consoleLock, &higherPriorityTaskWoken);
   }
 
   return ch;
 }
 
-int droneCommPutchar(int ch)
+int consoleCommPutchar(int ch)
 {
   int i;
   bool isInInterrupt = (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) != 0;
@@ -116,10 +116,10 @@ int droneCommPutchar(int ch)
   }
 
   if (isInInterrupt) {
-    return droneCommPutcharFromISR(ch);
+    return consoleCommPutcharFromISR(ch);
   }
 
-  if (xSemaphoreTake(droneLock, portMAX_DELAY) == pdTRUE)
+  if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE)
   {
     if (messageToPrint.size < CRTP_MAX_DATA_SIZE)
     {
@@ -136,75 +136,75 @@ int droneCommPutchar(int ch)
               (uint8_t)fullMsg[sizeof(fullMsg) - i - 1];
         }
       }
-      droneCommSendMessage();
+      consoleCommSendMessage();
     }
-    xSemaphoreGive(droneLock);
+    xSemaphoreGive(consoleLock);
   }
 
   return (unsigned char)ch;
 }
 
-int droneCommPuts(char *str)
+int consoleCommPuts(char *str)
 {
   int ret = 0;
 
   while(*str)
-    ret |= droneCommPutchar(*str++);
+    ret |= consoleCommPutchar(*str++);
 
   return ret;
 }
 
-void droneCommFlush(void)
+void consoleCommFlush(void)
 {
-  if (xSemaphoreTake(droneLock, portMAX_DELAY) == pdTRUE)
+  if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE)
   {
-    droneCommSendMessage();
-    xSemaphoreGive(droneLock);
+    consoleCommSendMessage();
+    xSemaphoreGive(consoleLock);
   }
 }
 
-void droneCommPflush(char * str)
+void consoleCommPflush(char * str)
 {
-	droneCommPuts(str);
-	droneCommFlush();
+	consoleCommPuts(str);
+	consoleCommFlush();
 }
 
-void droneCommInit()
+void consoleCommInit()
 {
   if (isInit)
     return;
 
   messageToPrint.size = 0;
-  messageToPrint.header = CRTP_HEADER(CRTP_PORT_DRONE, 0);
-  vSemaphoreCreateBinary(droneLock);
-  xTaskCreate(droneCommTask, DRONE_COMM_TASK_NAME,
-  			DRONE_COMM_TASK_STACKSIZE, NULL, DRONE_COMM_TASK_PRI, NULL);
+  messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
+  vSemaphoreCreateBinary(consoleLock);
+  xTaskCreate(consoleCommTask, CONSOLE_COMM_TASK_NAME,
+  			CONSOLE_COMM_TASK_STACKSIZE, NULL, CONSOLE_COMM_TASK_PRI, NULL);
   isInit = true;
-  droneCommPflush("drone comm init!");
+  consoleCommPflush("console comm init!");
 }
 
 
 //SEND CODE ABOVE. RECEIVE CODE BELOW
 
-void droneCommTask(void * prm)
+void consoleCommTask(void * prm)
 {
-	crtpInitTaskQueue(CRTP_PORT_DRONE);
+	crtpInitTaskQueue(CRTP_PORT_CONSOLE);
 
 	while(1) {
-		crtpReceivePacketBlock(CRTP_PORT_DRONE, &messageReceived);
+		crtpReceivePacketBlock(CRTP_PORT_CONSOLE, &messageReceived);
 
 		if (messageReceived.channel==0){
 			// currently this is data from the PC
 			//as a test, send this data back
-		  droneCommFlush();
-		  droneCommPuts("got message from pc: ");
+		  consoleCommFlush();
+		  consoleCommPuts("got message from pc: ");
 		  //messsageReceived.data is uint8_t, want to typecast to char.
-		  droneCommPflush((char*)(messageReceived.data));
+		  consoleCommPflush((char*)(messageReceived.data));
 		  if (messageReceived.data[0] == '~'){
-			  droneCommPflush("1! Sending to beacon; port,message:");
-			  droneCommPutchar(messageReceived.data[1]);
-			  droneCommPutchar(',');
-			  droneCommPflush((char*)(messageReceived.data+2));
+			  consoleCommPflush("1! Sending to beacon; port,message:");
+			  consoleCommPutchar(messageReceived.data[1]);
+			  consoleCommPutchar(',');
+			  consoleCommPflush((char*)(messageReceived.data+2));
 			  //uint8_t newID = (messageReceived.data[1]) - 48;//48 is '0' in ascii. 48+x is 'x'
 			  //beaconCommChangeID(newID);
 			  beaconCommPflush((char*)(messageReceived.data+2));

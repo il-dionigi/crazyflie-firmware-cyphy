@@ -29,6 +29,8 @@
 #include <math.h>
 
 #include "lpsTwrTag.h"
+
+#include "../../../modules/interface/consoleComm.h"
 #include "lpsTdma.h"
 
 #include "FreeRTOS.h"
@@ -43,7 +45,6 @@
 
 //CYPHY
 #include "beaconComm.h"
-#include "droneComm.h"
 
 // Outlier rejection
 #define RANGING_HISTORY_LENGTH 32
@@ -94,8 +95,8 @@ static char message[LPS_MAX_DATA_SIZE];
 
 void sendMessageToBeacon(char * msg){
 	messageToSend = 1;
-	droneCommPflush("3! About to send this to beacon:");
-	droneCommPflush(msg);
+	consoleCommPflush("3! About to send this to beacon:");
+	consoleCommPflush(msg);
 	memcpy(message, msg, LPS_MAX_DATA_SIZE);
 }
 
@@ -142,16 +143,16 @@ static uint32_t rxcallback(dwDevice_t *dev) {
   char hdr[2];
   hdr[0] = rxPacket.payload[LPS_TWR_TYPE];
   hdr[1] = '\0';
-  //droneCommPflush("beaconDataHeader:");
-  //droneCommPflush(hdr);
+  //consoleCommPflush("beaconDataHeader:");
+  //consoleCommPflush(hdr);
   if (messageExpected && (rxPacket.payload[LPS_TWR_TYPE] != LPS_TWR_RELAY_B2D)){
-	  droneCommPflush("expected B2D(5)");
+	  consoleCommPflush("expected B2D(5)");
 	  return 0;
   }
   else if (hdr[0] > 4){
 	  hdr[0] += '0';
-	  droneCommPflush("beaconDataHeader:");
-	  droneCommPflush(hdr);
+	  consoleCommPflush("beaconDataHeader:");
+	  consoleCommPflush(hdr);
   }
   switch(rxPacket.payload[LPS_TWR_TYPE]) {
     // Tag received messages
@@ -256,7 +257,7 @@ static uint32_t rxcallback(dwDevice_t *dev) {
     {
     	beaconAnalyzePayload((char*)rxPacket.payload);
     	ranging_complete = true;
-    	 droneCommPflush("6! ranGING comPLEte;RELAY");
+    	 consoleCommPflush("6! ranGING comPLEte;RELAY");
     	 messageToSend = 0;
     	 messageExpected = 0;
     	return 0;
@@ -340,7 +341,7 @@ static void initiateRanging(dwDevice_t *dev)
 	  messageExpected = 1;
 	  memcpy(txPacket.payload, message, LPS_MAX_DATA_SIZE);
 	  txPacket.payload[LPS_TWR_TYPE] =  LPS_TWR_RELAY_D2B;
-	  droneCommPflush("4! Sending message now!");
+	  consoleCommPflush("4! Sending message now!");
 
   }
   else{
