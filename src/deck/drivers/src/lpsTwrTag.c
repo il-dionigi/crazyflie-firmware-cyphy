@@ -29,6 +29,8 @@
 #include <math.h>
 
 #include "lpsTwrTag.h"
+
+#include "../../../modules/interface/consoleComm.h"
 #include "lpsTdma.h"
 
 #include "FreeRTOS.h"
@@ -43,7 +45,6 @@
 
 //CYPHY
 #include "beaconComm.h"
-#include "droneComm.h"
 #include "consoleComm.h"
 
 // Outlier rejection

@@ -28,6 +28,7 @@
 #include "crtp_commander.h"
 
 #include "commander.h"
+#include "consoleComm.h"
 #include "crtp.h"
 
 

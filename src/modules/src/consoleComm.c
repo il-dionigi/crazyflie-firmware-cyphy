@@ -30,14 +30,14 @@
  *
  *
  */
-//consoleComm.c - Used to send drone data to client
+//consoleComm.c - Used to send drone data to console
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
 
 #include "beaconComm.h"
-#include "droneComm.h"
+#include "consoleComm.h"
 #include "lpsTwrTag.h"
 
 /*FreeRtos includes*/
@@ -179,7 +179,7 @@ void consoleCommInit()
   messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
   vSemaphoreCreateBinary(consoleLock);
   xTaskCreate(consoleCommTask, CONSOLE_COMM_TASK_NAME,
-		  CONSOLE_COMM_TASK_STACKSIZE, NULL, CONSOLE_COMM_TASK_PRI, NULL);
+  			CONSOLE_COMM_TASK_STACKSIZE, NULL, CONSOLE_COMM_TASK_PRI, NULL);
   isInit = true;
   consoleCommPflush("console comm init!");
 }
@@ -209,10 +209,6 @@ void consoleCommTask(void * prm)
 			  //uint8_t newID = (messageReceived.data[1]) - 48;//48 is '0' in ascii. 48+x is 'x'
 			  //beaconCommChangeID(newID);
 			  beaconCommPflush((char*)(messageReceived.data+2));
-		  }
-		  else if (messageReceived.data[0] == '@'){
-			  consoleCommPflush("1! Sending to drone to send to other drone!?");
-			  droneCommPflush("TEst?!");
 		  }
 		}
 	}
