@@ -209,6 +209,8 @@ extern const MotorPerifDef* motorMapRZRBrushless[NBR_OF_MOTORS];
  */
 void motorsInit(const MotorPerifDef** motorMapSelect);
 
+void motorsPlayTone(uint16_t frequency, uint16_t duration_msec);
+
 /**
  * DeInitialisation. Reset to default
  */

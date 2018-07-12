@@ -35,10 +35,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include "led.h"
+#include "motors.h"
+
 
 #include "beaconComm.h"
 #include "consoleComm.h"
 #include "lpsTwrTag.h"
+#include "radiolink.h"
 
 /*FreeRtos includes*/
 #include "FreeRTOS.h"
@@ -73,7 +77,6 @@ static bool isInit;
  */
 static bool consoleCommSendMessage(void)
 {
-
   if (crtpSendPacket(&messageToPrint) == pdTRUE)
   {
     messageToPrint.size = 0;
@@ -109,7 +112,11 @@ int consoleCommPutcharFromISR(int ch) {
 
 int consoleCommPutchar(int ch)
 {
-  ledSet(LED_RED_L, true); // DELETE ME
+  //ledSet(LED_GREEN_R, true); // DELETE ME
+	//motorsPlayTone(A6, EIGHTS);
+	//motorsPlayTone(B6, EIGHTS);
+	//motorsPlayTone(A6, EIGHTS);
+
 
   int i;
   bool isInInterrupt = (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) != 0;
@@ -211,6 +218,39 @@ void consoleCommTask(void * prm)
 			  //uint8_t newID = (messageReceived.data[1]) - 48;//48 is '0' in ascii. 48+x is 'x'
 			  //beaconCommChangeID(newID);
 			  beaconCommPflush((char*)(messageReceived.data+2));
+			  char test[5] = "test\0";
+			  if (memcmp(messageReceived.data + 1, test, 4) == 0) {
+				  switch (RADIO_CHANNEL) {
+				  case 80:
+					  radiolinkSwitch(85, RADIO_RATE_2M, 0xE7E7E7E7E8);
+					  break;
+				  case 85:
+					  radiolinkSwitch(80, RADIO_RATE_2M, 0xE7E7E7E7E8);
+					  break;
+				  default:
+					  break;
+				  }
+				  crtpSetLink(radiolinkGetLink());
+				  ledSet(LED_GREEN_R, true);
+			  }
+			  CRTPPacket testpk;
+			  testpk.header = CRTP_HEADER(CRTP_PORT_LINK, 0);
+			  testpk.data[0] = 'a';
+			  testpk.data[1] = '\0';
+			  testpk.size = 2;
+			  char testMsg[2] = "a\0";
+			  switch (RADIO_CHANNEL) {
+			  case 85:
+				  while(1) {
+					  crtpSendPacket(&testpk);
+				  }
+				  break;
+			  case 80:
+					crtpReceivePacketBlock(CRTP_PORT_LINK, &messageReceived);
+				  if (memcmp(messageReceived.data, testMsg, 1) == 0) {
+					  ledSet(LED_GREEN_R, false);
+				  }
+			  }
 		  }
 		}
 	}
