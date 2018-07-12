@@ -109,6 +109,8 @@ int consoleCommPutcharFromISR(int ch) {
 
 int consoleCommPutchar(int ch)
 {
+  ledSet(LED_RED_L, true); // DELETE ME
+
   int i;
   bool isInInterrupt = (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) != 0;
 
