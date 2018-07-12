@@ -43,6 +43,10 @@
 #include "syslink.h"
 #include "crtp_localization_service.h"
 
+// CYPHY
+#include "radiolink.h"
+#include "led.h"
+
 static bool isInit;
 
 void commInit(void)
@@ -52,6 +56,17 @@ void commInit(void)
 
   uartslkInit();
   radiolinkInit();
+
+  switch (RADIO_CHANNEL) {
+    case 80:
+      radiolinkSwitch(85, RADIO_RATE_2M, 0xE7E7E7E7E8ULL);
+      break;
+    case 85:
+      radiolinkSwitch(80, RADIO_RATE_2M, 0xE7E7E7E7E8ULL);
+      break;
+    default:
+      break;
+  }
 
   /* These functions are moved to be initialized early so
    * that DEBUG_PRINT can be used early */
@@ -80,6 +95,7 @@ void commInit(void)
   //  crtpSetLink(radiolinkGetLink());
   
   isInit = true;
+  ledSet(LED_RED_L, true);
 }
 
 bool commTest(void)
@@ -95,4 +111,3 @@ bool commTest(void)
   
   return pass;
 }
-

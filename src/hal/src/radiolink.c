@@ -121,6 +121,15 @@ void radiolinkSetAddress(uint64_t address)
   syslinkSendPacket(&slp);
 }
 
+// CYPHY
+void radiolinkSwitch(uint8_t channel, uint8_t datarate, uint64_t address)
+{
+  // TODO: Later have this all be in some global that is created on initializtion
+  radiolinkSetChannel(channel);
+  radiolinkSetDatarate(datarate);
+  radiolinkSetAddress(address);
+}
+
 void radiolinkSetPowerDbm(int8_t powerDbm)
 {
   SyslinkPacket slp;
