@@ -66,6 +66,7 @@ static void consoleCommTask(void * prm);
 
 static CRTPPacket messageReceived;
 CRTPPacket messageToPrint;
+static char droneData[10];
 static xSemaphoreHandle consoleLock;
 
 static const char fullMsg[] = "<F>\n";
@@ -183,7 +184,9 @@ void consoleCommInit()
 {
   if (isInit)
     return;
-
+  droneData[0] = 0;
+  droneData[8] = 0;
+  droneData[9] = 0;
   messageToPrint.size = 0;
   messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
   vSemaphoreCreateBinary(consoleLock);
@@ -210,6 +213,10 @@ void consoleCommTask(void * prm)
 		  consoleCommPuts("got message from pc: ");
 		  //messsageReceived.data is uint8_t, want to typecast to char.
 		  consoleCommPflush((char*)(messageReceived.data));
+		  if (messageReceived.data[0] == '?'){
+			  consoleCommPflush("Current data in droneData:");
+			  consoleCommPflush(droneData);
+		  }
 		  if (messageReceived.data[0] == '~'){
 			  consoleCommPflush("1! Sending to beacon; port,message:");
 			  consoleCommPutchar(messageReceived.data[1]);
@@ -222,9 +229,13 @@ void consoleCommTask(void * prm)
 			  if (memcmp(messageReceived.data + 1, test, 4) == 0) {
 				  switch (RADIO_CHANNEL) {
 				  case 80:
+					  consoleCommPflush("I'm 80, LED GREEN RIGHT");
+					  //TRY CONNECT TO DRONE
 					  radiolinkSwitch(85, RADIO_RATE_2M, 0xE7E7E7E7E8);
 					  break;
 				  case 85:
+					  consoleCommPflush("I'm 85, LED GREEN RIGHT");
+					  //TRY CONNECT TO DRONE
 					  radiolinkSwitch(80, RADIO_RATE_2M, 0xE7E7E7E7E8);
 					  break;
 				  default:
@@ -232,23 +243,21 @@ void consoleCommTask(void * prm)
 				  }
 				  crtpSetLink(radiolinkGetLink());
 				  ledSet(LED_GREEN_R, true);
-			  }
-			  CRTPPacket testpk;
-			  testpk.header = CRTP_HEADER(CRTP_PORT_LINK, 0);
-			  testpk.data[0] = 'a';
-			  testpk.data[1] = '\0';
-			  testpk.size = 2;
-			  char testMsg[2] = "a\0";
-			  switch (RADIO_CHANNEL) {
-			  case 85:
-				  while(1) {
-					  crtpSendPacket(&testpk);
-				  }
-				  break;
-			  case 80:
-					crtpReceivePacketBlock(CRTP_PORT_LINK, &messageReceived);
-				  if (memcmp(messageReceived.data, testMsg, 1) == 0) {
-					  ledSet(LED_GREEN_R, false);
+				  CRTPPacket testpk;
+				  testpk.header = CRTP_HEADER(CRTP_PORT_LINK, 0);
+				  testpk.data[0] = 'a';
+				  testpk.data[1] = '\0';
+				  testpk.size = 2;
+				  char testMsg[2] = "a\0";
+				  switch (RADIO_CHANNEL) {
+				  case 85:
+					  while(1) {
+						  crtpSendPacket(&testpk);
+					  }
+					  break;
+				  case 80:
+						crtpReceivePacketBlock(11, &messageReceived);
+						memcpy(droneData, messageReceived.data,8);
 				  }
 			  }
 		  }
