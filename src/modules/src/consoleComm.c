@@ -252,6 +252,9 @@ void consoleCommTask(void * prm)
         channel = messageReceived.data[8] - '0';
         dataRate = messageReceived.data[9] - '0';
         crtpSwitchTarget(address, channel, dataRate);
+        while(true) {
+          consoleCommPflush("Test\0");
+        }
         break;
       default:
         break;
