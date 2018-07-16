@@ -50,6 +50,7 @@ static struct crtpLinkOperations nopLink = {
   .setEnable         = (void*) nopFunc,
   .sendPacket        = (void*) nopFunc,
   .receivePacket     = (void*) nopFunc,
+  .switchTarget      = (void*) nopFunc,
 }; 
 
 static struct crtpLinkOperations *link = &nopLink;
@@ -258,6 +259,12 @@ void crtpSetLink(struct crtpLinkOperations * lk)
     link = &nopLink;
 
   link->setEnable(true);
+}
+
+void crtpSwitchTarget(uint64_t address, uint8_t channel, uint8_t datarate)
+{
+  // TODO: Prevent this from giving errors if accidentally called on eskyLink
+  link->switchTarget(address, channel, datarate);
 }
 
 static int nopFunc(void)

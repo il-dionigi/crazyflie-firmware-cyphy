@@ -62,6 +62,7 @@ static struct crtpLinkOperations radiolinkOp =
   .setEnable         = radiolinkSetEnable,
   .sendPacket        = radiolinkSendCRTPPacket,
   .receivePacket     = radiolinkReceiveCRTPPacket,
+  .switchTarget      = radiolinkSetTarget,
 };
 
 void radiolinkInit(void)
@@ -121,13 +122,11 @@ void radiolinkSetAddress(uint64_t address)
   syslinkSendPacket(&slp);
 }
 
-// CYPHY
-void radiolinkSwitch(uint8_t channel, uint8_t datarate, uint64_t address)
+static void radiolinkSetTarget(uint64_t address, uint8_t channel, uint8_t datarate)
 {
-  // TODO: Later have this all be in some global that is created on initializtion
+  radiolinkSetAddress(address);
   radiolinkSetChannel(channel);
   radiolinkSetDatarate(datarate);
-  radiolinkSetAddress(address);
 }
 
 void radiolinkSetPowerDbm(int8_t powerDbm)

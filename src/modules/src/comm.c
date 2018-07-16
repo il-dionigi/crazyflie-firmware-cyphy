@@ -43,10 +43,6 @@
 #include "syslink.h"
 #include "crtp_localization_service.h"
 
-// CYPHY
-#include "radiolink.h"
-#include "led.h"
-
 static bool isInit;
 
 void commInit(void)

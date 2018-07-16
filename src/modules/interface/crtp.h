@@ -166,6 +166,7 @@ struct crtpLinkOperations
   int (*setEnable)(bool enable);
   int (*sendPacket)(CRTPPacket *pk);
   int (*receivePacket)(CRTPPacket *pk);
+  void (*switchTarget)(uint64_t address, uint8_t channel, uint8_t datarate);
   bool (*isConnected)(void);
   int (*reset)(void);
 };

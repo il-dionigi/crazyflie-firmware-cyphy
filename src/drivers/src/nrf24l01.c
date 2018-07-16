@@ -327,6 +327,13 @@ void nrfSetAddress(unsigned int pipe, char* address)
   nrfWriteReg(REG_RX_ADDR_P0 + pipe, address, len);
 }
 
+void nrfSetTo(unsigned int channel, int datarate, unsigned int pipe, char* address)
+{
+  nrfSetChannel(channel);
+  nrfSetDatarate(datarate);
+  nrfSetAddress(pipe, address);
+}
+
 void nrfSetEnable(bool enable)
 {
   if (enable)

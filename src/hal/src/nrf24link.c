@@ -128,9 +128,16 @@ static struct crtpLinkOperations radioOp =
   .setEnable         = setEnable,
   .sendPacket        = sendPacket,
   .receivePacket     = receivePacket,
+  .switchTarget      = nopFunc,
   .isConnected       = isConnected,
   .reset             = reset,
 };
+
+// CYPHY - prevent error when typecasting radioOp to CRTP's LinkOperations
+static int nopFunc(uint64_t address, uint8_t channel, uint8_t datarate)
+{
+  return ENETDOWN;
+}
 
 /* Radio task handles the CRTP packet transfers as well as the radio link
  * specific communications (eg. Scann and ID ports, communication error handling
