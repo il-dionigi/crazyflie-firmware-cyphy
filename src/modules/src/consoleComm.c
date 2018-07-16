@@ -209,7 +209,6 @@ void consoleCommInit()
 
 
 //SEND CODE ABOVE. RECEIVE CODE BELOW
-
 void consoleCommTask(void * prm)
 {
 	crtpInitTaskQueue(CRTP_PORT_CONSOLE);
@@ -217,60 +216,41 @@ void consoleCommTask(void * prm)
 	while(1) {
 		crtpReceivePacketBlock(CRTP_PORT_CONSOLE, &messageReceived);
 
-		if (messageReceived.channel==0){
-			// currently this is data from the PC
-			//as a test, send this data back
-		  consoleCommFlush();
-		  consoleCommPuts("got message from pc: ");
-		  //messsageReceived.data is uint8_t, want to typecast to char.
-		  consoleCommPflush((char*)(messageReceived.data));
-		  if (messageReceived.data[0] == '?'){
-			  consoleCommPflush("Current data in droneData:");
-			  consoleCommPflush(droneData);
-		  }
-		  if (messageReceived.data[0] == '~'){
-			  consoleCommPflush("1! Sending to beacon; port,message:");
-			  consoleCommPutchar(messageReceived.data[1]);
-			  consoleCommPutchar(',');
-			  consoleCommPflush((char*)(messageReceived.data+2));
-			  //uint8_t newID = (messageReceived.data[1]) - 48;//48 is '0' in ascii. 48+x is 'x'
-			  //beaconCommChangeID(newID);
-			  beaconCommPflush((char*)(messageReceived.data+2));
-			  //char test[5] = "test\0";
-			  /*if (memcmp(messageReceived.data + 1, test, 4) == 0) {
-				  switch (RADIO_CHANNEL) {
-				  case 80:
-					  consoleCommPflush("I'm 80, LED GREEN RIGHT");
-					  //TRY CONNECT TO DRONE
-					  radiolinkSwitch(85, RADIO_RATE_2M, 0xE7E7E7E7E8);
-					  break;
-				  case 85:
-					  consoleCommPflush("I'm 85, LED GREEN RIGHT");
-					  //TRY CONNECT TO DRONE
-					  radiolinkSwitch(80, RADIO_RATE_2M, 0xE7E7E7E7E8);
-					  break;
-				  default:
-					  break;
-				  }
-				  crtpSetLink(radiolinkGetLink());
-				  ledSet(LED_GREEN_R, true);
-				  CRTPPacket testpk;
-				  testpk.header = CRTP_HEADER(CRTP_PORT_LINK, 0);
-				  testpk.data[0] = 'a';
-				  testpk.data[1] = '\0';
-				  testpk.size = 2;
-				  switch (RADIO_CHANNEL) {
-				  case 85:
-					  while(1) {
-						  crtpSendPacket(&testpk);
-					  }
-					  break;
-				  case 80:
-						crtpReceivePacketBlock(11, &messageReceived);
-						memcpy(droneData, messageReceived.data,8);
-				  }
-			  }*/
-		  }
-		}
+    switch (messageReceived.channel) {
+      case C2RTP_CHANNEL_TEXT:
+        consoleCommFlush();
+        consoleCommPuts("got message from pc: ");
+        consoleCommPflush((char*)(messageReceived.data));
+        if (messageReceived.data[0] == '?'){
+          consoleCommPflush("Current data in droneData:");
+          consoleCommPflush(droneData);
+        }
+        if (messageReceived.data[0] == '~'){
+          consoleCommPflush("1! Sending to beacon; port,message:");
+          consoleCommPutchar(messageReceived.data[1]);
+          consoleCommPutchar(',');
+          consoleCommPflush((char*)(messageReceived.data+2));
+          beaconCommPflush((char*)(messageReceived.data+2));
+        }
+        break;
+      case C2RTP_CHANNEL_SWITCH:
+        uint64_t address = 0;
+        for (int i = 0; i < 7; i++){
+          char temp = messageReceived.data[i];
+          if (temp == 'x') {
+            i = 7;
+          }
+          else {
+            address = (address << 3) + (address << 1);
+            address += temp - '0';
+          }
+        }
+        uint8_t channel = messageReceived.data[8] - '0';
+        uint8_t dataRate = messageReceived.data[9] - '0';
+        crtpSwitchTarget(address, channel, dataRate);
+        break;
+      default:
+        break;
+    }
 	}
 }

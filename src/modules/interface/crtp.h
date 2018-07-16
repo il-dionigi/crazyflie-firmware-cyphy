@@ -173,6 +173,8 @@ struct crtpLinkOperations
 
 void crtpSetLink(struct crtpLinkOperations * lk);
 
+void crtpSwitchTarget(uint64_t address, uint8_t channel, uint8_t datarate); //CYPHY
+
 /**
  * Check if the connection timeout has been reached, otherwise
  * we will assume that we are connected.

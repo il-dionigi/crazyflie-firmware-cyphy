@@ -31,6 +31,11 @@
 #include <stdbool.h>
 #include "eprintf.h"
 
+typedef enum { // can only go up to 0x03
+    C2RTP_CHANNEL_TEXT    = 0x00,
+    C2RTP_CHANNEL_SWITCH  = 0x01,
+} C2RTPChannel
+
 /**
  * Initialize the consoleComm
  */
