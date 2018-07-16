@@ -65,7 +65,6 @@ unsigned char nrfReadRX(char *buffer, int len);
 void nrfSetChannel(unsigned int channel);
 void nrfSetDatarate(int datarate);
 void nrfSetAddress(unsigned int pipe, char* address);
-void nrfSetTo(unsigned int channel, int datarate, unsigned int pipe, char* address);
 void nrfSetEnable(bool enable);
 unsigned char nrfGetStatus();
 bool nrfInterruptActive(void);
