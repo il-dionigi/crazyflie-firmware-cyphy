@@ -102,7 +102,12 @@ int consoleCommPutcharFromISR(int ch) {
   if (xSemaphoreTakeFromISR(consoleLock, &higherPriorityTaskWoken) == pdTRUE) {
     if (messageToPrint.size < CRTP_MAX_DATA_SIZE)
     {
-      messageToPrint.data[messageToPrint.size] = (unsigned char)ch;
+	  if ( (unsigned char)ch <= 126 && (unsigned char)ch >= 32){
+		  messageToPrint.data[messageToPrint.size] = (unsigned char)ch;
+	  }
+	  else {
+		  messageToPrint.data[messageToPrint.size] = '?';
+	  }
       messageToPrint.size++;
     }
     xSemaphoreGiveFromISR(consoleLock, &higherPriorityTaskWoken);
@@ -134,8 +139,14 @@ int consoleCommPutchar(int ch)
   {
     if (messageToPrint.size < CRTP_MAX_DATA_SIZE)
     {
-      messageToPrint.data[messageToPrint.size] = (unsigned char)ch;
+      if ( (unsigned char)ch <= 126 && (unsigned char)ch >= 32){
+    	  messageToPrint.data[messageToPrint.size] = (unsigned char)ch;
+      }
+      else {
+    	  messageToPrint.data[messageToPrint.size] = '?';
+      }
       messageToPrint.size++;
+
     }
     if (ch == '\n' || messageToPrint.size >= CRTP_MAX_DATA_SIZE)
     {
@@ -225,8 +236,8 @@ void consoleCommTask(void * prm)
 			  //uint8_t newID = (messageReceived.data[1]) - 48;//48 is '0' in ascii. 48+x is 'x'
 			  //beaconCommChangeID(newID);
 			  beaconCommPflush((char*)(messageReceived.data+2));
-			  char test[5] = "test\0";
-			  if (memcmp(messageReceived.data + 1, test, 4) == 0) {
+			  //char test[5] = "test\0";
+			  /*if (memcmp(messageReceived.data + 1, test, 4) == 0) {
 				  switch (RADIO_CHANNEL) {
 				  case 80:
 					  consoleCommPflush("I'm 80, LED GREEN RIGHT");
@@ -248,7 +259,6 @@ void consoleCommTask(void * prm)
 				  testpk.data[0] = 'a';
 				  testpk.data[1] = '\0';
 				  testpk.size = 2;
-				  char testMsg[2] = "a\0";
 				  switch (RADIO_CHANNEL) {
 				  case 85:
 					  while(1) {
@@ -259,7 +269,7 @@ void consoleCommTask(void * prm)
 						crtpReceivePacketBlock(11, &messageReceived);
 						memcpy(droneData, messageReceived.data,8);
 				  }
-			  }
+			  }*/
 		  }
 		}
 	}

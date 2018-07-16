@@ -62,7 +62,7 @@ static struct crtpLinkOperations radiolinkOp =
   .setEnable         = radiolinkSetEnable,
   .sendPacket        = radiolinkSendCRTPPacket,
   .receivePacket     = radiolinkReceiveCRTPPacket,
-  .switchTarget      = radiolinkSetTarget,
+  //.switchTarget      = radiolinkSetTarget,
 };
 
 void radiolinkInit(void)
@@ -122,12 +122,12 @@ void radiolinkSetAddress(uint64_t address)
   syslinkSendPacket(&slp);
 }
 
-static void radiolinkSetTarget(uint64_t address, uint8_t channel, uint8_t datarate)
+/*static void radiolinkSetTarget(uint64_t address, uint8_t channel, uint8_t datarate)
 {
   radiolinkSetAddress(address);
   radiolinkSetChannel(channel);
   radiolinkSetDatarate(datarate);
-}
+}*/
 
 void radiolinkSetPowerDbm(int8_t powerDbm)
 {
