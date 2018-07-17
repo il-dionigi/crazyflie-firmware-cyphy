@@ -212,20 +212,22 @@ void consoleCommInit()
 void consoleCommTask(void * prm)
 {
 	crtpInitTaskQueue(CRTP_PORT_CONSOLE);
+	uint64_t address = 0;
+	char temp;
+	uint8_t channel;
+	uint8_t dataRate;
 
 	while(1) {
 		crtpReceivePacketBlock(CRTP_PORT_CONSOLE, &messageReceived);
-
-    uint64_t address = 0;
-    char temp;
-    uint8_t channel;
-    uint8_t dataRate;
+		consoleCommPuts("got msg from pc; data/channel: ");
+		consoleCommPflush((char*)(messageReceived.data));
+		temp = messageReceived.channel + '0';
+		consoleCommPutchar(temp);
+		consoleCommFlush();
 
     switch (messageReceived.channel) {
       case C2RTP_CHANNEL_TEXT:
         consoleCommFlush();
-        consoleCommPuts("got message from pc: ");
-        consoleCommPflush((char*)(messageReceived.data));
         if (messageReceived.data[0] == '?'){
           consoleCommPflush("Current data in droneData:");
           consoleCommPflush(droneData);
