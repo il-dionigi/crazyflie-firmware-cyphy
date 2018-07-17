@@ -220,12 +220,11 @@ void consoleCommTask(void * prm)
     char temp;
     uint8_t channel;
     uint8_t dataRate;
-
+    consoleCommPuts("got message from pc: ");
+    consoleCommPflush((char*)(messageReceived.data));
     switch (messageReceived.channel) {
       case C2RTP_CHANNEL_TEXT:
-        consoleCommFlush();
-        consoleCommPuts("got message from pc: ");
-        consoleCommPflush((char*)(messageReceived.data));
+        consoleCommPflush("CH0CH0");
         if (messageReceived.data[0] == '?'){
           consoleCommPflush("Current data in droneData:");
           consoleCommPflush(droneData);
