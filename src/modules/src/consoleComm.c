@@ -32,6 +32,7 @@
  */
 //consoleComm.c - Used to send drone data to console
 #include <stdbool.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
@@ -218,6 +219,7 @@ void consoleCommTask(void * prm)
 
 	uint8_t channel;
 	uint8_t dataRate;
+	uint8_t slept = 0;
 	char temp;
 	while(1) {
 		crtpReceivePacketBlock(CRTP_PORT_CONSOLE, &messageReceived);
@@ -244,6 +246,14 @@ void consoleCommTask(void * prm)
         break;
       case C2RTP_CHANNEL_SWITCH:
         consoleCommPflush("Currently switching channels");
+        if (!slept){
+        	consoleCommPflush("Sleeping");
+        	slept = 1;
+        	break;
+        }
+        else{
+        	consoleCommPflush("Waking");
+        }
         for (int i = 0; i < 7; i++){
           temp = messageReceived.data[i];
           if (temp == 'x') {
