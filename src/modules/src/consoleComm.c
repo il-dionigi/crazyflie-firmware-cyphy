@@ -102,12 +102,13 @@ int consoleCommPutcharFromISR(int ch) {
   if (xSemaphoreTakeFromISR(consoleLock, &higherPriorityTaskWoken) == pdTRUE) {
     if (messageToPrint.size < CRTP_MAX_DATA_SIZE)
     {
-	  if ( (unsigned char)ch <= 126 && (unsigned char)ch >= 32){
+	  /*if ( (unsigned char)ch <= 126 && (unsigned char)ch >= 32){
 		  messageToPrint.data[messageToPrint.size] = (unsigned char)ch;
 	  }
 	  else {
 		  messageToPrint.data[messageToPrint.size] = '?';
-	  }
+	  }*/
+		  messageToPrint.data[messageToPrint.size] = (unsigned char)ch;
       messageToPrint.size++;
     }
     xSemaphoreGiveFromISR(consoleLock, &higherPriorityTaskWoken);
@@ -139,12 +140,13 @@ int consoleCommPutchar(int ch)
   {
     if (messageToPrint.size < CRTP_MAX_DATA_SIZE)
     {
-      if ( (unsigned char)ch <= 126 && (unsigned char)ch >= 32){
+      /*if ( (unsigned char)ch <= 126 && (unsigned char)ch >= 32){
     	  messageToPrint.data[messageToPrint.size] = (unsigned char)ch;
       }
       else {
     	  messageToPrint.data[messageToPrint.size] = '?';
-      }
+      }*/
+	  messageToPrint.data[messageToPrint.size] = (unsigned char)ch;
       messageToPrint.size++;
 
     }
@@ -212,11 +214,11 @@ void consoleCommInit()
 void consoleCommTask(void * prm)
 {
 	crtpInitTaskQueue(CRTP_PORT_CONSOLE);
-	uint64_t address = 0;
-	char temp;
-	uint8_t channel;
-	uint8_t dataRate;
+	/*uint64_t address = 0;
 
+	uint8_t channel;
+	uint8_t dataRate;*/
+	char temp;
 	while(1) {
 		crtpReceivePacketBlock(CRTP_PORT_CONSOLE, &messageReceived);
 		consoleCommPuts("got msg from pc; data/channel: ");
@@ -225,7 +227,7 @@ void consoleCommTask(void * prm)
 		consoleCommPutchar(temp);
 		consoleCommFlush();
 
-    switch (messageReceived.channel) {
+    /*switch (messageReceived.channel) {
       case C2RTP_CHANNEL_TEXT:
         consoleCommFlush();
         if (messageReceived.data[0] == '?'){
@@ -261,6 +263,6 @@ void consoleCommTask(void * prm)
         break;
       default:
         break;
-    }
+    }*/
 	}
 }
