@@ -214,10 +214,10 @@ void consoleCommInit()
 void consoleCommTask(void * prm)
 {
 	crtpInitTaskQueue(CRTP_PORT_CONSOLE);
-	/*uint64_t address = 0;
+	uint64_t address = 0;
 
 	uint8_t channel;
-	uint8_t dataRate;*/
+	uint8_t dataRate;
 	char temp;
 	while(1) {
 		crtpReceivePacketBlock(CRTP_PORT_CONSOLE, &messageReceived);
@@ -227,7 +227,7 @@ void consoleCommTask(void * prm)
 		consoleCommPutchar(temp);
 		consoleCommFlush();
 
-    /*switch (messageReceived.channel) {
+    switch (messageReceived.channel) {
       case C2RTP_CHANNEL_TEXT:
         consoleCommFlush();
         if (messageReceived.data[0] == '?'){
@@ -263,6 +263,6 @@ void consoleCommTask(void * prm)
         break;
       default:
         break;
-    }*/
+    }
 	}
 }
