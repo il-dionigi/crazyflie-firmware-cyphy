@@ -217,13 +217,13 @@ void consoleCommTask(void * prm)
 	crtpInitTaskQueue(CRTP_PORT_CONSOLE);
 	uint64_t address = 0;
 
-	uint8_t channel;
-	uint8_t dataRate;
+	uint8_t channel = 0;
+	uint8_t dataRate = 0;
 	uint8_t slept = 0;
 	char temp;
 	while(1) {
 		crtpReceivePacketBlock(CRTP_PORT_CONSOLE, &messageReceived);
-		consoleCommPuts("got msg from pc; data/channel: ");
+		consoleCommPuts("got msg from pc; data/channel:");
 		consoleCommPflush((char*)(messageReceived.data));
 		temp = messageReceived.channel + '0';
 		consoleCommPutchar(temp);
@@ -254,18 +254,40 @@ void consoleCommTask(void * prm)
         else{
         	consoleCommPflush("Waking");
         }
-        for (int i = 0; i < 7; i++){
+        int i;
+        for (i = 0; i < CRTP_MAX_DATA_SIZE; i++){
           temp = messageReceived.data[i];
-          if (temp == 'x') {
-            i = 7;
+          if (temp == ',') {
+        	i++;
+            break;
           }
           else {
-            address = (address << 3) + (address << 1);
+            address *= 10;
             address += temp - '0';
           }
         }
-        channel = messageReceived.data[8] - '0';
-        dataRate = messageReceived.data[9] - '0';
+        for (; i < CRTP_MAX_DATA_SIZE; i++){
+		  temp = messageReceived.data[i];
+		  if (temp == ',') {
+			i++;
+			break;
+		  }
+		  else {
+			channel *= 10;
+			channel += temp - '0';
+		  }
+		}
+        for (; i < CRTP_MAX_DATA_SIZE; i++){
+		  temp = messageReceived.data[i];
+		  if (temp == ',') {
+			i++;
+			break;
+		  }
+		  else {
+			dataRate *= 10;
+			dataRate += temp - '0';
+		  }
+		}
         crtpSwitchTarget(address, channel, dataRate);
         while(true) {
           consoleCommPflush("Test\0");
