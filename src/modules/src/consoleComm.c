@@ -301,7 +301,7 @@ void consoleCommTask(void * prm)
 		}
         crtpSwitchTarget(address, channel, dataRate);
         while(true) {
-          consoleCommPflush("Test\0");
+          consoleCommPflush("!d2dWorkd\0");
         }
         break;
       default:
