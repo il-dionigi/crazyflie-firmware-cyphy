@@ -74,6 +74,8 @@ static const char fullMsg[] = "<F>\n";
 static bool isInit;
 
 static char radioAddress[16] = "XXXXXXXXXXXXXXX\0";
+static char radioChannel[3] = "XX\0";
+static char radioDatarate[2] = "X\0";
 
 /**
  * Send the data to the client
@@ -234,6 +236,8 @@ void consoleCommTask(void * prm)
     switch (messageReceived.channel) {
       case C2RTP_CHANNEL_TEXT:
         displayRadioAddress();
+        displayRadioChannel();
+        displayRadioDatarate();
         consoleCommFlush();
         if (messageReceived.data[0] == '?'){
           consoleCommPflush("Current data in droneData:");
@@ -312,6 +316,26 @@ void saveRadioAddress(uint64_t address) {
   radioAddress[pos] = '\0';
 }
 
+void saveRadioChannel(uint8_t channel) {
+  radioChannel[0] = (channel / 10) + '0';
+  radioChannel[1] = (channel % 10) + '0';
+}
+
+void saveRadioDatarate(uint8_t datarate) {
+  radioDatarate[0] = datarate + '0';
+}
+
 void displayRadioAddress(void) {
+  consoleCommPflush("Radio address: ");
   consoleCommPflush(radioAddress);
+}
+
+void displayRadioChannel(void) {
+  consoleCommPflush("Radio channel: ");
+  consoleCommPflush(radioChannel);
+}
+
+void displayRadioDatarate(void) {
+  consoleCommPflush("Radio datarate: ");
+  consoleCommPflush(radioDatarate);
 }

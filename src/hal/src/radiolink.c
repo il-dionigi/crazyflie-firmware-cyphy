@@ -98,6 +98,8 @@ bool radiolinkTest(void)
 
 void radiolinkSetChannel(uint8_t channel)
 {
+  saveRadioChannel(channel);
+
   SyslinkPacket slp;
 
   slp.type = SYSLINK_RADIO_CHANNEL;
@@ -108,6 +110,8 @@ void radiolinkSetChannel(uint8_t channel)
 
 void radiolinkSetDatarate(uint8_t datarate)
 {
+  saveRadioDatarate(datarate);
+
   SyslinkPacket slp;
 
   slp.type = SYSLINK_RADIO_DATARATE;
