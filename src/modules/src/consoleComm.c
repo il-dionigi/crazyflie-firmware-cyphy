@@ -249,6 +249,7 @@ void consoleCommTask(void * prm)
       case C2RTP_CHANNEL_SWITCH:
         consoleCommPflush("Currently switching channels");
         if (!slept){
+          displayRadioAddress();
         	consoleCommPflush("Sleeping");
         	slept = 1;
         	break;
