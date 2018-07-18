@@ -20088,7 +20088,7 @@ LOAD /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crtn.o
  *(.flashtext)
                 0x0000000008004188                . = ALIGN (0x4)
 
-.text           0x0000000008004188    0x27e04
+.text           0x0000000008004188    0x27e0c
                 0x0000000008004188                . = ALIGN (0x4)
  *(.text)
  .text          0x0000000008004188       0x18 /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/libgcc.a(_lshrdi3.o)
@@ -23471,670 +23471,671 @@ LOAD /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crtn.o
  .text.strtol   0x0000000008024d44       0x1c /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libc_nano.a(lib_a-strtol.o)
                 0x0000000008024d44                strtol
  *(.rodata)
- .rodata        0x0000000008024d60        0x6 bin/consoleComm.o
- .rodata        0x0000000008024d66        0xb bin/vl53l1_api.o
- .rodata        0x0000000008024d71       0x28 bin/deck_info.o
- .rodata        0x0000000008024d99        0xa bin/ledring12.o
+ .rodata        0x0000000008024d60        0xb bin/consoleComm.o
+ .rodata        0x0000000008024d6b        0xb bin/vl53l1_api.o
+ .rodata        0x0000000008024d76       0x28 bin/deck_info.o
+ .rodata        0x0000000008024d9e        0xa bin/ledring12.o
  *(.rodata*)
  .rodata.str1.1
-                0x0000000008024da3      0x29d bin/tasks.o
+                0x0000000008024da8      0x29d bin/tasks.o
  .rodata.str1.1
-                0x0000000008025040      0x208 bin/queue.o
+                0x0000000008025045      0x208 bin/queue.o
                                         0x217 (size before relaxing)
  .rodata.str1.1
-                0x0000000008025248       0x83 bin/timers.o
+                0x000000000802524d       0x83 bin/timers.o
                                          0x8b (size before relaxing)
  .rodata.str1.1
-                0x00000000080252cb       0xfa bin/heap_4.o
+                0x00000000080252d0       0xfa bin/heap_4.o
  .rodata.str1.1
-                0x00000000080253c5      0x15d bin/port.o
+                0x00000000080253ca      0x15d bin/port.o
  .rodata.str1.1
-                0x0000000008025522       0xae bin/nvic.o
+                0x0000000008025527       0xae bin/nvic.o
+ *fill*         0x00000000080255d5        0x3 
  .rodata.RZR_M3_BL
-                0x00000000080255d0       0x44 bin/motors.o
+                0x00000000080255d8       0x44 bin/motors.o
  .rodata.MOTORS
-                0x0000000008025614       0x10 bin/motors.o
-                0x0000000008025614                MOTORS
+                0x000000000802561c       0x10 bin/motors.o
+                0x000000000802561c                MOTORS
  .rodata.RZR_M2_BL
-                0x0000000008025624       0x44 bin/motors.o
+                0x000000000802562c       0x44 bin/motors.o
  .rodata.RZR_M4_BL
-                0x0000000008025668       0x44 bin/motors.o
+                0x0000000008025670       0x44 bin/motors.o
  .rodata.str1.1
-                0x00000000080256ac       0x51 bin/motors.o
+                0x00000000080256b4       0x51 bin/motors.o
                                          0x55 (size before relaxing)
- *fill*         0x00000000080256fd        0x3 
+ *fill*         0x0000000008025705        0x3 
  .rodata.RZR_M1_BL
-                0x0000000008025700       0x44 bin/motors.o
+                0x0000000008025708       0x44 bin/motors.o
  .rodata.testsound
-                0x0000000008025744        0x8 bin/motors.o
+                0x000000000802574c        0x8 bin/motors.o
  .rodata.CONN_M1
-                0x000000000802574c       0x44 bin/motors.o
+                0x0000000008025754       0x44 bin/motors.o
  .rodata.CONN_M2
-                0x0000000008025790       0x44 bin/motors.o
+                0x0000000008025798       0x44 bin/motors.o
  .rodata.CONN_M3
-                0x00000000080257d4       0x44 bin/motors.o
+                0x00000000080257dc       0x44 bin/motors.o
  .rodata.CONN_M4
-                0x0000000008025818       0x44 bin/motors.o
+                0x0000000008025820       0x44 bin/motors.o
  .rodata.str1.1
-                0x000000000802585c       0x91 bin/crtp.o
+                0x0000000008025864       0x91 bin/crtp.o
                                          0x93 (size before relaxing)
- *fill*         0x00000000080258ed        0x3 
+ *fill*         0x00000000080258f5        0x3 
  .rodata.sequences
-                0x00000000080258f0       0x28 bin/ledseq.o
+                0x00000000080258f8       0x28 bin/ledseq.o
  .rodata.seq_bootloader
-                0x0000000008025918       0x18 bin/ledseq.o
-                0x0000000008025918                seq_bootloader
+                0x0000000008025920       0x18 bin/ledseq.o
+                0x0000000008025920                seq_bootloader
  .rodata.seq_linkup
-                0x0000000008025930       0x18 bin/ledseq.o
-                0x0000000008025930                seq_linkup
+                0x0000000008025938       0x18 bin/ledseq.o
+                0x0000000008025938                seq_linkup
  .rodata.seq_lowbat
-                0x0000000008025948       0x10 bin/ledseq.o
-                0x0000000008025948                seq_lowbat
+                0x0000000008025950       0x10 bin/ledseq.o
+                0x0000000008025950                seq_lowbat
  .rodata.seq_calibrated
-                0x0000000008025958       0x18 bin/ledseq.o
-                0x0000000008025958                seq_calibrated
+                0x0000000008025960       0x18 bin/ledseq.o
+                0x0000000008025960                seq_calibrated
  .rodata.seq_testPassed
-                0x0000000008025970       0x78 bin/ledseq.o
-                0x0000000008025970                seq_testPassed
+                0x0000000008025978       0x78 bin/ledseq.o
+                0x0000000008025978                seq_testPassed
  .rodata.str1.1
-                0x00000000080259e8        0xc bin/ledseq.o
+                0x00000000080259f0        0xc bin/ledseq.o
  .rodata.seq_charged
-                0x00000000080259f4       0x10 bin/ledseq.o
-                0x00000000080259f4                seq_charged
+                0x00000000080259fc       0x10 bin/ledseq.o
+                0x00000000080259fc                seq_charged
  .rodata.seq_armed
-                0x0000000008025a04       0x18 bin/ledseq.o
-                0x0000000008025a04                seq_armed
+                0x0000000008025a0c       0x18 bin/ledseq.o
+                0x0000000008025a0c                seq_armed
  .rodata.seq_alive
-                0x0000000008025a1c       0x18 bin/ledseq.o
-                0x0000000008025a1c                seq_alive
+                0x0000000008025a24       0x18 bin/ledseq.o
+                0x0000000008025a24                seq_alive
  .rodata.str1.1
-                0x0000000008025a34       0x11 bin/freeRTOSdebug.o
+                0x0000000008025a3c       0x11 bin/freeRTOSdebug.o
  .rodata.str1.1
-                0x0000000008025a45      0x121 bin/system.o
+                0x0000000008025a4d      0x121 bin/system.o
                                         0x130 (size before relaxing)
  .rodata.fullMsg
-                0x0000000008025b66        0x5 bin/console.o
+                0x0000000008025b6e        0x5 bin/console.o
  .rodata.str1.1
-                0x0000000008025b6b       0xf7 bin/consoleComm.o
+                0x0000000008025b73       0xf7 bin/consoleComm.o
  .rodata.fullMsg
-                0x0000000008025c62        0x5 bin/consoleComm.o
+                0x0000000008025c6a        0x5 bin/consoleComm.o
  .rodata.str1.1
-                0x0000000008025c67       0x5a bin/beaconComm.o
+                0x0000000008025c6f       0x5a bin/beaconComm.o
  .rodata.str1.1
-                0x0000000008025cc1       0x13 bin/crtpservice.o
+                0x0000000008025cc9       0x13 bin/crtpservice.o
  .rodata.str1.1
-                0x0000000008025cd4       0x3b bin/param.o
+                0x0000000008025cdc       0x3b bin/param.o
                                          0x3c (size before relaxing)
  .rodata.str1.1
-                0x0000000008025d0f       0x2f bin/log.o
+                0x0000000008025d17       0x2f bin/log.o
                                          0x51 (size before relaxing)
  .rodata.typeLength
-                0x0000000008025d3e        0x9 bin/log.o
+                0x0000000008025d46        0x9 bin/log.o
  .rodata.str1.1
-                0x0000000008025d47       0x31 bin/sitaw.o
+                0x0000000008025d4f       0x31 bin/sitaw.o
                                          0x37 (size before relaxing)
  .rodata.priorityDisable
-                0x0000000008025d78        0x4 bin/commander.o
+                0x0000000008025d80        0x4 bin/commander.o
  .rodata.str1.1
-                0x0000000008025d7c       0x38 bin/commander.o
+                0x0000000008025d84       0x38 bin/commander.o
  .rodata.str1.1
-                0x0000000008025db4       0x89 bin/crtp_commander_rpyt.o
+                0x0000000008025dbc       0x89 bin/crtp_commander_rpyt.o
                                          0x94 (size before relaxing)
- *fill*         0x0000000008025e3d        0x3 
+ *fill*         0x0000000008025e45        0x3 
  .rodata.packetDecoders
-                0x0000000008025e40       0x1c bin/crtp_commander_generic.o
+                0x0000000008025e48       0x1c bin/crtp_commander_generic.o
  .rodata.str1.1
-                0x0000000008025e5c      0x102 bin/crtp_commander_generic.o
+                0x0000000008025e64      0x102 bin/crtp_commander_generic.o
                                         0x10b (size before relaxing)
  .rodata.str1.1
-                0x0000000008025f5e       0x99 bin/crtp_localization_service.o
+                0x0000000008025f66       0x99 bin/crtp_localization_service.o
                                          0xae (size before relaxing)
  .rodata.str1.1
-                0x0000000008025ff7       0xc2 bin/attitude_pid_controller.o
+                0x0000000008025fff       0xc2 bin/attitude_pid_controller.o
                                          0xd8 (size before relaxing)
  .rodata.str1.1
-                0x00000000080260b9       0x60 bin/sensfusion6.o
+                0x00000000080260c1       0x60 bin/sensfusion6.o
                                          0x74 (size before relaxing)
  .rodata.str1.1
-                0x0000000008026119       0xa4 bin/stabilizer.o
+                0x0000000008026121       0xa4 bin/stabilizer.o
                                          0xf5 (size before relaxing)
  .rodata.str1.1
-                0x00000000080261bd       0x6f bin/position_estimator_altitude.o
+                0x00000000080261c5       0x6f bin/position_estimator_altitude.o
                                          0x7f (size before relaxing)
  .rodata.str1.1
-                0x000000000802622c       0xd9 bin/position_controller_pid.o
+                0x0000000008026234       0xd9 bin/position_controller_pid.o
                                         0x12a (size before relaxing)
  .rodata.str1.1
-                0x0000000008026305       0x1f bin/estimator.o
+                0x000000000802630d       0x1f bin/estimator.o
  .rodata.estimatorFunctions
-                0x0000000008026324       0x24 bin/estimator.o
+                0x000000000802632c       0x24 bin/estimator.o
  .rodata.controllerFunctions
-                0x0000000008026348       0x24 bin/controller.o
+                0x0000000008026350       0x24 bin/controller.o
  .rodata.str1.1
-                0x000000000802636c       0x21 bin/controller.o
+                0x0000000008026374       0x21 bin/controller.o
  .rodata.str1.1
-                0x000000000802638d       0x33 bin/controller_pid.o
+                0x0000000008026395       0x33 bin/controller_pid.o
                                          0x5d (size before relaxing)
  .rodata.str1.1
-                0x00000000080263c0       0xc1 bin/controller_mellinger.o
+                0x00000000080263c8       0xc1 bin/controller_mellinger.o
                                          0xc9 (size before relaxing)
  .rodata.str1.1
-                0x0000000008026481       0x36 bin/power_distribution_stock.o
+                0x0000000008026489       0x36 bin/power_distribution_stock.o
                                          0x3c (size before relaxing)
  .rodata.str1.1
-                0x00000000080264b7       0x59 bin/cfassert.o
+                0x00000000080264bf       0x59 bin/cfassert.o
                                          0x5a (size before relaxing)
- .rodata.digit  0x0000000008026510       0x10 bin/eprintf.o
+ .rodata.digit  0x0000000008026518       0x10 bin/eprintf.o
  .rodata.V_MODIFIED
-                0x0000000008026520        0x1 bin/version.o
-                0x0000000008026520                V_MODIFIED
+                0x0000000008026528        0x1 bin/version.o
+                0x0000000008026528                V_MODIFIED
  .rodata.str1.1
-                0x0000000008026521       0x56 bin/version.o
+                0x0000000008026529       0x56 bin/version.o
                                          0x61 (size before relaxing)
- *fill*         0x0000000008026577        0x1 
+ *fill*         0x000000000802657f        0x1 
  .rodata.V_REVISION_0
-                0x0000000008026578        0x4 bin/version.o
-                0x0000000008026578                V_REVISION_0
+                0x0000000008026580        0x4 bin/version.o
+                0x0000000008026580                V_REVISION_0
  .rodata.V_REVISION_1
-                0x000000000802657c        0x2 bin/version.o
-                0x000000000802657c                V_REVISION_1
- *fill*         0x000000000802657e        0x2 
+                0x0000000008026584        0x2 bin/version.o
+                0x0000000008026584                V_REVISION_1
+ *fill*         0x0000000008026586        0x2 
  .rodata.uxTopUsedPriority
-                0x0000000008026580        0x4 bin/FreeRTOS-openocd.o
-                0x0000000008026580                uxTopUsedPriority
+                0x0000000008026588        0x4 bin/FreeRTOS-openocd.o
+                0x0000000008026588                uxTopUsedPriority
  .rodata.str1.1
-                0x0000000008026584       0x31 bin/diskio.o
+                0x000000000802658c       0x31 bin/diskio.o
  .rodata.str1.1
-                0x00000000080265b5       0x44 bin/ff.o
+                0x00000000080265bd       0x44 bin/ff.o
                                          0x47 (size before relaxing)
- .rodata.ExCvt  0x00000000080265f9       0x80 bin/ff.o
+ .rodata.ExCvt  0x0000000008026601       0x80 bin/ff.o
  .rodata.LfnOfs
-                0x0000000008026679        0xd bin/ff.o
- .rodata.Tbl    0x0000000008026686      0x100 bin/unicode.o
+                0x0000000008026681        0xd bin/ff.o
+ .rodata.Tbl    0x000000000802668e      0x100 bin/unicode.o
  .rodata.cvt2.4302
-                0x0000000008026786       0xbc bin/unicode.o
+                0x000000000802678e       0xbc bin/unicode.o
  .rodata.cvt1.4301
-                0x0000000008026842      0x1f2 bin/unicode.o
+                0x000000000802684a      0x1f2 bin/unicode.o
  .rodata.str1.1
-                0x0000000008026a34       0x43 bin/platform_cf2.o
- *fill*         0x0000000008026a77        0x1 
+                0x0000000008026a3c       0x43 bin/platform_cf2.o
+ *fill*         0x0000000008026a7f        0x1 
  .rodata.led_polarity
-                0x0000000008026a78       0x14 bin/led_f405.o
+                0x0000000008026a80       0x14 bin/led_f405.o
  .rodata.led_pin
-                0x0000000008026a8c       0x14 bin/led_f405.o
+                0x0000000008026a94       0x14 bin/led_f405.o
  .rodata.led_port
-                0x0000000008026aa0       0x14 bin/led_f405.o
+                0x0000000008026aa8       0x14 bin/led_f405.o
  .rodata.mpu6500StTb
-                0x0000000008026ab4      0x200 bin/mpu6500.o
+                0x0000000008026abc      0x200 bin/mpu6500.o
  .rodata.str1.1
-                0x0000000008026cb4       0x6f bin/mpu6500.o
+                0x0000000008026cbc       0x6f bin/mpu6500.o
  .rodata.str1.1
-                0x0000000008026d23       0x53 bin/lps25h.o
+                0x0000000008026d2b       0x53 bin/lps25h.o
                                          0x5c (size before relaxing)
- *fill*         0x0000000008026d76        0x2 
+ *fill*         0x0000000008026d7e        0x2 
  .rodata.sensorBusDef
-                0x0000000008026d78       0x50 bin/i2c_drv.o
+                0x0000000008026d80       0x50 bin/i2c_drv.o
  .rodata.deckBusDef
-                0x0000000008026dc8       0x50 bin/i2c_drv.o
+                0x0000000008026dd0       0x50 bin/i2c_drv.o
  .rodata.str1.1
-                0x0000000008026e18       0x57 bin/ak8963.o
+                0x0000000008026e20       0x57 bin/ak8963.o
                                          0x5d (size before relaxing)
  .rodata.str1.1
-                0x0000000008026e6f       0x3e bin/eeprom.o
+                0x0000000008026e77       0x3e bin/eeprom.o
  .rodata.str1.1
-                0x0000000008026ead       0x1f bin/uart_syslink.o
+                0x0000000008026eb5       0x1f bin/uart_syslink.o
                                          0x21 (size before relaxing)
  .rodata.str1.1
-                0x0000000008026ecc       0x3a bin/watchdog.o
+                0x0000000008026ed4       0x3a bin/watchdog.o
  .rodata.str1.1
-                0x0000000008026f06       0x21 bin/cppm.o
+                0x0000000008026f0e       0x21 bin/cppm.o
  .rodata.str1.1
-                0x0000000008026f27       0x3c bin/vl53l0x.o
+                0x0000000008026f2f       0x3c bin/vl53l0x.o
  .rodata.str1.1
-                0x0000000008026f63       0x20 bin/pmw3901.o
+                0x0000000008026f6b       0x20 bin/pmw3901.o
  .rodata.str1.1
-                0x0000000008026f83       0x34 bin/usblink.o
+                0x0000000008026f8b       0x34 bin/usblink.o
  .rodata.str1.1
-                0x0000000008026fb7       0x59 bin/usbd_desc.o
+                0x0000000008026fbf       0x59 bin/usbd_desc.o
                                          0x67 (size before relaxing)
  .rodata.bin2hex
-                0x0000000008027010       0x10 bin/usbd_desc.o
+                0x0000000008027018       0x10 bin/usbd_desc.o
  .rodata.bat671723HS25C
-                0x0000000008027020       0x28 bin/pm_f405.o
+                0x0000000008027028       0x28 bin/pm_f405.o
  .rodata.str1.1
-                0x0000000008027048       0x57 bin/pm_f405.o
+                0x0000000008027050       0x57 bin/pm_f405.o
                                          0x5a (size before relaxing)
  .rodata.str1.1
-                0x000000000802709f       0x51 bin/syslink.o
+                0x00000000080270a7       0x51 bin/syslink.o
  .rodata.str1.1
-                0x00000000080270f0       0x3b bin/radiolink.o
+                0x00000000080270f8       0x3b bin/radiolink.o
                                          0x5f (size before relaxing)
  .rodata.str1.1
-                0x000000000802712b       0xae bin/ow_syslink.o
+                0x0000000008027133       0xae bin/ow_syslink.o
                                          0xc4 (size before relaxing)
  .rodata.str1.1
-                0x00000000080271d9      0x195 bin/sensors_cf2.o
+                0x00000000080271e1      0x195 bin/sensors_cf2.o
                                         0x1ab (size before relaxing)
  .rodata.BIAS_900_64
-                0x000000000802736e       0x12 bin/libdw1000.o
+                0x0000000008027376       0x12 bin/libdw1000.o
  .rodata.BIAS_500_16
-                0x0000000008027380       0x12 bin/libdw1000.o
+                0x0000000008027388       0x12 bin/libdw1000.o
  .rodata.BIAS_900_16
-                0x0000000008027392       0x12 bin/libdw1000.o
+                0x000000000802739a       0x12 bin/libdw1000.o
  .rodata.MODE_LONGDATA_RANGE_LOWPOWER
-                0x00000000080273a4        0x3 bin/libdw1000.o
-                0x00000000080273a4                MODE_LONGDATA_RANGE_LOWPOWER
+                0x00000000080273ac        0x3 bin/libdw1000.o
+                0x00000000080273ac                MODE_LONGDATA_RANGE_LOWPOWER
  .rodata.MODE_SHORTDATA_FAST_ACCURACY
-                0x00000000080273a7        0x3 bin/libdw1000.o
-                0x00000000080273a7                MODE_SHORTDATA_FAST_ACCURACY
+                0x00000000080273af        0x3 bin/libdw1000.o
+                0x00000000080273af                MODE_SHORTDATA_FAST_ACCURACY
  .rodata.BIAS_500_64
-                0x00000000080273aa       0x12 bin/libdw1000.o
+                0x00000000080273b2       0x12 bin/libdw1000.o
  .rodata.CSWTCH.46
-                0x00000000080273bc        0x6 bin/vl53l1_api_core.o
+                0x00000000080273c4        0x6 bin/vl53l1_api_core.o
  .rodata.CSWTCH.55
-                0x00000000080273c2       0x10 bin/vl53l1_api.o
- *fill*         0x00000000080273d2        0x2 
+                0x00000000080273ca       0x10 bin/vl53l1_api.o
+ *fill*         0x00000000080273da        0x2 
  .rodata.starwars
-                0x00000000080273d4      0x148 bin/sound_cf2.o
+                0x00000000080273dc      0x148 bin/sound_cf2.o
  .rodata.usb_connect
-                0x000000000802751c      0x148 bin/sound_cf2.o
+                0x0000000008027524      0x148 bin/sound_cf2.o
  .rodata.usb_disconnect
-                0x0000000008027664      0x148 bin/sound_cf2.o
+                0x000000000802766c      0x148 bin/sound_cf2.o
  .rodata.calibrated
-                0x00000000080277ac      0x148 bin/sound_cf2.o
+                0x00000000080277b4      0x148 bin/sound_cf2.o
  .rodata.valkyries
-                0x00000000080278f4      0x148 bin/sound_cf2.o
+                0x00000000080278fc      0x148 bin/sound_cf2.o
  .rodata.range_fast
-                0x0000000008027a3c      0x148 bin/sound_cf2.o
+                0x0000000008027a44      0x148 bin/sound_cf2.o
  .rodata.lowbatt
-                0x0000000008027b84      0x148 bin/sound_cf2.o
+                0x0000000008027b8c      0x148 bin/sound_cf2.o
  .rodata.str1.1
-                0x0000000008027ccc       0x29 bin/sound_cf2.o
+                0x0000000008027cd4       0x29 bin/sound_cf2.o
                                          0x4c (size before relaxing)
- *fill*         0x0000000008027cf5        0x3 
+ *fill*         0x0000000008027cfd        0x3 
  .rodata.range_slow
-                0x0000000008027cf8      0x148 bin/sound_cf2.o
+                0x0000000008027d00      0x148 bin/sound_cf2.o
  .rodata.chg_done
-                0x0000000008027e40      0x148 bin/sound_cf2.o
+                0x0000000008027e48      0x148 bin/sound_cf2.o
  .rodata.startup
-                0x0000000008027f88      0x148 bin/sound_cf2.o
+                0x0000000008027f90      0x148 bin/sound_cf2.o
  .rodata.factory_test
-                0x00000000080280d0      0x148 bin/sound_cf2.o
+                0x00000000080280d8      0x148 bin/sound_cf2.o
  .rodata.str1.1
-                0x0000000008028218       0x21 bin/extrx.o
+                0x0000000008028220       0x21 bin/extrx.o
                                          0x3d (size before relaxing)
  .rodata.str1.1
-                0x0000000008028239       0xd3 bin/sysload.o
+                0x0000000008028241       0xd3 bin/sysload.o
                                          0xda (size before relaxing)
  .rodata.str1.1
-                0x000000000802830c        0x4 bin/mem_cf2.o
+                0x0000000008028314        0x4 bin/mem_cf2.o
  .rodata.eepromSerialNum
-                0x0000000008028310        0x8 bin/mem_cf2.o
- .rodata.noData
                 0x0000000008028318        0x8 bin/mem_cf2.o
+ .rodata.noData
+                0x0000000008028320        0x8 bin/mem_cf2.o
  .rodata.str1.1
-                0x0000000008028320      0x25c bin/estimator_kalman.o
+                0x0000000008028328      0x25c bin/estimator_kalman.o
                                         0x284 (size before relaxing)
  .rodata.str1.1
-                0x000000000802857c       0x5f bin/deck.o
+                0x0000000008028584       0x5f bin/deck.o
  .rodata.str1.1
-                0x00000000080285db      0x322 bin/deck_info.o
+                0x00000000080285e3      0x322 bin/deck_info.o
                                         0x324 (size before relaxing)
  .rodata.str1.1
-                0x00000000080288fd       0x20 bin/deck_drivers.o
- *fill*         0x000000000802891d        0x3 
+                0x0000000008028905       0x20 bin/deck_drivers.o
+ *fill*         0x0000000008028925        0x3 
  .rodata.deckGPIOMapping
-                0x0000000008028920       0x9c bin/deck_constants.o
-                0x0000000008028920                deckGPIOMapping
+                0x0000000008028928       0x9c bin/deck_constants.o
+                0x0000000008028928                deckGPIOMapping
  .rodata.rzr_deck
-                0x00000000080289bc       0x1c bin/rzr.o
+                0x00000000080289c4       0x1c bin/rzr.o
  .rodata.str1.1
-                0x00000000080289d8       0x24 bin/rzr.o
+                0x00000000080289e0       0x24 bin/rzr.o
  .rodata.test_pat
-                0x00000000080289fc        0x9 bin/ledring12.o
+                0x0000000008028a04        0x9 bin/ledring12.o
  .rodata.str1.1
-                0x0000000008028a05       0x7f bin/ledring12.o
+                0x0000000008028a0d       0x7f bin/ledring12.o
                                          0xd2 (size before relaxing)
  .rodata.ledring12_deck
-                0x0000000008028a84       0x1c bin/ledring12.o
+                0x0000000008028a8c       0x1c bin/ledring12.o
  .rodata.blueRing
-                0x0000000008028aa0       0x24 bin/ledring12.o
+                0x0000000008028aa8       0x24 bin/ledring12.o
  .rodata.colorRing
-                0x0000000008028ac4       0x24 bin/ledring12.o
+                0x0000000008028acc       0x24 bin/ledring12.o
  .rodata.whiteRing
-                0x0000000008028ae8       0x24 bin/ledring12.o
+                0x0000000008028af0       0x24 bin/ledring12.o
  .rodata.buzzer_deck
-                0x0000000008028b0c       0x1c bin/buzzdeck.o
+                0x0000000008028b14       0x1c bin/buzzdeck.o
  .rodata.str1.1
-                0x0000000008028b28        0x9 bin/buzzdeck.o
+                0x0000000008028b30        0x9 bin/buzzdeck.o
                                          0x18 (size before relaxing)
- *fill*         0x0000000008028b31        0x3 
+ *fill*         0x0000000008028b39        0x3 
  .rodata.gtgps_deck
-                0x0000000008028b34       0x1c bin/gtgps.o
+                0x0000000008028b3c       0x1c bin/gtgps.o
  .rodata.str1.1
-                0x0000000008028b50       0x64 bin/gtgps.o
+                0x0000000008028b58       0x64 bin/gtgps.o
                                          0x6e (size before relaxing)
  .rodata.cppm_deck
-                0x0000000008028bb4       0x1c bin/cppmdeck.o
+                0x0000000008028bbc       0x1c bin/cppmdeck.o
  .rodata.str1.1
-                0x0000000008028bd0        0x7 bin/cppmdeck.o
+                0x0000000008028bd8        0x7 bin/cppmdeck.o
  .rodata.str1.1
-                0x0000000008028bd7      0x1ad bin/usddeck.o
+                0x0000000008028bdf      0x1ad bin/usddeck.o
                                         0x1c6 (size before relaxing)
  .rodata.usd_deck
-                0x0000000008028d84       0x1c bin/usddeck.o
+                0x0000000008028d8c       0x1c bin/usddeck.o
  .rodata.zranger_deck
-                0x0000000008028da0       0x1c bin/zranger.o
+                0x0000000008028da8       0x1c bin/zranger.o
  .rodata.str1.1
-                0x0000000008028dbc       0x24 bin/zranger.o
+                0x0000000008028dc4       0x24 bin/zranger.o
                                          0x39 (size before relaxing)
  .rodata.zranger2_deck
-                0x0000000008028de0       0x1c bin/zranger2.o
+                0x0000000008028de8       0x1c bin/zranger2.o
  .rodata.str1.1
-                0x0000000008028dfc       0x48 bin/zranger2.o
+                0x0000000008028e04       0x48 bin/zranger2.o
                                          0x6f (size before relaxing)
  .rodata.str1.1
-                0x0000000008028e44      0x27c bin/locodeck.o
+                0x0000000008028e4c      0x27c bin/locodeck.o
                                         0x2b4 (size before relaxing)
  .rodata.dwm1000_deck
-                0x00000000080290c0       0x1c bin/locodeck.o
+                0x00000000080290c8       0x1c bin/locodeck.o
  .rodata.str1.1
-                0x00000000080290dc      0x171 bin/lpsTwrTag.o
+                0x00000000080290e4      0x171 bin/lpsTwrTag.o
                                         0x17b (size before relaxing)
  .rodata.str1.1
-                0x000000000802924d       0xc3 bin/lpsTdoa2Tag.o
+                0x0000000008029255       0xc3 bin/lpsTdoa2Tag.o
                                          0xd3 (size before relaxing)
  .rodata.str1.1
-                0x0000000008029310       0x77 bin/lpsTdoaTagStats.o
+                0x0000000008029318       0x77 bin/lpsTdoaTagStats.o
                                          0x90 (size before relaxing)
- *fill*         0x0000000008029387        0x1 
+ *fill*         0x000000000802938f        0x1 
  .rodata.flowdeck1_deck
-                0x0000000008029388       0x1c bin/flowdeck_v1v2.o
+                0x0000000008029390       0x1c bin/flowdeck_v1v2.o
  .rodata.flowdeck2_deck
-                0x00000000080293a4       0x1c bin/flowdeck_v1v2.o
+                0x00000000080293ac       0x1c bin/flowdeck_v1v2.o
  .rodata.str1.1
-                0x00000000080293c0       0x8d bin/flowdeck_v1v2.o
+                0x00000000080293c8       0x8d bin/flowdeck_v1v2.o
                                          0xb8 (size before relaxing)
- *fill*         0x000000000802944d        0x3 
+ *fill*         0x0000000008029455        0x3 
  .rodata.oa_deck
-                0x0000000008029450       0x1c bin/oa.o
+                0x0000000008029458       0x1c bin/oa.o
  .rodata.str1.1
-                0x000000000802946c      0x165 bin/oa.o
+                0x0000000008029474      0x165 bin/oa.o
                                         0x177 (size before relaxing)
- *fill*         0x00000000080295d1        0x3 
+ *fill*         0x00000000080295d9        0x3 
  .rodata.multiranger_deck
-                0x00000000080295d4       0x1c bin/multiranger.o
+                0x00000000080295dc       0x1c bin/multiranger.o
  .rodata.str1.1
-                0x00000000080295f0        0xe bin/multiranger.o
+                0x00000000080295f8        0xe bin/multiranger.o
                                         0x189 (size before relaxing)
  .rodata.str1.1
-                0x00000000080295fe       0x23 bin/exptest.o
- *fill*         0x0000000008029621        0x3 
+                0x0000000008029606       0x23 bin/exptest.o
+ *fill*         0x0000000008029629        0x3 
  .rodata.exptest_deck
-                0x0000000008029624       0x1c bin/exptest.o
+                0x000000000802962c       0x1c bin/exptest.o
  .rodata.str1.1
-                0x0000000008029640        0xc bin/exptestRR.o
+                0x0000000008029648        0xc bin/exptestRR.o
                                          0x25 (size before relaxing)
  .rodata.exptestRR_deck
-                0x000000000802964c       0x1c bin/exptestRR.o
+                0x0000000008029654       0x1c bin/exptestRR.o
  .rodata.str1.1
-                0x0000000008029668       0x3d bin/configblockeeprom.o
- *fill*         0x00000000080296a5        0x3 
+                0x0000000008029670       0x3d bin/configblockeeprom.o
+ *fill*         0x00000000080296ad        0x3 
  .rodata.sinTable_f32
-                0x00000000080296a8      0x804 bin/libarm_math.a(arm_common_tables.o)
-                0x00000000080296a8                sinTable_f32
+                0x00000000080296b0      0x804 bin/libarm_math.a(arm_common_tables.o)
+                0x00000000080296b0                sinTable_f32
  .rodata.atanlo
-                0x0000000008029eac       0x10 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-sf_atan.o)
+                0x0000000008029eb4       0x10 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-sf_atan.o)
  .rodata.atanhi
-                0x0000000008029ebc       0x10 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-sf_atan.o)
+                0x0000000008029ec4       0x10 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-sf_atan.o)
  .rodata.str1.4
-                0x0000000008029ecc        0x4 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-w_pow.o)
+                0x0000000008029ed4        0x4 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-w_pow.o)
  .rodata.str1.4
-                0x0000000008029ed0        0x5 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-w_sqrt.o)
+                0x0000000008029ed8        0x5 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-w_sqrt.o)
                                           0x8 (size before relaxing)
- *fill*         0x0000000008029ed5        0x3 
+ *fill*         0x0000000008029edd        0x3 
  .rodata.str1.4
-                0x0000000008029ed8        0x6 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-wf_asin.o)
+                0x0000000008029ee0        0x6 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-wf_asin.o)
                                           0xc (size before relaxing)
- *fill*         0x0000000008029ede        0x2 
+ *fill*         0x0000000008029ee6        0x2 
  .rodata.str1.4
-                0x0000000008029ee0        0x5 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-wf_exp.o)
+                0x0000000008029ee8        0x5 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-wf_exp.o)
                                           0x8 (size before relaxing)
- *fill*         0x0000000008029ee5        0x3 
+ *fill*         0x0000000008029eed        0x3 
  .rodata.str1.4
-                0x0000000008029ee8        0x7 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-wf_log10.o)
+                0x0000000008029ef0        0x7 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-wf_log10.o)
                                           0xc (size before relaxing)
- *fill*         0x0000000008029eef        0x1 
+ *fill*         0x0000000008029ef7        0x1 
  .rodata.str1.4
-                0x0000000008029ef0        0x5 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-wf_pow.o)
+                0x0000000008029ef8        0x5 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-wf_pow.o)
                                           0x8 (size before relaxing)
- *fill*         0x0000000008029ef5        0x3 
+ *fill*         0x0000000008029efd        0x3 
  .rodata.str1.4
-                0x0000000008029ef8        0x8 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-wf_sqrt.o)
- .rodata.dp_h   0x0000000008029f00       0x10 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-e_pow.o)
- .rodata.dp_l   0x0000000008029f10       0x10 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-e_pow.o)
- .rodata.bp     0x0000000008029f20       0x10 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-e_pow.o)
+                0x0000000008029f00        0x8 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-wf_sqrt.o)
+ .rodata.dp_h   0x0000000008029f08       0x10 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-e_pow.o)
+ .rodata.dp_l   0x0000000008029f18       0x10 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-e_pow.o)
+ .rodata.bp     0x0000000008029f28       0x10 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-e_pow.o)
  .rodata.str1.4
-                0x0000000008029f30        0x4 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-e_pow.o)
- .rodata.halF   0x0000000008029f30        0x8 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_exp.o)
- .rodata.ln2LO  0x0000000008029f38        0x8 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_exp.o)
- .rodata.ln2HI  0x0000000008029f40        0x8 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_exp.o)
- .rodata.dp_h   0x0000000008029f48        0x8 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_pow.o)
- .rodata.dp_l   0x0000000008029f50        0x8 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_pow.o)
- .rodata.bp     0x0000000008029f58        0x8 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_pow.o)
+                0x0000000008029f38        0x4 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-e_pow.o)
+ .rodata.halF   0x0000000008029f38        0x8 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_exp.o)
+ .rodata.ln2LO  0x0000000008029f40        0x8 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_exp.o)
+ .rodata.ln2HI  0x0000000008029f48        0x8 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_exp.o)
+ .rodata.dp_h   0x0000000008029f50        0x8 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_pow.o)
+ .rodata.dp_l   0x0000000008029f58        0x8 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_pow.o)
+ .rodata.bp     0x0000000008029f60        0x8 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_pow.o)
  .rodata.str1.4
-                0x0000000008029f60        0x4 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_pow.o)
+                0x0000000008029f68        0x4 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_pow.o)
  .rodata.npio2_hw
-                0x0000000008029f60       0x80 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_rem_pio2.o)
+                0x0000000008029f68       0x80 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_rem_pio2.o)
  .rodata.two_over_pi
-                0x0000000008029fe0      0x318 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_rem_pio2.o)
+                0x0000000008029fe8      0x318 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-ef_rem_pio2.o)
  .rodata.init_jk
-                0x000000000802a2f8        0xc /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-kf_rem_pio2.o)
- .rodata.PIo2   0x000000000802a304       0x2c /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-kf_rem_pio2.o)
+                0x000000000802a300        0xc /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-kf_rem_pio2.o)
+ .rodata.PIo2   0x000000000802a30c       0x2c /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-kf_rem_pio2.o)
  .rodata.atanlo
-                0x000000000802a330       0x20 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-s_atan.o)
+                0x000000000802a338       0x20 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-s_atan.o)
  .rodata.atanhi
-                0x000000000802a350       0x20 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-s_atan.o)
- .rodata.TWO52  0x000000000802a370       0x10 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-s_rint.o)
+                0x000000000802a358       0x20 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-s_atan.o)
+ .rodata.TWO52  0x000000000802a378       0x10 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libm.a(lib_a-s_rint.o)
  .rodata._ctype_
-                0x000000000802a380      0x101 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libc_nano.a(lib_a-ctype_.o)
-                0x000000000802a380                _ctype_
+                0x000000000802a388      0x101 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libc_nano.a(lib_a-ctype_.o)
+                0x000000000802a388                _ctype_
  .rodata.str1.1
-                0x000000000802a481        0x2 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libc_nano.a(lib_a-impure.o)
+                0x000000000802a489        0x2 /usr/lib/gcc/arm-none-eabi/4.9.3/../../../arm-none-eabi/lib/armv7e-m/fpu/libc_nano.a(lib_a-impure.o)
  *(.glue_7)
- .glue_7        0x000000000802a483        0x0 linker stubs
+ .glue_7        0x000000000802a48b        0x0 linker stubs
  *(.glue_7t)
- .glue_7t       0x000000000802a483        0x0 linker stubs
+ .glue_7t       0x000000000802a48b        0x0 linker stubs
  *(.init)
- *fill*         0x000000000802a483        0x1 
- .init          0x000000000802a484        0x4 /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crti.o
-                0x000000000802a484                _init
+ *fill*         0x000000000802a48b        0x1 
+ .init          0x000000000802a48c        0x4 /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crti.o
+                0x000000000802a48c                _init
  *(.fini)
- .fini          0x000000000802a488        0x4 /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crti.o
-                0x000000000802a488                _fini
+ .fini          0x000000000802a490        0x4 /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crti.o
+                0x000000000802a490                _fini
  *(.eh_frame)
-                0x000000000802a48c                . = ALIGN (0x4)
-                0x000000000802a48c                _param_start = .
+                0x000000000802a494                . = ALIGN (0x4)
+                0x000000000802a494                _param_start = .
  *(.param)
  *(.param.*)
- .param.cpu     0x000000000802a48c       0x48 bin/system.o
- .param.system  0x000000000802a4d4       0x24 bin/system.o
+ .param.cpu     0x000000000802a494       0x48 bin/system.o
+ .param.system  0x000000000802a4dc       0x24 bin/system.o
  .param.flightmode
-                0x000000000802a4f8       0x78 bin/crtp_commander_rpyt.o
+                0x000000000802a500       0x78 bin/crtp_commander_rpyt.o
  .param.cmdrCPPM
-                0x000000000802a570       0x54 bin/crtp_commander_generic.o
- .param.locSrv  0x000000000802a5c4       0x24 bin/crtp_localization_service.o
+                0x000000000802a578       0x54 bin/crtp_commander_generic.o
+ .param.locSrv  0x000000000802a5cc       0x24 bin/crtp_localization_service.o
  .param.pid_rate
-                0x000000000802a5e8       0x84 bin/attitude_pid_controller.o
+                0x000000000802a5f0       0x84 bin/attitude_pid_controller.o
  .param.pid_attitude
-                0x000000000802a66c       0x84 bin/attitude_pid_controller.o
+                0x000000000802a674       0x84 bin/attitude_pid_controller.o
  .param.sensorfusion6
-                0x000000000802a6f0       0x3c bin/sensfusion6.o
+                0x000000000802a6f8       0x3c bin/sensfusion6.o
  .param.stabilizer
-                0x000000000802a72c       0x30 bin/stabilizer.o
- .param.posEst  0x000000000802a75c       0x54 bin/position_estimator_altitude.o
+                0x000000000802a734       0x30 bin/stabilizer.o
+ .param.posEst  0x000000000802a764       0x54 bin/position_estimator_altitude.o
  .param.velCtlPid
-                0x000000000802a7b0       0x84 bin/position_controller_pid.o
+                0x000000000802a7b8       0x84 bin/position_controller_pid.o
  .param.posCtlPid
-                0x000000000802a834       0xc0 bin/position_controller_pid.o
+                0x000000000802a83c       0xc0 bin/position_controller_pid.o
  .param.controller
-                0x000000000802a8f4       0x24 bin/controller_pid.o
+                0x000000000802a8fc       0x24 bin/controller_pid.o
  .param.ctrlMel
-                0x000000000802a918       0xfc bin/controller_mellinger.o
+                0x000000000802a920       0xfc bin/controller_mellinger.o
  .param.motorPowerSet
-                0x000000000802aa14       0x54 bin/power_distribution_stock.o
+                0x000000000802aa1c       0x54 bin/power_distribution_stock.o
  .param.firmware
-                0x000000000802aa68       0x3c bin/version.o
+                0x000000000802aa70       0x3c bin/version.o
  .param.imu_sensors
-                0x000000000802aaa4       0x30 bin/sensors_cf2.o
+                0x000000000802aaac       0x30 bin/sensors_cf2.o
  .param.imu_tests
-                0x000000000802aad4       0x3c bin/sensors_cf2.o
- .param.sound   0x000000000802ab10       0x48 bin/sound_cf2.o
- .param.system  0x000000000802ab58       0x24 bin/sysload.o
- .param.kalman  0x000000000802ab7c       0xc0 bin/estimator_kalman.o
- .param.ring    0x000000000802ac3c       0x9c bin/ledring12.o
- .param.deck    0x000000000802acd8       0x24 bin/ledring12.o
- .param.deck    0x000000000802acfc       0x24 bin/buzzdeck.o
- .param.deck    0x000000000802ad20       0x24 bin/usddeck.o
- .param.deck    0x000000000802ad44       0x24 bin/zranger.o
- .param.deck    0x000000000802ad68       0x24 bin/zranger2.o
- .param.loco    0x000000000802ad8c       0x24 bin/locodeck.o
- .param.deck    0x000000000802adb0       0x24 bin/locodeck.o
+                0x000000000802aadc       0x3c bin/sensors_cf2.o
+ .param.sound   0x000000000802ab18       0x48 bin/sound_cf2.o
+ .param.system  0x000000000802ab60       0x24 bin/sysload.o
+ .param.kalman  0x000000000802ab84       0xc0 bin/estimator_kalman.o
+ .param.ring    0x000000000802ac44       0x9c bin/ledring12.o
+ .param.deck    0x000000000802ace0       0x24 bin/ledring12.o
+ .param.deck    0x000000000802ad04       0x24 bin/buzzdeck.o
+ .param.deck    0x000000000802ad28       0x24 bin/usddeck.o
+ .param.deck    0x000000000802ad4c       0x24 bin/zranger.o
+ .param.deck    0x000000000802ad70       0x24 bin/zranger2.o
+ .param.loco    0x000000000802ad94       0x24 bin/locodeck.o
+ .param.deck    0x000000000802adb8       0x24 bin/locodeck.o
  .param.anchorpos
-                0x000000000802add4      0x144 bin/locodeck.o
- .param.tdoa3   0x000000000802af18       0x30 bin/lpsTdoaTagStats.o
- .param.motion  0x000000000802af48       0x24 bin/flowdeck_v1v2.o
- .param.deck    0x000000000802af6c       0x30 bin/flowdeck_v1v2.o
- .param.deck    0x000000000802af9c       0x24 bin/oa.o
- .param.deck    0x000000000802afc0       0x24 bin/multiranger.o
-                0x000000000802afe4                _param_stop = .
-                0x000000000802afe4                . = ALIGN (0x4)
-                0x000000000802afe4                _log_start = .
+                0x000000000802addc      0x144 bin/locodeck.o
+ .param.tdoa3   0x000000000802af20       0x30 bin/lpsTdoaTagStats.o
+ .param.motion  0x000000000802af50       0x24 bin/flowdeck_v1v2.o
+ .param.deck    0x000000000802af74       0x30 bin/flowdeck_v1v2.o
+ .param.deck    0x000000000802afa4       0x24 bin/oa.o
+ .param.deck    0x000000000802afc8       0x24 bin/multiranger.o
+                0x000000000802afec                _param_stop = .
+                0x000000000802afec                . = ALIGN (0x4)
+                0x000000000802afec                _log_start = .
  *(.log)
  *(.log.*)
- .log.pwm       0x000000000802afe4       0x48 bin/motors.o
- .log.crtp      0x000000000802b02c       0x3c bin/crtp.o
- .log.sys       0x000000000802b068       0x24 bin/system.o
- .log.sitAw     0x000000000802b08c       0x3c bin/sitaw.o
- .log.ext_pos   0x000000000802b0c8       0x3c bin/crtp_localization_service.o
+ .log.pwm       0x000000000802afec       0x48 bin/motors.o
+ .log.crtp      0x000000000802b034       0x3c bin/crtp.o
+ .log.sys       0x000000000802b070       0x24 bin/system.o
+ .log.sitAw     0x000000000802b094       0x3c bin/sitaw.o
+ .log.ext_pos   0x000000000802b0d0       0x3c bin/crtp_localization_service.o
  .log.pid_attitude
-                0x000000000802b104       0x84 bin/attitude_pid_controller.o
- .log.pid_rate  0x000000000802b188       0x84 bin/attitude_pid_controller.o
+                0x000000000802b10c       0x84 bin/attitude_pid_controller.o
+ .log.pid_rate  0x000000000802b190       0x84 bin/attitude_pid_controller.o
  .log.sensorfusion6
-                0x000000000802b20c       0x90 bin/sensfusion6.o
+                0x000000000802b214       0x90 bin/sensfusion6.o
  .log.ctrltarget
-                0x000000000802b29c       0x3c bin/stabilizer.o
- .log.acc       0x000000000802b2d8       0x3c bin/stabilizer.o
+                0x000000000802b2a4       0x3c bin/stabilizer.o
+ .log.acc       0x000000000802b2e0       0x3c bin/stabilizer.o
  .log.controller
-                0x000000000802b314       0x24 bin/stabilizer.o
+                0x000000000802b31c       0x24 bin/stabilizer.o
  .log.stateEstimate
-                0x000000000802b338       0x3c bin/stabilizer.o
+                0x000000000802b340       0x3c bin/stabilizer.o
  .log.stabilizer
-                0x000000000802b374       0x48 bin/stabilizer.o
- .log.baro      0x000000000802b3bc       0x3c bin/stabilizer.o
- .log.mag       0x000000000802b3f8       0x3c bin/stabilizer.o
- .log.gyro      0x000000000802b434       0x3c bin/stabilizer.o
+                0x000000000802b37c       0x48 bin/stabilizer.o
+ .log.baro      0x000000000802b3c4       0x3c bin/stabilizer.o
+ .log.mag       0x000000000802b400       0x3c bin/stabilizer.o
+ .log.gyro      0x000000000802b43c       0x3c bin/stabilizer.o
  .log.posEstimatorAlt
-                0x000000000802b470       0x3c bin/position_estimator_altitude.o
- .log.posCtl    0x000000000802b4ac      0x114 bin/position_controller_pid.o
+                0x000000000802b478       0x3c bin/position_estimator_altitude.o
+ .log.posCtl    0x000000000802b4b4      0x114 bin/position_controller_pid.o
  .log.controller
-                0x000000000802b5c0       0x6c bin/controller_pid.o
- .log.ctrlMel   0x000000000802b62c       0x60 bin/controller_mellinger.o
- .log.motor     0x000000000802b68c       0x48 bin/power_distribution_stock.o
- .log.pm        0x000000000802b6d4       0x78 bin/pm_f405.o
- .log.radio     0x000000000802b74c       0x24 bin/radiolink.o
- .log.extrx     0x000000000802b770       0x78 bin/extrx.o
- .log.kalman    0x000000000802b7e8      0x144 bin/estimator_kalman.o
+                0x000000000802b5c8       0x6c bin/controller_pid.o
+ .log.ctrlMel   0x000000000802b634       0x60 bin/controller_mellinger.o
+ .log.motor     0x000000000802b694       0x48 bin/power_distribution_stock.o
+ .log.pm        0x000000000802b6dc       0x78 bin/pm_f405.o
+ .log.radio     0x000000000802b754       0x24 bin/radiolink.o
+ .log.extrx     0x000000000802b778       0x78 bin/extrx.o
+ .log.kalman    0x000000000802b7f0      0x144 bin/estimator_kalman.o
  .log.kalman_states
-                0x000000000802b92c       0x48 bin/estimator_kalman.o
+                0x000000000802b934       0x48 bin/estimator_kalman.o
  .log.kalman_pred
-                0x000000000802b974       0x48 bin/estimator_kalman.o
- .log.ring      0x000000000802b9bc       0x24 bin/ledring12.o
- .log.gps       0x000000000802b9e0       0x60 bin/gtgps.o
- .log.range     0x000000000802ba40       0x24 bin/zranger.o
- .log.range     0x000000000802ba64       0x24 bin/zranger2.o
- .log.loco      0x000000000802ba88       0x24 bin/locodeck.o
- .log.ranging   0x000000000802baac       0xe4 bin/locodeck.o
- .log.twr       0x000000000802bb90       0xa8 bin/lpsTwrTag.o
- .log.tdoa      0x000000000802bc38      0x168 bin/lpsTdoa2Tag.o
- .log.tdoa3     0x000000000802bda0       0x90 bin/lpsTdoaTagStats.o
- .log.motion    0x000000000802be30       0x78 bin/flowdeck_v1v2.o
- .log.oa        0x000000000802bea8       0x54 bin/oa.o
- .log.range     0x000000000802befc       0x54 bin/multiranger.o
-                0x000000000802bf50                _log_stop = .
-                0x000000000802bf50                _deckDriver_start = .
+                0x000000000802b97c       0x48 bin/estimator_kalman.o
+ .log.ring      0x000000000802b9c4       0x24 bin/ledring12.o
+ .log.gps       0x000000000802b9e8       0x60 bin/gtgps.o
+ .log.range     0x000000000802ba48       0x24 bin/zranger.o
+ .log.range     0x000000000802ba6c       0x24 bin/zranger2.o
+ .log.loco      0x000000000802ba90       0x24 bin/locodeck.o
+ .log.ranging   0x000000000802bab4       0xe4 bin/locodeck.o
+ .log.twr       0x000000000802bb98       0xa8 bin/lpsTwrTag.o
+ .log.tdoa      0x000000000802bc40      0x168 bin/lpsTdoa2Tag.o
+ .log.tdoa3     0x000000000802bda8       0x90 bin/lpsTdoaTagStats.o
+ .log.motion    0x000000000802be38       0x78 bin/flowdeck_v1v2.o
+ .log.oa        0x000000000802beb0       0x54 bin/oa.o
+ .log.range     0x000000000802bf04       0x54 bin/multiranger.o
+                0x000000000802bf58                _log_stop = .
+                0x000000000802bf58                _deckDriver_start = .
  *(.deckDriver)
  *(.deckDriver.*)
  .deckDriver.rzr_deck
-                0x000000000802bf50        0x4 bin/rzr.o
-                0x000000000802bf50                driver_rzr_deck
+                0x000000000802bf58        0x4 bin/rzr.o
+                0x000000000802bf58                driver_rzr_deck
  .deckDriver.ledring12_deck
-                0x000000000802bf54        0x4 bin/ledring12.o
-                0x000000000802bf54                driver_ledring12_deck
+                0x000000000802bf5c        0x4 bin/ledring12.o
+                0x000000000802bf5c                driver_ledring12_deck
  .deckDriver.buzzer_deck
-                0x000000000802bf58        0x4 bin/buzzdeck.o
-                0x000000000802bf58                driver_buzzer_deck
+                0x000000000802bf60        0x4 bin/buzzdeck.o
+                0x000000000802bf60                driver_buzzer_deck
  .deckDriver.gtgps_deck
-                0x000000000802bf5c        0x4 bin/gtgps.o
-                0x000000000802bf5c                driver_gtgps_deck
+                0x000000000802bf64        0x4 bin/gtgps.o
+                0x000000000802bf64                driver_gtgps_deck
  .deckDriver.cppm_deck
-                0x000000000802bf60        0x4 bin/cppmdeck.o
-                0x000000000802bf60                driver_cppm_deck
+                0x000000000802bf68        0x4 bin/cppmdeck.o
+                0x000000000802bf68                driver_cppm_deck
  .deckDriver.usd_deck
-                0x000000000802bf64        0x4 bin/usddeck.o
-                0x000000000802bf64                driver_usd_deck
+                0x000000000802bf6c        0x4 bin/usddeck.o
+                0x000000000802bf6c                driver_usd_deck
  .deckDriver.zranger_deck
-                0x000000000802bf68        0x4 bin/zranger.o
-                0x000000000802bf68                driver_zranger_deck
+                0x000000000802bf70        0x4 bin/zranger.o
+                0x000000000802bf70                driver_zranger_deck
  .deckDriver.zranger2_deck
-                0x000000000802bf6c        0x4 bin/zranger2.o
-                0x000000000802bf6c                driver_zranger2_deck
+                0x000000000802bf74        0x4 bin/zranger2.o
+                0x000000000802bf74                driver_zranger2_deck
  .deckDriver.dwm1000_deck
-                0x000000000802bf70        0x4 bin/locodeck.o
-                0x000000000802bf70                driver_dwm1000_deck
+                0x000000000802bf78        0x4 bin/locodeck.o
+                0x000000000802bf78                driver_dwm1000_deck
  .deckDriver.flowdeck1_deck
-                0x000000000802bf74        0x4 bin/flowdeck_v1v2.o
-                0x000000000802bf74                driver_flowdeck1_deck
+                0x000000000802bf7c        0x4 bin/flowdeck_v1v2.o
+                0x000000000802bf7c                driver_flowdeck1_deck
  .deckDriver.flowdeck2_deck
-                0x000000000802bf78        0x4 bin/flowdeck_v1v2.o
-                0x000000000802bf78                driver_flowdeck2_deck
+                0x000000000802bf80        0x4 bin/flowdeck_v1v2.o
+                0x000000000802bf80                driver_flowdeck2_deck
  .deckDriver.oa_deck
-                0x000000000802bf7c        0x4 bin/oa.o
-                0x000000000802bf7c                driver_oa_deck
+                0x000000000802bf84        0x4 bin/oa.o
+                0x000000000802bf84                driver_oa_deck
  .deckDriver.multiranger_deck
-                0x000000000802bf80        0x4 bin/multiranger.o
-                0x000000000802bf80                driver_multiranger_deck
+                0x000000000802bf88        0x4 bin/multiranger.o
+                0x000000000802bf88                driver_multiranger_deck
  .deckDriver.exptest_deck
-                0x000000000802bf84        0x4 bin/exptest.o
-                0x000000000802bf84                driver_exptest_deck
+                0x000000000802bf8c        0x4 bin/exptest.o
+                0x000000000802bf8c                driver_exptest_deck
  .deckDriver.exptestRR_deck
-                0x000000000802bf88        0x4 bin/exptestRR.o
-                0x000000000802bf88                driver_exptestRR_deck
-                0x000000000802bf8c                _deckDriver_stop = .
-                0x000000000802bf8c                . = ALIGN (0x4)
-                0x000000000802bf8c                _etext = .
-
-.vfp11_veneer   0x000000000802bf8c        0x0
- .vfp11_veneer  0x000000000802bf8c        0x0 linker stubs
-
-.v4_bx          0x000000000802bf8c        0x0
- .v4_bx         0x000000000802bf8c        0x0 linker stubs
-
-.iplt           0x000000000802bf8c        0x0
- .iplt          0x000000000802bf8c        0x0 /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crtbegin.o
-
-.libc           0x000000000802bf8c        0x8
-                0x000000000802bf8c                . = ALIGN (0x4)
- *(.ARM.exidx*)
- .ARM.exidx     0x000000000802bf8c        0x8 /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/libgcc.a(_divdi3.o)
- .ARM.exidx     0x000000000802bf94        0x0 /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/libgcc.a(_udivdi3.o)
-                                          0x8 (size before relaxing)
+                0x000000000802bf90        0x4 bin/exptestRR.o
+                0x000000000802bf90                driver_exptestRR_deck
+                0x000000000802bf94                _deckDriver_stop = .
                 0x000000000802bf94                . = ALIGN (0x4)
-                0x000000000802bf94                _elibc = .
-                0x000000000802bf94                _sidata = _elibc
+                0x000000000802bf94                _etext = .
 
-.rel.dyn        0x000000000802bf94        0x0
- .rel.iplt      0x000000000802bf94        0x0 /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crtbegin.o
+.vfp11_veneer   0x000000000802bf94        0x0
+ .vfp11_veneer  0x000000000802bf94        0x0 linker stubs
+
+.v4_bx          0x000000000802bf94        0x0
+ .v4_bx         0x000000000802bf94        0x0 linker stubs
+
+.iplt           0x000000000802bf94        0x0
+ .iplt          0x000000000802bf94        0x0 /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crtbegin.o
+
+.libc           0x000000000802bf94        0x8
+                0x000000000802bf94                . = ALIGN (0x4)
+ *(.ARM.exidx*)
+ .ARM.exidx     0x000000000802bf94        0x8 /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/libgcc.a(_divdi3.o)
+ .ARM.exidx     0x000000000802bf9c        0x0 /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/libgcc.a(_udivdi3.o)
+                                          0x8 (size before relaxing)
+                0x000000000802bf9c                . = ALIGN (0x4)
+                0x000000000802bf9c                _elibc = .
+                0x000000000802bf9c                _sidata = _elibc
+
+.rel.dyn        0x000000000802bf9c        0x0
+ .rel.iplt      0x000000000802bf9c        0x0 /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crtbegin.o
 
 .flashpatch     0x0000000000000000        0x0
                 0x0000000000000000                . = ALIGN (0x4)
@@ -24146,7 +24147,7 @@ LOAD /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crtn.o
  *(.endflash)
                 0x0000000000000000                . = ALIGN (0x4)
 
-.data           0x0000000020000000      0xb7c load address 0x000000000802bf94
+.data           0x0000000020000000      0xb7c load address 0x000000000802bf9c
                 0x0000000020000000                . = ALIGN (0x4)
                 0x0000000020000000                _sdata = .
  *(.data)
@@ -24445,10 +24446,10 @@ LOAD /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crtn.o
                 0x0000000020000b7c                . = ALIGN (0x4)
                 0x0000000020000b7c                _edata = .
 
-.igot.plt       0x0000000020000b7c        0x0 load address 0x000000000802cb10
+.igot.plt       0x0000000020000b7c        0x0 load address 0x000000000802cb18
  .igot.plt      0x0000000020000b7c        0x0 /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crtbegin.o
 
-.bss            0x0000000020000b80    0x122e4 load address 0x000000000802cb18
+.bss            0x0000000020000b80    0x122e4 load address 0x000000000802cb20
                 0x0000000020000b80                . = ALIGN (0x4)
                 0x0000000020000b80                _sbss = .
  *(.bss)
@@ -25429,7 +25430,7 @@ LOAD /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crtn.o
                 0x0000000020012e64                . = ALIGN (0x4)
                 0x0000000020012e64                _ebss = .
 
-.nzds           0x0000000020012e64        0xc load address 0x000000000803edfc
+.nzds           0x0000000020012e64        0xc load address 0x000000000803ee04
                 0x0000000020012e64                . = ALIGN (0x4)
                 0x0000000020012e64                _snzds = .
  *(.nzds)
@@ -25442,7 +25443,7 @@ LOAD /usr/lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crtn.o
                 [!provide]                        PROVIDE (end, _enzds)
                 [!provide]                        PROVIDE (_end, _enzds)
 
-._usrstack      0x0000000020012e70      0x100 load address 0x000000000803ee08
+._usrstack      0x0000000020012e70      0x100 load address 0x000000000803ee10
                 0x0000000020012e70                . = ALIGN (0x4)
                 0x0000000020012e70                _susrstack = .
                 0x0000000020012f70                . = (. + _Minimum_Stack_Size)
