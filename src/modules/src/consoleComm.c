@@ -203,7 +203,6 @@ void consoleCommInit()
   if (isInit)
     return;
   droneData[0] = 0;
-  droneData[8] = 0;
   droneData[9] = 0;
   messageToPrint.size = 0;
   messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
@@ -243,12 +242,17 @@ void consoleCommTask(void * prm)
           consoleCommPflush("Current data in droneData:");
           consoleCommPflush(droneData);
         }
-        if (messageReceived.data[0] == '~'){
+        else if (messageReceived.data[0] == '~'){
           consoleCommPflush("1! Sending to beacon; port,message:");
           consoleCommPutchar(messageReceived.data[1]);
           consoleCommPutchar(',');
           consoleCommPflush((char*)(messageReceived.data+2));
           beaconCommPflush((char*)(messageReceived.data+2));
+        }
+        else if (messageReceived.data[0] == '!') {
+          consoleCommPflush("Putting data in droneData:");
+          consoleCommPflush((char*)(messageReceived.data+1));
+          memcpy(&droneData, messageReceived.data + 1, 9);
         }
         break;
       case C2RTP_CHANNEL_SWITCH:
