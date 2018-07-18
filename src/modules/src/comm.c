@@ -43,9 +43,6 @@
 #include "syslink.h"
 #include "crtp_localization_service.h"
 
-// CYPHY
-#include "consoleComm.h"
-
 static bool isInit;
 
 void commInit(void)
@@ -86,8 +83,6 @@ void commInit(void)
   logInit();
   paramInit();
   locSrvInit();
-
-displayRadioAddress();
 
   //setup CRTP communication channel
   //TODO: check for USB first and prefer USB over radio
