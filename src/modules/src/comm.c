@@ -44,7 +44,7 @@
 #include "crtp_localization_service.h"
 
 // CYPHY
-#include "consoleComm.c"
+#include "consoleComm.h"
 
 static bool isInit;
 

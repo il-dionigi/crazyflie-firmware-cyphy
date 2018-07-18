@@ -88,6 +88,8 @@ void radiolinkInit(void)
   radiolinkSetDatarate(configblockGetRadioSpeed());
   radiolinkSetAddress(configblockGetRadioAddress());
 
+  saveRadioAddress(configblockGetRadioAddress());
+
   isInit = true;
 }
 
@@ -119,8 +121,6 @@ void radiolinkSetDatarate(uint8_t datarate)
 void radiolinkSetAddress(uint64_t address)
 {
   SyslinkPacket slp;
-
-  saveRadioAddress(address);
 
   slp.type = SYSLINK_RADIO_ADDRESS;
   slp.length = 5;

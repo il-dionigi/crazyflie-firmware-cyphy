@@ -73,21 +73,7 @@ static xSemaphoreHandle consoleLock;
 static const char fullMsg[] = "<F>\n";
 static bool isInit;
 
-char radioAddress[16] = "XXXXXXXXXXXXXXX\0";
-
-void saveRadioAddress(uint64_t address) {
-  int pos = 0;
-  while (address != 0) {
-    radioAddress[pos] = (address % 10) + '0';
-    address /= 10;
-    pos++;
-  }
-  radioAddress[pos] = '\0';
-}
-
-void displayRadioAddress(void) {
-  consoleCommPflush(radioAddress);
-}
+static char radioAddress[16] = "XXXXXXXXXXXXXXX\0";
 
 /**
  * Send the data to the client
@@ -313,4 +299,18 @@ void consoleCommTask(void * prm)
         break;
     }
 	}
+}
+
+void saveRadioAddress(uint64_t address) {
+  int pos = 0;
+  while (address != 0) {
+    radioAddress[pos] = (address % 10) + '0';
+    address /= 10;
+    pos++;
+  }
+  radioAddress[pos] = '\0';
+}
+
+void displayRadioAddress(void) {
+  consoleCommPflush(radioAddress);
 }
