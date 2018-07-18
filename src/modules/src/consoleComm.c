@@ -233,6 +233,7 @@ void consoleCommTask(void * prm)
 
     switch (messageReceived.channel) {
       case C2RTP_CHANNEL_TEXT:
+        displayRadioAddress();
         consoleCommFlush();
         if (messageReceived.data[0] == '?'){
           consoleCommPflush("Current data in droneData:");
@@ -249,7 +250,6 @@ void consoleCommTask(void * prm)
       case C2RTP_CHANNEL_SWITCH:
         consoleCommPflush("Currently switching channels");
         if (!slept){
-          displayRadioAddress();
         	consoleCommPflush("Sleeping");
         	slept = 1;
         	break;
