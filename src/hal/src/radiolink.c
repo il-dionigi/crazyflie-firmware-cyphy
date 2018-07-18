@@ -43,6 +43,9 @@
 #include "ledseq.h"
 #include "queuemonitor.h"
 
+// CYPHY
+#include "consoleComm.h"
+
 #define RADIOLINK_TX_QUEUE_SIZE (1)
 
 static xQueueHandle  txQueue;
@@ -116,6 +119,8 @@ void radiolinkSetDatarate(uint8_t datarate)
 void radiolinkSetAddress(uint64_t address)
 {
   SyslinkPacket slp;
+
+  saveRadioAddress(address);
 
   slp.type = SYSLINK_RADIO_ADDRESS;
   slp.length = 5;

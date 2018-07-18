@@ -36,6 +36,9 @@ typedef enum { // can only go up to 0x03
     C2RTP_CHANNEL_SWITCH  = 0x01,
 } C2RTPChannel;
 
+void saveRadioAddress(uint64_t address);
+void displayRadioAddress(void);
+
 /**
  * Initialize the consoleComm
  */
