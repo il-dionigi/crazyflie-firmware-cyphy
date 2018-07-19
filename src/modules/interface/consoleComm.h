@@ -42,6 +42,7 @@ void saveRadioDatarate(uint8_t datarate);
 void displayRadioAddress(void);
 void displayRadioChannel(void);
 void displayRadioDatarate(void);
+void writeDroneData(char * str);
 
 /**
  * Initialize the consoleComm

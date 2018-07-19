@@ -77,6 +77,11 @@ static char radioAddress[16] = "XXXXXXXXXXXXXXX\0";
 static char radioChannel[3] = "XX\0";
 static char radioDatarate[2] = "X\0";
 
+
+void writeDroneData(char * str){
+	memcpy(droneData, str, 9);
+	droneData[9] = 0;
+}
 /**
  * Send the data to the client
  * returns TRUE if successful otherwise FALSE
