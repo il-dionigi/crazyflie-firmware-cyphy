@@ -85,6 +85,7 @@ void radiolinkInit(void)
   syslinkInit();
 
   radiolinkSetChannel(configblockGetRadioChannel());
+  radiolinkSetChannel(configblockGetRadioChannel());
   radiolinkSetDatarate(configblockGetRadioSpeed());
   radiolinkSetAddress(configblockGetRadioAddress());
 
