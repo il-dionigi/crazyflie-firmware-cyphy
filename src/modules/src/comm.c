@@ -73,13 +73,13 @@ void commInit(void)
   // consoleInit();
 
 #ifdef USE_RADIOLINK_CRTP
-  writeDroneData("RADIO\0");
+  writeDroneData("RADIO\0", 6);
   crtpSetLink(radiolinkGetLink());
 #elif defined(USE_ESKYLINK)
-  writeDroneData("ESKY\0");
+  writeDroneData("ESKY\0", 5);
   crtpSetLink(eskylinkGetLink());
 #else
-  writeDroneData("NRF24\0");
+  writeDroneData("NRF24\0", 6);
   crtpSetLink(nrf24linkGetLink());
 #endif
 

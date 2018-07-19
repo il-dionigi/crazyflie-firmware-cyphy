@@ -67,7 +67,8 @@ static void consoleCommTask(void * prm);
 
 static CRTPPacket messageReceived;
 CRTPPacket messageToPrint;
-static char droneData[10];
+static int currBufferLen = 0;
+static char droneData[1024];
 static xSemaphoreHandle consoleLock;
 
 static const char fullMsg[] = "<F>\n";
@@ -78,9 +79,10 @@ static char radioChannel[3] = "XX\0";
 static char radioDatarate[2] = "X\0";
 
 
-void writeDroneData(char * str){
-	memcpy(droneData, str, 9);
-	droneData[9] = 0;
+void writeDroneData(char * str, int len){
+	memcpy(droneData + currBufferLen, str, len);
+  currBufferLen += len;
+	droneData[currBufferLen] = 0;
 }
 
 /**
