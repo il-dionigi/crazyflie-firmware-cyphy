@@ -84,9 +84,12 @@ void radiolinkInit(void)
 
   syslinkInit();
 
-  radiolinkSetChannel(configblockGetRadioChannel());
-  radiolinkSetDatarate(configblockGetRadioSpeed());
-  radiolinkSetAddress(configblockGetRadioAddress());
+  // radiolinkSetChannel(configblockGetRadioChannel());
+  // radiolinkSetDatarate(configblockGetRadioSpeed());
+  // radiolinkSetAddress(configblockGetRadioAddress());
+  radiolinkSetChannel(80);
+  radiolinkSetDatarate(2);
+  radiolinkSetAddress(996028180456ULL);
 
   isInit = true;
 }
