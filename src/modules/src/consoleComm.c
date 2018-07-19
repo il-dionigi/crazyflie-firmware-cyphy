@@ -82,6 +82,7 @@ void writeDroneData(char * str){
 	memcpy(droneData, str, 9);
 	droneData[9] = 0;
 }
+
 /**
  * Send the data to the client
  * returns TRUE if successful otherwise FALSE

@@ -43,6 +43,8 @@
 #include "syslink.h"
 #include "crtp_localization_service.h"
 
+#include "consoleComm.h"
+
 static bool isInit;
 
 void commInit(void)
@@ -71,10 +73,13 @@ void commInit(void)
   // consoleInit();
 
 #ifdef USE_RADIOLINK_CRTP
+  writeDroneData("RADIO\0");
   crtpSetLink(radiolinkGetLink());
 #elif defined(USE_ESKYLINK)
+  writeDroneData("ESKY\0");
   crtpSetLink(eskylinkGetLink());
 #else
+  writeDroneData("NRF24\0");
   crtpSetLink(nrf24linkGetLink());
 #endif
 
