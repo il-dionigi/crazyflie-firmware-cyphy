@@ -91,6 +91,8 @@ void radiolinkInit(void)
   radiolinkSetDatarate(2);
   radiolinkSetAddress(996028180456ULL);
 
+  writeDroneData("Test\0");
+
   isInit = true;
 }
 
