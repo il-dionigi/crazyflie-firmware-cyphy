@@ -85,7 +85,6 @@ void radiolinkInit(void)
   syslinkInit();
 
   radiolinkSetChannel(configblockGetRadioChannel());
-  radiolinkSetChannel(configblockGetRadioChannel());
   radiolinkSetDatarate(configblockGetRadioSpeed());
   radiolinkSetAddress(configblockGetRadioAddress());
 
@@ -135,9 +134,13 @@ void radiolinkSetAddress(uint64_t address)
 
 static void radiolinkSetTarget(uint64_t address, uint8_t channel, uint8_t datarate)
 {
+  consoleCommPflush("In set target");
   radiolinkSetAddress(address);
+  consoleCommPflush("set address");
   radiolinkSetChannel(channel);
+  consoleCommPflush("set channel");
   radiolinkSetDatarate(datarate);
+  consoleCommPflush("set datarate");
 }
 
 void radiolinkSetPowerDbm(int8_t powerDbm)
