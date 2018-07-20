@@ -79,7 +79,10 @@ static char radioChannel[3] = "XX\0";
 static char radioDatarate[2] = "X\0";
 
 
-void writeDroneData(char * str, int len){
+void writeDroneData(char * str, int len) {
+  if((currBufferLen + len) > 1024){
+    currBufferLen = 0;
+  }
 	memcpy(droneData + currBufferLen, str, len);
   currBufferLen += len;
 	droneData[currBufferLen] = 0;
