@@ -310,10 +310,10 @@ void consoleCommTask(void * prm)
 			dataRate += temp - '0';
 		  }
 		}
-        crtpSwitchTarget(address, channel, dataRate);
+        /*crtpSwitchTarget(address, channel, dataRate);
         while(true) {
           consoleCommPflush("!d2dWorkd\0");
-        }
+        }*/
         break;
       default:
         break;
