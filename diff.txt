@@ -1,0 +1,220 @@
+30,31c30,31
+< ESTIMATOR          ?= any
+< CONTROLLER         ?= Any # one of Any, PID, Mellinger
+---
+> ESTIMATOR          ?= complementary
+> CONTROLLER         ?= pid
+37a38,41
+> ifeq ($(PLATFORM), CF1)
+> OPENOCD_TARGET    ?= target/stm32f1x_stlink.cfg
+> USE_FPU            = 0
+> endif
+43a48,50
+> ifeq ($(PLATFORM), CF1)
+> REV               ?= F
+> endif
+61a69,72
+> ifeq ($(PLATFORM), CF1)
+> LINKER_DIR = tools/make/F103/linker
+> ST_OBJ_DIR  = tools/make/F103
+> endif
+67d77
+< 
+78a89,118
+> #add aes.c and aes.h
+> #thigns to define
+> #
+> #definitions for porting
+> #SIZEOF_LONG define in code?
+> #SIZEOF_LONG_LONG define in code?
+> #little endian -- nothing to do
+> #NO_WRITEV -- 
+> #WOLFSSL_USER_IO -- SEE WHAT I HAVE TO DO THOUGH -/
+> #NO_FILESYSTEM
+> #NO_DEV_RANDOM -- ADD SUPPORT FOR TRUERANDOM FROM HARDWARE
+> #CUSTOM ATOMIC RECORD LAYER PROCESSING
+> #
+> #removing features
+> #NO_WOLFSSL_CLIENT
+> #NO_DES3
+> #NO_DSA
+> #NO_HMAC
+> #NO_MD4
+> #NO_MD5
+> #NO_SHA256
+> #NO_PWDBASED
+> #NO_RC4
+> #NO_SESSION_CACHE
+> #NO_TLS
+> #NOWC_NO_RSA_OAEP
+> # NO_OLD_TLS for the sake of weird stuff
+> #
+> #enabling features
+> #HAVE_AESGCM
+83a124,127
+> VPATH_CF1 += $(LIB)/CMSIS/Core/CM3
+> VPATH_CF1 += $(LIB)/CMSIS/Core/CM3/startup/gcc
+> CRT0_CF1 = startup_stm32f10x_md.o system_stm32f10x.o
+> 
+108,110d151
+< # vl53l1 driver
+< VPATH_CF2 += $(LIB)/vl53l1/core/src
+< 
+129c170,171
+< VPATH += src/init src/hal/src src/modules/src src/utils/src src/drivers/bosch/src src/drivers/src
+---
+> VPATH += src/init src/hal/src src/modules/src src/utils/src src/drivers/src
+> VPATH_CF1 += src/platform/cf1
+131a174,176
+> ifeq ($(PLATFORM), CF1)
+> VPATH +=$(VPATH_CF1)
+> endif
+136d180
+< 
+140a185
+> PROJ_OBJ_CF1 += platform_cf1.o
+144a190,192
+> PROJ_OBJ_CF1 += led_f103.o i2cdev_f103.o i2croutines.o adc_f103.o mpu6050.o
+> PROJ_OBJ_CF1 += hmc5883l.o ms5611.o nrf24l01.o eeprom.o watchdog.o
+> PROJ_OBJ_CF1 += eskylink.o
+149,152c197
+< PROJ_OBJ_CF2 += bmi055_accel.o bmi055_gyro.o bmi160.o bmp280.o bstdr_comm_support.o bmm150.o
+< PROJ_OBJ_CF2 += bmi088_accel.o bmi088_gyro.o bmi088_fifo.o bmp3.o
+< PROJ_OBJ_CF2 += pca9685.o vl53l0x.o pca95x4.o vl53l1x.o pmw3901.o
+< 
+---
+> PROJ_OBJ_CF2 += bmi160.o bma2x2.o bmg160.o bmp280.o bstdr_comm_support.o
+157a203
+> PROJ_OBJ_CF1 += imu_cf1.o pm_f103.o nrf24link.o ow_none.o uart_cf1.o
+158a205
+> PROJ_OBJ_CF2 += aeslink.o
+164,168d210
+< # vl53l1 lib
+< PROJ_OBJ_CF2 += vl53l1_api_core.o vl53l1_api.o vl53l1_core.o vl53l1_silicon_core.o vl53l1_api_strings.o
+< PROJ_OBJ_CF2 += vl53l1_api_calibration.o vl53l1_api_debug.o vl53l1_api_preset_modes.o vl53l1_error_strings.o
+< PROJ_OBJ_CF2 += vl53l1_register_funcs.o vl53l1_wait.o vl53l1_core_support.o
+< 
+170c212,217
+< PROJ_OBJ += system.o comm.o console.o consoleComm.o beaconComm.o pid.o crtpservice.o param.o
+---
+> 
+> #PROJ_OBJ += system.o comm.o console.o pid.o crtpservice.o param.o mem.o
+> #PROJ_OBJ += rng_interface.o #crtpservice2.o
+> 
+> PROJ_OBJ += system.o comm.o console.o pid.o crtpservice.o param.o
+> 
+171a219
+> PROJ_OBJ_CF1 += sound_cf1.o sensors_cf1.o mem_cf1.o
+179,180c227
+< PROJ_OBJ += estimator.o estimator_complementary.o
+< PROJ_OBJ += controller.o controller_pid.o controller_mellinger.o
+---
+> PROJ_OBJ += estimator_$(ESTIMATOR).o controller_$(CONTROLLER).o
+182d228
+< PROJ_OBJ_CF2 += estimator_kalman.o
+184,185d229
+< # High-Level Commander
+< PROJ_OBJ += crtp_commander_high_level.o planner.o pptraj.o
+204c248
+< PROJ_OBJ_CF2 += zranger.o zranger2.o
+---
+> PROJ_OBJ_CF2 += vl53l0x.o
+205a250,252
+> ifeq ($(LPS_TDMA_ENABLE), 1)
+> PROJ_OBJ_CF2 += lpsTwrTdmaTag.o
+> else
+207,212c254
+< PROJ_OBJ_CF2 += lpsTdoa2Tag.o
+< PROJ_OBJ_CF2 += lpsTdoa3Tag.o lpsTdoaTagEngine.o lpsTdoaTagStats.o
+< PROJ_OBJ_CF2 += outlierFilter.o
+< PROJ_OBJ_CF2 += flowdeck_v1v2.o
+< PROJ_OBJ_CF2 += oa.o
+< PROJ_OBJ_CF2 += multiranger.o
+---
+> endif
+214a257
+> PROJ_OBJ_CF2 += lpsTdoaTag.o
+218,221d260
+< ifeq ($(LPS_TDMA_ENABLE), 1)
+< CFLAGS += -DLPS_TDMA_ENABLE
+< endif
+< 
+224d262
+< PROJ_OBJ_CF2 += exptestRR.o
+231,232c269,270
+< PROJ_OBJ_CF2 += configblockeeprom.o crc_bosch.o
+< PROJ_OBJ_CF2 += sleepus.o
+---
+> PROJ_OBJ_CF1 += configblockflash.o
+> PROJ_OBJ_CF2 += configblockeeprom.o
+237d274
+< 
+260a298,300
+> ifeq ($(PLATFORM), CF1)
+> OBJ += $(CRT0_CF1) $(ST_OBJ_CF1) $(PROJ_OBJ_CF1)
+> endif
+280c320,323
+< INCLUDES += -Ivendor/CMSIS/CMSIS/Include -Isrc/drivers/bosch/interface
+---
+> INCLUDES += -Ivendor/CMSIS/CMSIS/Include
+> 
+> INCLUDES_CF1 += -I$(LIB)/STM32F10x_StdPeriph_Driver/inc
+> INCLUDES_CF1 += -I$(LIB)/CMSIS/Core/CM3
+294,295d336
+< INCLUDES_CF2 += -I$(LIB)/vl53l1
+< INCLUDES_CF2 += -I$(LIB)/vl53l1/core/inc
+300a342,344
+> 	ifeq ($(PLATFORM), CF1)
+> 		PROCESSOR = -mcpu=cortex-m3 -mthumb
+> 	endif
+307c351,352
+< STFLAGS_CF2 = -DSTM32F4XX -DSTM32F40_41xxx -DHSE_VALUE=8000000 -DUSE_STDPERIPH_DRIVER
+---
+> STFLAGS_CF1 = -DSTM32F10X_MD -DHSE_VALUE=16000000 -include stm32f10x_conf.h -DPLATFORM_CF1
+> STFLAGS_CF2 = -DSTM32F4XX -DSTM32F40_41xxx -DHSE_VALUE=8000000 -DUSE_STDPERIPH_DRIVER -DPLATFORM_CF2
+324c369
+< CFLAGS += -DBOARD_REV_$(REV) -DESTIMATOR_NAME=$(ESTIMATOR)Estimator -DCONTROLLER_NAME=ControllerType$(CONTROLLER) -DPOWER_DISTRIBUTION_TYPE_$(POWER_DISTRIBUTION)
+---
+> CFLAGS += -DBOARD_REV_$(REV) -DESTIMATOR_TYPE_$(ESTIMATOR) -DCONTROLLER_TYPE_$(CONTROLLER) -DPOWER_DISTRIBUTION_TYPE_$(POWER_DISTRIBUTION)
+326a372,374
+> ifeq ($(PLATFORM), CF1)
+> CFLAGS += $(INCLUDES_CF1) $(STFLAGS_CF1)
+> endif
+356a405,407
+> ifeq ($(PLATFORM), CF1)
+> PROG = cf1
+> else
+357a409
+> endif
+376,382c428,429
+< build:
+< # Each target is in a different line, so they are executed one after the other even when the processor has multiple cores (when the -j option for the make command is > 1). See: https://www.gnu.org/software/make/manual/html_node/Parallel.html
+< 	@$(MAKE) --no-print-directory clean_version
+< 	@$(MAKE) --no-print-directory compile
+< 	@$(MAKE) --no-print-directory print_version
+< 	@$(MAKE) --no-print-directory size
+< compile: $(PROG).hex $(PROG).bin $(PROG).dfu
+---
+> build: clean_version compile print_version size
+> compile: clean_version $(PROG).hex $(PROG).bin $(PROG).dfu
+393c440,443
+< print_version:
+---
+> print_version: compile
+> ifeq ($(PLATFORM), CF1)
+> 	@echo "Crazyflie Nano (1.0) build!"
+> endif
+405c455
+< size:
+---
+> size: compile
+419,425c469
+<                  -c "flash write_image erase $(PROG).bin $(LOAD_ADDRESS) bin" \
+<                  -c "verify_image $(PROG).bin $(LOAD_ADDRESS) bin" -c "reset run" -c shutdown
+< 
+< #verify only
+< flash_verify:
+< 	$(OPENOCD) -d2 -f $(OPENOCD_INTERFACE) $(OPENOCD_CMDS) -f $(OPENOCD_TARGET) -c init -c targets -c "reset halt" \
+<                  -c "verify_image $(PROG).bin $(LOAD_ADDRESS) bin" -c "reset run" -c shutdown
+---
+>                  -c "flash write_image erase $(PROG).elf" -c "verify_image $(PROG).elf" -c "reset run" -c shutdown

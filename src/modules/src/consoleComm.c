@@ -38,8 +38,6 @@
 #include <errno.h>
 #include "led.h"
 #include "motors.h"
-#include <openssl/evp.h>
-
 
 #include "beaconComm.h"
 #include "consoleComm.h"
