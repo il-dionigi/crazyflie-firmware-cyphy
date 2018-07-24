@@ -385,6 +385,9 @@ void consoleCommTask(void * prm)
           consoleCommPflush("Putting data in droneData:");
           consoleCommPflush((char*)(messageReceived.data+1));
           memcpy(&droneData, messageReceived.data + 1, 9);
+        } else if (strcmp(messageReceived.data, "START")) {
+          commInit();
+          consoleCommInit();
         }
         break;
       case C2RTP_CHANNEL_SWITCH:
