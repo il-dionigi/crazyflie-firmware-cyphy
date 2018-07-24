@@ -90,9 +90,9 @@ static char encryptedMessage[128];
 unsigned int salt[] = {12345, 54321};
 unsigned char *key_data;
 int key_data_len, i;
-char *input[] = {"a", "abcd", "this is a test", "this is a bigger test",
+/*char *input[] = {"a", "abcd", "this is a test", "this is a bigger test",
 				 "\nWho are you ?\nI am the 'Doctor'.\n'Doctor' who ?\nPrecisely!",
-				 NULL};
+				 NULL};*/
 
 int aes_init(unsigned char *key_data, int key_data_len, unsigned char *salt, EVP_CIPHER_CTX *e_ctx,
              EVP_CIPHER_CTX *d_ctx)
@@ -200,6 +200,7 @@ static bool consoleCommSendMessage(void)
 		  memcpy(messageToPrint.data, encryptedMessage+charsSent, 30);
 		  messageToPrint.size = 30;
 	  }
+	  messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 1);
 	  if (crtpSendPacket(&messageToPrint) == pdTRUE)
 	  {
 		charsSent += 30;
