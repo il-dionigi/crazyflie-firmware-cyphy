@@ -38,6 +38,7 @@
 #include <errno.h>
 #include "led.h"
 #include "motors.h"
+#include "comm.h"
 
 #include "beaconComm.h"
 #include "consoleComm.h"
