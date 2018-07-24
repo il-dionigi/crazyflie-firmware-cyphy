@@ -85,7 +85,7 @@ void commInit(void)
 
   crtpserviceInit();
   platformserviceInit();
-  logInit();
+  //logInit();
   paramInit();
   locSrvInit();
 
