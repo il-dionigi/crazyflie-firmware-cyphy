@@ -53,6 +53,7 @@ static bool dwm1000Test()
 #include "crc.h"
 #include "config.h"
 #include "consoleComm.h"
+#include "comm.h"
 
 #define DEBUG_MODULE "DWM"
 
