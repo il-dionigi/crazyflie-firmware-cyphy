@@ -25403,115 +25403,115 @@ LOAD /home/bitcraze/bin/../lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crtn.o
                 0x080092a8       0x28 bin/system.o
                 0x080092a8                systemLaunch
  .text.systemInit
-                0x080092d0       0xe8 bin/system.o
+                0x080092d0       0xec bin/system.o
                 0x080092d0                systemInit
  .text.systemTest
-                0x080093b8       0x28 bin/system.o
-                0x080093b8                systemTest
+                0x080093bc       0x28 bin/system.o
+                0x080093bc                systemTest
  .text.systemStart
-                0x080093e0       0x1c bin/system.o
-                0x080093e0                systemStart
+                0x080093e4       0x1c bin/system.o
+                0x080093e4                systemStart
  .text.systemTask
-                0x080093fc      0x104 bin/system.o
+                0x08009400      0x104 bin/system.o
  .text.systemWaitStart
-                0x08009500       0x38 bin/system.o
-                0x08009500                systemWaitStart
+                0x08009504       0x38 bin/system.o
+                0x08009504                systemWaitStart
  .text.systemSetCanFly
-                0x08009538        0xc bin/system.o
-                0x08009538                systemSetCanFly
+                0x0800953c        0xc bin/system.o
+                0x0800953c                systemSetCanFly
  .text.vApplicationIdleHook
-                0x08009544       0x20 bin/system.o
-                0x08009544                vApplicationIdleHook
+                0x08009548       0x20 bin/system.o
+                0x08009548                vApplicationIdleHook
  .text.commInit
-                0x08009564       0x40 bin/comm.o
-                0x08009564                commInit
+                0x08009568       0x40 bin/comm.o
+                0x08009568                commInit
  .text.commTest
-                0x080095a4       0x34 bin/comm.o
-                0x080095a4                commTest
+                0x080095a8       0x34 bin/comm.o
+                0x080095a8                commTest
  .text.consoleSendMessage
-                0x080095d8       0x1c bin/console.o
+                0x080095dc       0x1c bin/console.o
  .text.consoleInit
-                0x080095f4       0x3c bin/console.o
-                0x080095f4                consoleInit
+                0x080095f8       0x3c bin/console.o
+                0x080095f8                consoleInit
  .text.consoleTest
-                0x08009630        0xc bin/console.o
-                0x08009630                consoleTest
+                0x08009634        0xc bin/console.o
+                0x08009634                consoleTest
  .text.consolePutcharFromISR
-                0x0800963c       0x3c bin/console.o
-                0x0800963c                consolePutcharFromISR
+                0x08009640       0x3c bin/console.o
+                0x08009640                consolePutcharFromISR
  .text.consolePutchar
-                0x08009678       0x9c bin/console.o
-                0x08009678                consolePutchar
+                0x0800967c       0x9c bin/console.o
+                0x0800967c                consolePutchar
  .text.consoleCommSendMessage
-                0x08009714       0x1c bin/consoleComm.o
+                0x08009718       0x1c bin/consoleComm.o
  .text.writeDroneData
-                0x08009730       0x38 bin/consoleComm.o
-                0x08009730                writeDroneData
+                0x08009734       0x38 bin/consoleComm.o
+                0x08009734                writeDroneData
  .text.consoleCommPutcharFromISR
-                0x08009768       0x3c bin/consoleComm.o
-                0x08009768                consoleCommPutcharFromISR
+                0x0800976c       0x3c bin/consoleComm.o
+                0x0800976c                consoleCommPutcharFromISR
  .text.consoleCommPutchar
-                0x080097a4       0x9c bin/consoleComm.o
-                0x080097a4                consoleCommPutchar
+                0x080097a8       0x9c bin/consoleComm.o
+                0x080097a8                consoleCommPutchar
  .text.consoleCommPuts
-                0x08009840       0x18 bin/consoleComm.o
-                0x08009840                consoleCommPuts
+                0x08009844       0x18 bin/consoleComm.o
+                0x08009844                consoleCommPuts
  .text.consoleCommFlush
-                0x08009858       0x30 bin/consoleComm.o
-                0x08009858                consoleCommFlush
+                0x0800985c       0x30 bin/consoleComm.o
+                0x0800985c                consoleCommFlush
  .text.consoleCommPflush
-                0x08009888        0xe bin/consoleComm.o
-                0x08009888                consoleCommPflush
- *fill*         0x08009896        0x2 
+                0x0800988c        0xe bin/consoleComm.o
+                0x0800988c                consoleCommPflush
+ *fill*         0x0800989a        0x2 
  .text.consoleCommInit
-                0x08009898       0x78 bin/consoleComm.o
-                0x08009898                consoleCommInit
+                0x0800989c       0x78 bin/consoleComm.o
+                0x0800989c                consoleCommInit
  .text.saveRadioAddress
-                0x08009910       0x40 bin/consoleComm.o
-                0x08009910                saveRadioAddress
+                0x08009914       0x40 bin/consoleComm.o
+                0x08009914                saveRadioAddress
  .text.saveRadioChannel
-                0x08009950       0x20 bin/consoleComm.o
-                0x08009950                saveRadioChannel
+                0x08009954       0x20 bin/consoleComm.o
+                0x08009954                saveRadioChannel
  .text.saveRadioDatarate
-                0x08009970        0xc bin/consoleComm.o
-                0x08009970                saveRadioDatarate
+                0x08009974        0xc bin/consoleComm.o
+                0x08009974                saveRadioDatarate
  .text.displayRadioAddress
-                0x0800997c       0x1c bin/consoleComm.o
-                0x0800997c                displayRadioAddress
+                0x08009980       0x1c bin/consoleComm.o
+                0x08009980                displayRadioAddress
  .text.displayRadioChannel
-                0x08009998       0x1c bin/consoleComm.o
-                0x08009998                displayRadioChannel
+                0x0800999c       0x1c bin/consoleComm.o
+                0x0800999c                displayRadioChannel
  .text.displayRadioDatarate
-                0x080099b4       0x1c bin/consoleComm.o
-                0x080099b4                displayRadioDatarate
+                0x080099b8       0x1c bin/consoleComm.o
+                0x080099b8                displayRadioDatarate
  .text.consoleCommTask
-                0x080099d0      0x118 bin/consoleComm.o
+                0x080099d4      0x118 bin/consoleComm.o
  .text.beaconCommSendMessage
-                0x08009ae8       0x2c bin/beaconComm.o
- .text.testMsg  0x08009b14        0xc bin/beaconComm.o
-                0x08009b14                testMsg
+                0x08009aec       0x2c bin/beaconComm.o
+ .text.testMsg  0x08009b18        0xc bin/beaconComm.o
+                0x08009b18                testMsg
  .text.beaconCommInit
-                0x08009b20       0x50 bin/beaconComm.o
-                0x08009b20                beaconCommInit
+                0x08009b24       0x50 bin/beaconComm.o
+                0x08009b24                beaconCommInit
  .text.beaconCommPutcharFromISR
-                0x08009b70       0x40 bin/beaconComm.o
-                0x08009b70                beaconCommPutcharFromISR
+                0x08009b74       0x40 bin/beaconComm.o
+                0x08009b74                beaconCommPutcharFromISR
  .text.beaconCommPutchar
-                0x08009bb0       0x8c bin/beaconComm.o
-                0x08009bb0                beaconCommPutchar
+                0x08009bb4       0x8c bin/beaconComm.o
+                0x08009bb4                beaconCommPutchar
  .text.beaconCommPuts
-                0x08009c3c       0x18 bin/beaconComm.o
-                0x08009c3c                beaconCommPuts
+                0x08009c40       0x18 bin/beaconComm.o
+                0x08009c40                beaconCommPuts
  .text.beaconCommFlush
-                0x08009c54       0x30 bin/beaconComm.o
-                0x08009c54                beaconCommFlush
+                0x08009c58       0x30 bin/beaconComm.o
+                0x08009c58                beaconCommFlush
  .text.beaconCommPflush
-                0x08009c84        0xe bin/beaconComm.o
-                0x08009c84                beaconCommPflush
- *fill*         0x08009c92        0x2 
+                0x08009c88        0xe bin/beaconComm.o
+                0x08009c88                beaconCommPflush
+ *fill*         0x08009c96        0x2 
  .text.beaconAnalyzePayload
-                0x08009c94       0x30 bin/beaconComm.o
-                0x08009c94                beaconAnalyzePayload
+                0x08009c98       0x2c bin/beaconComm.o
+                0x08009c98                beaconAnalyzePayload
  .text.pidInit  0x08009cc4       0x40 bin/pid.o
                 0x08009cc4                pidInit
  .text.pidUpdate
@@ -30930,11 +30930,11 @@ LOAD /home/bitcraze/bin/../lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crtn.o
  .debug_info    0x00010f0b      0x962 bin/ledseq.o
  .debug_info    0x0001186d      0x1f3 bin/freeRTOSdebug.o
  .debug_info    0x00011a60      0x171 bin/buzzer.o
- .debug_info    0x00011bd1      0xbc0 bin/system.o
- .debug_info    0x00012791      0x3d5 bin/comm.o
- .debug_info    0x00012b66      0x777 bin/console.o
- .debug_info    0x000132dd      0xdf6 bin/consoleComm.o
- .debug_info    0x000140d3      0x7ec bin/beaconComm.o
+ .debug_info    0x00011bd1      0xbd0 bin/system.o
+ .debug_info    0x000127a1      0x3d5 bin/comm.o
+ .debug_info    0x00012b76      0x777 bin/console.o
+ .debug_info    0x000132ed      0xdf6 bin/consoleComm.o
+ .debug_info    0x000140e3      0x7dc bin/beaconComm.o
  .debug_info    0x000148bf      0x537 bin/pid.o
  .debug_info    0x00014df6      0x342 bin/crtpservice.o
  .debug_info    0x00015138      0xa90 bin/param.o
@@ -31230,11 +31230,11 @@ LOAD /home/bitcraze/bin/../lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crtn.o
  .debug_line    0x00009f01      0x42a bin/ledseq.o
  .debug_line    0x0000a32b      0x343 bin/freeRTOSdebug.o
  .debug_line    0x0000a66e      0x1a6 bin/buzzer.o
- .debug_line    0x0000a814      0x9ba bin/system.o
- .debug_line    0x0000b1ce      0x329 bin/comm.o
- .debug_line    0x0000b4f7      0x6a1 bin/console.o
- .debug_line    0x0000bb98      0x9bd bin/consoleComm.o
- .debug_line    0x0000c555      0x99f bin/beaconComm.o
+ .debug_line    0x0000a814      0x9bb bin/system.o
+ .debug_line    0x0000b1cf      0x329 bin/comm.o
+ .debug_line    0x0000b4f8      0x6a1 bin/console.o
+ .debug_line    0x0000bb99      0x9bd bin/consoleComm.o
+ .debug_line    0x0000c556      0x99e bin/beaconComm.o
  .debug_line    0x0000cef4      0x29c bin/pid.o
  .debug_line    0x0000d190      0x3b3 bin/crtpservice.o
  .debug_line    0x0000d543      0x51f bin/param.o
@@ -31614,16 +31614,16 @@ LOAD /home/bitcraze/bin/../lib/gcc/arm-none-eabi/4.9.3/armv7e-m/fpu/crtn.o
                                0x8522 (size before relaxing)
  .debug_str     0x0006ee9e       0x81 bin/buzzer.o
                                0x3388 (size before relaxing)
- .debug_str     0x0006ef1f     0x17cf bin/system.o
-                              0x67bc9 (size before relaxing)
- .debug_str     0x000706ee      0x149 bin/comm.o
+ .debug_str     0x0006ef1f     0x17df bin/system.o
+                              0x67bd9 (size before relaxing)
+ .debug_str     0x000706fe      0x149 bin/comm.o
                                0x5610 (size before relaxing)
- .debug_str     0x00070837       0xae bin/console.o
+ .debug_str     0x00070847       0xae bin/console.o
                               0x624a7 (size before relaxing)
- .debug_str     0x000708e5     0x2d67 bin/consoleComm.o
+ .debug_str     0x000708f5     0x2d57 bin/consoleComm.o
                               0x693ab (size before relaxing)
  .debug_str     0x0007364c      0x3ab bin/beaconComm.o
-                              0x6840f (size before relaxing)
+                              0x683ff (size before relaxing)
  .debug_str     0x000739f7      0xa4f bin/pid.o
                                0x3e21 (size before relaxing)
  .debug_str     0x00074446       0x55 bin/crtpservice.o
@@ -34663,7 +34663,7 @@ configblockTest                                   bin/configblockeeprom.o
                                                   bin/system.o
 consoleCommFlush                                  bin/consoleComm.o
 consoleCommInit                                   bin/consoleComm.o
-                                                  bin/beaconComm.o
+                                                  bin/system.o
 consoleCommPflush                                 bin/consoleComm.o
                                                   bin/lpsTwrTag.o
                                                   bin/radiolink.o
