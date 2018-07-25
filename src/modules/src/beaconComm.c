@@ -220,6 +220,10 @@ void beaconAnalyzePayload(char * data)
 	//for now, send this data through consoleComm
 	consoleCommPflush("5! Received msg from beacon:");
 	consoleCommPflush(data);
+  if (strcmp(data, "START")) {
+          commInit();
+          consoleCommInit();
+        }
 	//consoleCommPflush("Sending this to beacon:");
 	//consoleCommPuts("message:num:");
 	//consoleCommPutchar(num+'0');

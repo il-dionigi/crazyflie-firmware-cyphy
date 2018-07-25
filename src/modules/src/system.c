@@ -102,7 +102,7 @@ void systemInit(void)
   crtpInit();
   consoleInit();
   //CYPHY
-  consoleCommInit();
+  //consoleCommInit();
 
   DEBUG_PRINT("----------------------------\n");
   DEBUG_PRINT(P_NAME " is up and running!\n");
