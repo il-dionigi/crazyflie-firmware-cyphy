@@ -270,7 +270,7 @@ void consoleCommTask(void * prm)
           memcpy(&droneData, messageReceived.data + 1, 9);
         } else if (strcmp((char*)messageReceived.data, "START")) {
           commInit();
-          consoleCommInit();
+          //consoleCommInit();
         }
         break;
       case C2RTP_CHANNEL_SWITCH:
