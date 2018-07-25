@@ -52,6 +52,10 @@
 #include "crc.h"
 #include "config.h"
 
+#include "aes.h"
+#include "aeslink.h"
+
+
 #ifdef STM32F40_41xxx
 #include "stm32f4xx.h"
 #else
@@ -76,6 +80,8 @@ static char radioAddress[16] = "XXXXXXXXXXXXXXX\0";
 static char radioChannel[3] = "XX\0";
 static char radioDatarate[2] = "X\0";
 
+static bool encrypt = false;
+static bool encryptSent = false;
 
 void writeDroneData(char * str, int len) {
   if((currBufferLen + len) > 1024){
@@ -92,7 +98,16 @@ void writeDroneData(char * str, int len) {
  */
 static bool consoleCommSendMessage(void)
 {
-
+  if (encrypt){
+	   if(aeslinkSendCRTPPacket(&messageToPrint)){
+		   messageToPrint.size = 0;
+		   encryptSent = true;
+		   return true;
+	   }
+	   encryptSent = false;
+	   return false;
+  }
+  //for debugging
   if (crtpSendPacket(&messageToPrint) == pdTRUE)
   {
 	  messageToPrint.size = 0;
@@ -210,6 +225,20 @@ void consoleCommPflush(char * str)
 	consoleCommFlush();
 }
 
+void consoleCommEncflush(char * str){
+	if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE)
+	  {
+		if (messageToPrint.size > 0){
+			consoleCommSendMessage();
+		}
+		encrypt = 1;
+		consoleCommPuts(str);
+	    consoleCommSendMessage();
+	    encrypt = 0;
+	    xSemaphoreGive(consoleLock);
+	  }
+}
+
 void consoleCommInit()
 {
   if (isInit)
@@ -266,6 +295,10 @@ void consoleCommTask(void * prm)
           consoleCommPflush("Putting data in droneData:");
           consoleCommPflush((char*)(messageReceived.data+1));
           memcpy(&droneData, messageReceived.data + 1, 9);
+
+        }
+        else if (messageReceived.data[0] == '^'){
+        	consoleCommEncflush("Test Encryption Message");
         }
         break;
       case C2RTP_CHANNEL_SWITCH:
