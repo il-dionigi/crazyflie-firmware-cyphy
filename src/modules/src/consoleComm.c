@@ -53,7 +53,7 @@
 #include "config.h"
 
 #include "aes.h"
-#include "aeslink.h"
+#include "../../hal/interface/aeslink.h"
 
 
 #ifdef STM32F40_41xxx
@@ -250,7 +250,7 @@ void consoleCommInit()
   vSemaphoreCreateBinary(consoleLock);
   xTaskCreate(consoleCommTask, CONSOLE_COMM_TASK_NAME,
   			CONSOLE_COMM_TASK_STACKSIZE, NULL, CONSOLE_COMM_TASK_PRI, NULL);
-
+  aesEnableTunnel();
   isInit = true;
   consoleCommPflush("console comm init!");
 }

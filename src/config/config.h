@@ -79,6 +79,7 @@
 #define SENSORS_TASK_PRI        4
 #define ADC_TASK_PRI            3
 #define FLOW_TASK_PRI           3
+#define AESLINK_TASK_PRI        2 //~CYPHY~ using Lunds encrypt
 #define SYSTEM_TASK_PRI         2
 #define CRTP_TX_TASK_PRI        2
 #define CRTP_RX_TASK_PRI        2
@@ -126,6 +127,7 @@
 #define PROXIMITY_TASK_NAME     "PROXIMITY"
 #define EXTRX_TASK_NAME         "EXTRX"
 #define UART_RX_TASK_NAME       "UART"
+#define AESLINK_TASK_NAME   	"AESLINK" //CYPHY using Lunds
 #define ZRANGER_TASK_NAME       "ZRANGER"
 #define ZRANGER2_TASK_NAME      "ZRANGER2"
 #define FLOW_TASK_NAME          "FLOW"
@@ -154,6 +156,7 @@
 #define PROXIMITY_TASK_STACKSIZE      configMINIMAL_STACK_SIZE
 #define EXTRX_TASK_STACKSIZE          configMINIMAL_STACK_SIZE
 #define UART_RX_TASK_STACKSIZE        configMINIMAL_STACK_SIZE
+#define AESLINK_TASK_STACKSIZE        (2 * configMINIMAL_STACK_SIZE)//CYPHY using Lunds
 #define ZRANGER_TASK_STACKSIZE        (2 * configMINIMAL_STACK_SIZE)
 #define ZRANGER2_TASK_STACKSIZE       (2 * configMINIMAL_STACK_SIZE)
 #define FLOW_TASK_STACKSIZE           (2 * configMINIMAL_STACK_SIZE)
