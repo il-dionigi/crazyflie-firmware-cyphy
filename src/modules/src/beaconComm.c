@@ -222,7 +222,7 @@ void beaconAnalyzePayload(char * data)
 	consoleCommPflush("5! Received msg from beacon:");
 	consoleCommPflush(data);
   if (strcmp(data, "START")) {
-          commInit();
+          //commInit();
           //consoleCommInit();
         }
 	//consoleCommPflush("Sending this to beacon:");
