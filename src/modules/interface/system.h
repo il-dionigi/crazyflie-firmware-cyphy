@@ -29,6 +29,12 @@
 
 #include <stdint.h>
 
+enum radioMode_e
+{
+  RADIO_MODE_PTX,
+  RADIO_MODE_PRX,
+};
+
 void systemInit(void);
 bool systemTest(void);
 

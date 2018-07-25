@@ -435,7 +435,7 @@ void pmTask(void *param)
           }
           systemSetCanFly(false);
           //Due to voltage change radio must be restarted
-          nrf24linkReInit();
+          nrf24linkReInit(RADIO_MODE_PTX); // TODO : Reinit as last
           break;
         case lowPower:
           ledseqRun(LED_RED, seq_lowbat);
@@ -446,7 +446,7 @@ void pmTask(void *param)
           ledseqStop(LED_GREEN, seq_charged);
           systemSetCanFly(true);
           //Due to voltage change radio must be restarted
-          nrf24linkReInit();
+          nrf24linkReInit(RADIO_MODE_PTX); // TODO : Reinit as last
           break;
         default:
           systemSetCanFly(true);

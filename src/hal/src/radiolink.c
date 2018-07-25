@@ -45,6 +45,7 @@
 
 // CYPHY
 #include "consoleComm.h"
+#include "nrf24l01.h"
 
 #define RADIOLINK_TX_QUEUE_SIZE (1)
 

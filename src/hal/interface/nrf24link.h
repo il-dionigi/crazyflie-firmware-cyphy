@@ -28,10 +28,11 @@
 #define __NRF24LINK_H__
 
 #include "crtp.h"
+#include "system.h"
 
-void nrf24linkInit();
+void nrf24linkInit(enum radioMode_e mode);
 bool nrf24linkTest();
 struct crtpLinkOperations * nrf24linkGetLink();
-void nrf24linkReInit(void);
+void nrf24linkReInit(enum radioMode_e mode);
 
 #endif

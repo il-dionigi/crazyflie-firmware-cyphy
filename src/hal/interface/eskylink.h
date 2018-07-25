@@ -28,8 +28,9 @@
 #define __ESKYLINK_H__
 
 #include "crtp.h"
+#include "system.h"
 
-void eskylinkInit();
+void eskylinkInit(enum radioMode_e mode);
 bool eskylinkTest();
 struct crtpLinkOperations * eskylinkGetLink();
 void eskylinkReInit(void);
