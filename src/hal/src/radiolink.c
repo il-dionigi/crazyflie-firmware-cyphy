@@ -80,7 +80,7 @@ void radiolinkInit(void)
   DEBUG_QUEUE_MONITOR_REGISTER(crtpPacketDelivery);
 
 
-  ASSERT(crtpPacketDelivery);
+  ASSERT(crtpPacketDelivery); // Get rid of this for test?
 
   syslinkInit();
 

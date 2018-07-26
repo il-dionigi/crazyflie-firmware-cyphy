@@ -216,7 +216,7 @@ void consoleCommInit()
   droneData[0] = 0;
   droneData[9] = 0;
   messageToPrint.size = 0;
-  messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
+  messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 1); // Change back to 0 after D2D test
   vSemaphoreCreateBinary(consoleLock);
   xTaskCreate(consoleCommTask, CONSOLE_COMM_TASK_NAME,
   			CONSOLE_COMM_TASK_STACKSIZE, NULL, CONSOLE_COMM_TASK_PRI, NULL);
@@ -229,11 +229,11 @@ void consoleCommInit()
 void consoleCommTask(void * prm)
 {
 	crtpInitTaskQueue(CRTP_PORT_CONSOLE);
-	uint64_t address = 0;
+	// uint64_t address = 0;
 
-	uint8_t channel = 0;
-	uint8_t dataRate = 0;
-	uint8_t slept = 0;
+	// uint8_t channel = 0;
+	// uint8_t dataRate = 0;
+	// uint8_t slept = 0;
 	char temp;
 	while(1) {
 		crtpReceivePacketBlock(CRTP_PORT_CONSOLE, &messageReceived);
@@ -267,49 +267,51 @@ void consoleCommTask(void * prm)
         }
         break;
       case C2RTP_CHANNEL_SWITCH:
-        consoleCommPflush("Currently switching channels");
-        if (!slept){
-        	consoleCommPflush("Sleeping");
-        	slept = 1;
-        	break;
-        }
-        else{
-        	consoleCommPflush("Waking");
-        }
-        int i;
-        for (i = 0; i < CRTP_MAX_DATA_SIZE; i++){
-          temp = messageReceived.data[i];
-          if (temp == ',') {
-        	i++;
-            break;
-          }
-          else {
-            address *= 10;
-            address += temp - '0';
-          }
-        }
-        for (; i < CRTP_MAX_DATA_SIZE; i++){
-		  temp = messageReceived.data[i];
-		  if (temp == ',') {
-			i++;
-			break;
-		  }
-		  else {
-			channel *= 10;
-			channel += temp - '0';
-		  }
-		}
-        for (; i < CRTP_MAX_DATA_SIZE; i++){
-		  temp = messageReceived.data[i];
-		  if (temp == ',') {
-			i++;
-			break;
-		  }
-		  else {
-			dataRate *= 10;
-			dataRate += temp - '0';
-		  }
-		}
+        consoleCommPflush((char*)(messageReceived.data+1));
+        memcpy(&droneData, messageReceived.data + 1, 9);
+    //     consoleCommPflush("Currently switching channels");
+    //     if (!slept){
+    //     	consoleCommPflush("Sleeping");
+    //     	slept = 1;
+    //     	break;
+    //     }
+    //     else{
+    //     	consoleCommPflush("Waking");
+    //     }
+    //     int i;
+    //     for (i = 0; i < CRTP_MAX_DATA_SIZE; i++){
+    //       temp = messageReceived.data[i];
+    //       if (temp == ',') {
+    //     	i++;
+    //         break;
+    //       }
+    //       else {
+    //         address *= 10;
+    //         address += temp - '0';
+    //       }
+    //     }
+    //     for (; i < CRTP_MAX_DATA_SIZE; i++){
+		//   temp = messageReceived.data[i];
+		//   if (temp == ',') {
+		// 	i++;
+		// 	break;
+		//   }
+		//   else {
+		// 	channel *= 10;
+		// 	channel += temp - '0';
+		//   }
+		// }
+    //     for (; i < CRTP_MAX_DATA_SIZE; i++){
+		//   temp = messageReceived.data[i];
+		//   if (temp == ',') {
+		// 	i++;
+		// 	break;
+		//   }
+		//   else {
+		// 	dataRate *= 10;
+		// 	dataRate += temp - '0';
+		//   }
+		// }
         /*crtpSwitchTarget(address, channel, dataRate);
         while(true) {
           consoleCommPflush("!d2dWorkd\0");
