@@ -103,35 +103,6 @@ void writeDroneData(char * str, int len) {
  */
 static bool consoleCommSendMessage(void)
 {
-  if (encrypt){
-	  messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 2);
-	  uint8_t dataLen = messageToPrint.size;
-	  if (dataLen > 16){
-		  memcpy(plainData, messageToPrint.data, dataLen);
-		  memcpy(plainData+dataLen, "padpadpadpadpadpad", 32-dataLen); // fill it to size 32
-		  wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData, 16);
-		  memcpy(messageToPrint.data, encryptedData, 16);
-		  memcpy(messageToPrint.data+16, "\0BadBadBadBad", 14);
-		  crtpSendPacket(&messageToPrint);
-		  wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData+16, 16);
-		  memcpy(messageToPrint.data, encryptedData, 16);
-		  memcpy(messageToPrint.data+16, "\0BadBadBadBad", 14);
-		  crtpSendPacket(&messageToPrint);
-		  encryptSent = 2;
-	  }
-	  else{
-		  memcpy(plainData, messageToPrint.data, dataLen);
-		  memcpy(plainData+dataLen, "padpadpadpadpadpad", 16-dataLen); // fill it to size 16
-		  wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData, 16);
-		  memcpy(messageToPrint.data, encryptedData, 16);
-		  memcpy(messageToPrint.data+16, "\0BadBadBadBad", 14);
-		  crtpSendPacket(&messageToPrint);
-		  encryptSent = 1;
-	  }
-	  messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
-	  return true; // Hope it worked for now, error check later
-  }
-  //for debugging
   if (crtpSendPacket(&messageToPrint) == pdTRUE)
   {
 	  messageToPrint.size = 0;
@@ -249,15 +220,34 @@ void consoleCommPflush(char * str)
 	consoleCommFlush();
 }
 
-void consoleCommEncflush(char * str){
+void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
 	if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE)
 	  {
 		if (messageToPrint.size > 0){
-			consoleCommSendMessage();
+			crtpSendMessage(&messageToPrint); //no error checking for now!!
+			messageToPrint.size = 0;
 		}
 		encrypt = 1;
-		consoleCommPuts(str);
-	    consoleCommSendMessage();
+		encryptSent = 0;
+		messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 2);
+		uint8_t counter = 0;
+		while (counter < lengthOfMessage){
+			if (lengthOfMessage - counter < 16){
+				messageToPrint.size = lengthOfMessage-counter;
+				memcpy(plainData, str+counter, messageToPrint.size);
+			    memcpy(plainData+messageToPrint.size, "padpadpadpadpadpad", 16-messageToPrint.size); // fill it to size 16
+			}
+			else{
+				messageToPrint.size = 16;
+				memcpy(plainData, str+counter, messageToPrint.size);
+			}
+			counter = counter + 16;
+		    wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData, 16);
+		    memcpy(messageToPrint.data, encryptedData, 16);
+		    memcpy(messageToPrint.data+16, "\0BadBadBadBad", 14);
+		    crtpSendPacket(&messageToPrint);
+		    encryptSent++;
+		}
 	    encrypt = 0;
 	    xSemaphoreGive(consoleLock);
 	  }
@@ -321,8 +311,8 @@ void consoleCommTask(void * prm)
           memcpy(&droneData, messageReceived.data + 1, 9);
 
         }
-        else if (messageReceived.data[0] == '^'){`
-        	consoleCommEncflush("Test Encryption Message");
+        else if (messageReceived.data[0] == '^'){
+        	consoleCommEncflush("Test Encryption Messagexxx",23);
         }
         break;
       case C2RTP_CHANNEL_SWITCH:
