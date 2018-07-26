@@ -224,7 +224,7 @@ void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
 	if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE)
 	  {
 		if (messageToPrint.size > 0){
-			crtpSendMessage(&messageToPrint); //no error checking for now!!
+			crtpSendPacket(&messageToPrint); //no error checking for now!!
 			messageToPrint.size = 0;
 		}
 		encrypt = 1;
