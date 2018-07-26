@@ -30,9 +30,9 @@
 #include "crtp.h"
 #include "system.h"
 
-void nrf24linkInit(enum radioMode_e mode);
+void nrf24linkInit();
 bool nrf24linkTest();
 struct crtpLinkOperations * nrf24linkGetLink();
-void nrf24linkReInit(enum radioMode_e mode);
+void nrf24linkReInit();
 
 #endif

@@ -134,25 +134,25 @@ static int eskylinkFetchData(char * packet, int dataLen)
   return dataLen;
 }
 
-static void eskylinkInitPairing(enum radioMode_e mode)
+static void eskylinkInitPairing()
 {
   int i;
 
   // Power the radio, Enable the DR interruption, set the radio in PRX mode with 2bytes CRC
-  // nrfWrite1Reg(REG_CONFIG, 0x3F);
+  nrfWrite1Reg(REG_CONFIG, 0x3F);
 
-  // CYPHY - New code based on crazyradio firmware
-  switch (mode)
-  {
-  case RADIO_MODE_PTX:
-    // Energize the radio in PTX mode. Interrupts disable
-    nrfWrite1Reg(REG_CONFIG, 0x7E);
-    break;
-  case RADIO_MODE_PRX:
-    // Energize the radio in PRX mode. Interrupts disable
-    nrfWrite1Reg(REG_CONFIG, 0x3F);
-    break;
-  }
+  // // CYPHY - New code based on crazyradio firmware
+  // switch (mode)
+  // {
+  // case RADIO_MODE_PTX:
+  //   // Energize the radio in PTX mode. Interrupts disable
+  //   nrfWrite1Reg(REG_CONFIG, 0x7E);
+  //   break;
+  // case RADIO_MODE_PRX:
+  //   // Energize the radio in PRX mode. Interrupts disable
+  //   nrfWrite1Reg(REG_CONFIG, 0x3F);
+  //   break;
+  // }
 
   vTaskDelay(M2T(2)); //Wait for the chip to be ready
 
@@ -305,7 +305,7 @@ static void eskylinkTask(void * arg)
  * Public functions
  */
 
-void eskylinkInit(enum radioMode_e mode)
+void eskylinkInit()
 {
   if(isInit)
     return;
@@ -322,7 +322,7 @@ void eskylinkInit(enum radioMode_e mode)
   /* Queue init */
   rxQueue = xQueueCreate(3, sizeof(CRTPPacket));
 
-  eskylinkInitPairing(mode);
+  eskylinkInitPairing();
 
     /* Launch the Radio link task */
   xTaskCreate(eskylinkTask, ESKYLINK_TASK_NAME,

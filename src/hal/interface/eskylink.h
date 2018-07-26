@@ -30,7 +30,7 @@
 #include "crtp.h"
 #include "system.h"
 
-void eskylinkInit(enum radioMode_e mode);
+void eskylinkInit();
 bool eskylinkTest();
 struct crtpLinkOperations * eskylinkGetLink();
 void eskylinkReInit(void);

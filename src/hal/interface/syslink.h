@@ -61,6 +61,9 @@
 #define SYSLINK_OW_READ     0x22
 #define SYSLINK_OW_WRITE    0x23
 
+// CYPHY
+#define SYSLINK_D2D_WRITE   0x30
+
 typedef struct _SyslinkPacket
 {
   uint8_t type;

@@ -93,7 +93,6 @@ static int messageExpected = 0;
 static int messageToSend = 0;
 static char message[LPS_MAX_DATA_SIZE];
 
-
 void sendMessageToBeacon(char * msg){
 	messageToSend = 1;
 	consoleCommPflush("3! About to send this to beacon:");
@@ -258,9 +257,13 @@ static uint32_t rxcallback(dwDevice_t *dev) {
     {
     	beaconAnalyzePayload((char*)rxPacket.payload);
     	ranging_complete = true;
-    	 consoleCommPflush("6! ranGING comPLEte;RELAY");
-    	 messageToSend = 0;
-    	 messageExpected = 0;
+    	consoleCommPflush("6! ranGING comPLEte;RELAY");
+    	messageToSend = 0;
+    	messageExpected = 0;
+      
+      // D2D
+      consoleCommPflush("A\0");
+      
     	return 0;
     	break;
     }

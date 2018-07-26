@@ -45,7 +45,6 @@
 
 // CYPHY
 #include "consoleComm.h"
-#include "nrf24l01.h"
 
 #define RADIOLINK_TX_QUEUE_SIZE (1)
 
@@ -203,7 +202,7 @@ static int radiolinkSendCRTPPacket(CRTPPacket *p)
 
   ASSERT(p->size <= CRTP_MAX_DATA_SIZE);
 
-  slp.type = SYSLINK_RADIO_RAW;
+  slp.type = SYSLINK_D2D_WRITE; // CYPHY
   slp.length = p->size + 1;
   memcpy(slp.data, &p->header, p->size + 1);
 

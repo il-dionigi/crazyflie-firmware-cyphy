@@ -196,7 +196,7 @@ static void nrf24linkTask(void * arg)
   }
 }
 
-static void nrf24linkInitNRF24L01P(enum radioMode_e mode)
+static void nrf24linkInitNRF24L01P()
 {
   int i;
   char radioAddress[5] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE7};
@@ -209,20 +209,20 @@ static void nrf24linkInitNRF24L01P(enum radioMode_e mode)
   nrfSetAddress(0, radioAddress);
 
   //Power the radio, Enable the DS interruption, set the radio in PRX mode
-  // nrfWrite1Reg(REG_CONFIG, 0x3F);
+  nrfWrite1Reg(REG_CONFIG, 0x3F);
 
-  // CYPHY - New code based on crazyradio firmware
-  switch (mode)
-  {
-  case RADIO_MODE_PTX:
-    // Energize the radio in PTX mode. Interrupts disable
-    nrfWrite1Reg(REG_CONFIG, 0x7E);
-    break;
-  case RADIO_MODE_PRX:
-    // Energize the radio in PRX mode. Interrupts disable
-    nrfWrite1Reg(REG_CONFIG, 0x3F);
-    break;
-  }
+  // // CYPHY - New code based on crazyradio firmware
+  // switch (mode)
+  // {
+  // case RADIO_MODE_PTX:
+  //   // Energize the radio in PTX mode. Interrupts disable
+  //   nrfWrite1Reg(REG_CONFIG, 0x7E);
+  //   break;
+  // case RADIO_MODE_PRX:
+  //   // Energize the radio in PRX mode. Interrupts disable
+  //   nrfWrite1Reg(REG_CONFIG, 0x3F);
+  //   break;
+  // }
 
   vTaskDelay(M2T(2)); //Wait for the chip to be ready
   // Enable the dynamic payload size and the ack payload for the pipe 0
@@ -241,7 +241,7 @@ static void nrf24linkInitNRF24L01P(enum radioMode_e mode)
  * Public functions
  */
 
-void nrf24linkInit(enum radioMode_e mode)
+void nrf24linkInit()
 {
   if(isInit)
     return;
@@ -259,7 +259,7 @@ void nrf24linkInit(enum radioMode_e mode)
   rxQueue = xQueueCreate(3, sizeof(RadioPacket));
   txQueue = xQueueCreate(3, sizeof(RadioPacket));
 
-  nrf24linkInitNRF24L01P(mode);
+  nrf24linkInitNRF24L01P();
 
     /* Launch the Radio link task */
   xTaskCreate(nrf24linkTask, NRF24LINK_TASK_NAME,
@@ -278,10 +278,10 @@ struct crtpLinkOperations * nrf24linkGetLink()
   return &radioOp;
 }
 
-void nrf24linkReInit(enum radioMode_e mode)
+void nrf24linkReInit()
 {
   if (!isInit)
     return;
 
-  nrf24linkInitNRF24L01P(mode);
+  nrf24linkInitNRF24L01P();
 }
