@@ -109,11 +109,11 @@ static bool consoleCommSendMessage(void)
 	  if (dataLen > 16){
 		  memcpy(plainData, messageToPrint.data, dataLen);
 		  memcpy(plainData+dataLen, "padpadpadpadpadpad", 32-dataLen); // fill it to size 32
-		  wc_AesCbcEncrypt(&aes, encryptedData, plainData, 16);
+		  wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData, 16);
 		  memcpy(messageToPrint.data, encryptedData, 16);
 		  memcpy(messageToPrint.data+16, "\0BadBadBadBad", 14);
 		  crtpSendPacket(&messageToPrint);
-		  wc_AesCbcEncrypt(&aes, encryptedData, plainData+16, 16);
+		  wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData+16, 16);
 		  memcpy(messageToPrint.data, encryptedData, 16);
 		  memcpy(messageToPrint.data+16, "\0BadBadBadBad", 14);
 		  crtpSendPacket(&messageToPrint);
@@ -122,7 +122,7 @@ static bool consoleCommSendMessage(void)
 	  else{
 		  memcpy(plainData, messageToPrint.data, dataLen);
 		  memcpy(plainData+dataLen, "padpadpadpadpadpad", 16-dataLen); // fill it to size 16
-		  wc_AesCbcEncrypt(&aes, encryptedData, plainData, 16);
+		  wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData, 16);
 		  memcpy(messageToPrint.data, encryptedData, 16);
 		  memcpy(messageToPrint.data+16, "\0BadBadBadBad", 14);
 		  crtpSendPacket(&messageToPrint);
@@ -275,7 +275,7 @@ void consoleCommInit()
   xTaskCreate(consoleCommTask, CONSOLE_COMM_TASK_NAME,
   			CONSOLE_COMM_TASK_STACKSIZE, NULL, CONSOLE_COMM_TASK_PRI, NULL);
   isInit = true;
-  wc_AesSetKey(&aes, key, strlen(key), iv, AES_ENCRYPTION);
+  wc_AesSetKey(&aes, key, 16, iv, AES_ENCRYPTION);
   consoleCommPflush("console comm init!");
 }
 
@@ -321,7 +321,7 @@ void consoleCommTask(void * prm)
           memcpy(&droneData, messageReceived.data + 1, 9);
 
         }
-        else if (messageReceived.data[0] == '^'){
+        else if (messageReceived.data[0] == '^'){`
         	consoleCommEncflush("Test Encryption Message");
         }
         break;
