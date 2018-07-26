@@ -57,8 +57,8 @@ int main()
   ledInit();
   ledSet(0, 1);
   ledSet(1, 1);
-
-  ledSet(LED_GREEN_R, 1);
+  while(1)
+    ledSet(LED_GREEN_R, 1);
 
   //Should never reach this point!
   while(1);
