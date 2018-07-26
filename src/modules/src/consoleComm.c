@@ -53,7 +53,6 @@
 #include "config.h"
 
 #include "aes.h"
-#include "../../hal/interface/aeslink.h"
 
 
 #ifdef STM32F40_41xxx
@@ -81,7 +80,13 @@ static char radioChannel[3] = "XX\0";
 static char radioDatarate[2] = "X\0";
 
 static bool encrypt = false;
-static bool encryptSent = false;
+static int encryptSent = 0;
+static char encryptedData[CRTP_MAX_DATA_SIZE*2];
+static char plainData[CRTP_MAX_DATA_SIZE*2];
+static Aes aes;
+static char* key = "Password";
+// iv must be 16 bytes?
+static char* iv = "())4))(4mna4.,.4";
 
 void writeDroneData(char * str, int len) {
   if((currBufferLen + len) > 1024){
@@ -99,13 +104,32 @@ void writeDroneData(char * str, int len) {
 static bool consoleCommSendMessage(void)
 {
   if (encrypt){
-	   if(aeslinkSendCRTPPacket(&messageToPrint)){
-		   messageToPrint.size = 0;
-		   encryptSent = true;
-		   return true;
-	   }
-	   encryptSent = false;
-	   return false;
+	  messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 2);
+	  uint8_t dataLen = messageToPrint.size;
+	  if (dataLen > 16){
+		  memcpy(plainData, messageToPrint.data, dataLen);
+		  memcpy(plainData+dataLen, "padpadpadpadpadpad", 32-dataLen); // fill it to size 32
+		  wc_AesCbcEncrypt(&aes, encryptedData, plainData, 16);
+		  memcpy(messageToPrint.data, encryptedData, 16);
+		  memcpy(messageToPrint.data+16, "\0BadBadBadBad", 14);
+		  crtpSendPacket(&messageToPrint);
+		  wc_AesCbcEncrypt(&aes, encryptedData, plainData+16, 16);
+		  memcpy(messageToPrint.data, encryptedData, 16);
+		  memcpy(messageToPrint.data+16, "\0BadBadBadBad", 14);
+		  crtpSendPacket(&messageToPrint);
+		  encryptSent = 2;
+	  }
+	  else{
+		  memcpy(plainData, messageToPrint.data, dataLen);
+		  memcpy(plainData+dataLen, "padpadpadpadpadpad", 16-dataLen); // fill it to size 16
+		  wc_AesCbcEncrypt(&aes, encryptedData, plainData, 16);
+		  memcpy(messageToPrint.data, encryptedData, 16);
+		  memcpy(messageToPrint.data+16, "\0BadBadBadBad", 14);
+		  crtpSendPacket(&messageToPrint);
+		  encryptSent = 1;
+	  }
+	  messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
+	  return true; // Hope it worked for now, error check later
   }
   //for debugging
   if (crtpSendPacket(&messageToPrint) == pdTRUE)
@@ -250,8 +274,8 @@ void consoleCommInit()
   vSemaphoreCreateBinary(consoleLock);
   xTaskCreate(consoleCommTask, CONSOLE_COMM_TASK_NAME,
   			CONSOLE_COMM_TASK_STACKSIZE, NULL, CONSOLE_COMM_TASK_PRI, NULL);
-  aesEnableTunnel();
   isInit = true;
+  wc_AesSetKey(&aes, key, strlen(key), iv, AES_ENCRYPTION);
   consoleCommPflush("console comm init!");
 }
 
