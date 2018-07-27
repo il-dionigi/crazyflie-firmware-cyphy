@@ -89,7 +89,7 @@ void radiolinkInit(void)
   // radiolinkSetAddress(configblockGetRadioAddress());
   radiolinkSetChannel(80);
   radiolinkSetDatarate(2);
-  radiolinkSetAddress(996028180456ULL);
+  radiolinkSetAddress(996028180456ULL); // CYPHY D2D
 
   writeDroneData("Test\0", 5);
 
@@ -183,7 +183,14 @@ void radiolinkSyslinkDispatch(SyslinkPacket *slp)
 	{
 		//Extract RSSI sample sent from radio
 		memcpy(&rssi, slp->data, sizeof(uint8_t));
-	}
+	} else if (slp->type == SYSLINK_D2D_WRITE) // CYPHY D2D
+  {
+    slp->length--; // Decrease to get CRTP size.
+    xQueueSend(crtpPacketDelivery, &slp->length, 0);
+    ledseqRun(LINK_LED, seq_linkup);
+    ledseqRun(LINK_DOWN_LED, seq_linkup);
+    syslinkSendPacket(&txPacket);
+  }
 }
 
 static int radiolinkReceiveCRTPPacket(CRTPPacket *p)

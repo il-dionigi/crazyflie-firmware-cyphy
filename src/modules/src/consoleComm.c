@@ -216,7 +216,7 @@ void consoleCommInit()
   droneData[0] = 0;
   droneData[9] = 0;
   messageToPrint.size = 0;
-  messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 1); // Change back to 0 after D2D test
+  messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
   vSemaphoreCreateBinary(consoleLock);
   xTaskCreate(consoleCommTask, CONSOLE_COMM_TASK_NAME,
   			CONSOLE_COMM_TASK_STACKSIZE, NULL, CONSOLE_COMM_TASK_PRI, NULL);

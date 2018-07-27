@@ -249,7 +249,7 @@ static uint32_t rxcallback(dwDevice_t *dev) {
         tdmaSynchronized = true;
       }
       ranging_complete = true;
-      consoleCommPflush("Test\0"); // D2D Test
+      consoleCommPflush("!Test\0"); // D2D Test
       return 0;
       break;
     }

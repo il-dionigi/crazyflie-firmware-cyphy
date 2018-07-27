@@ -72,7 +72,7 @@ void consoleInit()
     return;
 
   messageToPrint.size = 0;
-  messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
+  messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0); // CYPHY D2D
   vSemaphoreCreateBinary(synch);
 
   isInit = true;
