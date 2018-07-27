@@ -236,6 +236,7 @@ void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
 				messageToPrint.size = lengthOfMessage-counter;
 				memcpy(plainData, str+counter, messageToPrint.size);
 			    memcpy(plainData+messageToPrint.size, "padpadpadpadpadpad", 16-messageToPrint.size); // fill it to size 16
+			    messageToPrint.size = 16;
 			}
 			else{
 				messageToPrint.size = 16;
