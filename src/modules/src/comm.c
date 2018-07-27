@@ -69,8 +69,8 @@ void commInit(void)
 
   /* These functions are moved to be initialized early so
    * that DEBUG_PRINT can be used early */
-  // crtpInit();
-  // consoleInit();
+  crtpInit();
+  consoleInit();
 
 #ifdef USE_RADIOLINK_CRTP
   writeDroneData("RADIO\0", 6);
@@ -85,7 +85,7 @@ void commInit(void)
 
   crtpserviceInit();
   platformserviceInit();
-  //logInit();
+  logInit();
   paramInit();
   locSrvInit();
 
