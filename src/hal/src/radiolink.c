@@ -84,13 +84,10 @@ void radiolinkInit(void)
 
   syslinkInit();
 
-  // radiolinkSetChannel(configblockGetRadioChannel());
-  // radiolinkSetDatarate(configblockGetRadioSpeed());
-  // radiolinkSetAddress(configblockGetRadioAddress());
-  radiolinkSetChannel(80);
-  radiolinkSetDatarate(2);
-  radiolinkSetAddress(996028180456ULL); // CYPHY D2D
-
+  radiolinkSetChannel(configblockGetRadioChannel());
+  radiolinkSetDatarate(configblockGetRadioSpeed());
+  radiolinkSetAddress(configblockGetRadioAddress());
+  
   writeDroneData("Test\0", 5);
 
   isInit = true;
