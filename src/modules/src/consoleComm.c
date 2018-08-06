@@ -65,7 +65,7 @@
 #endif
 #endif
 
-#include "RTOS.h"
+//#include "RTOS.h"
 //from Wolfssl/wolfcrypt/benchmark/benchmark.c
 /*
 double current_time(int reset)
@@ -249,7 +249,7 @@ void consoleCommPflush(char * str)
 }
 
 void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
-	double start, total;
+	double start, total = 0;
 	if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE)
 	  {
 		if (messageToPrint.size > 0){
@@ -282,7 +282,7 @@ void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
 		}
 	    encrypt = 0;
 		messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
-	    sprintf(messageToPrint.data, "ET:{%.10f}", total);
+	    sprintf((char*)messageToPrint.data, "ET:{%.10f}", total);
 	    messageToPrint.size = 0;
 	    while (messageToPrint.data[messageToPrint.size] != '}' && messageToPrint.size <= 30){
 	    	messageToPrint.size++;
