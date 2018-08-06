@@ -55,6 +55,7 @@
 #include "aes.h"
 
 
+
 #ifdef STM32F40_41xxx
 #include "stm32f4xx.h"
 #else
@@ -63,6 +64,31 @@
 #define SCB_ICSR_VECTACTIVE_Msk 0x1FFUL
 #endif
 #endif
+
+#include "RTOS.h"
+//from Wolfssl/wolfcrypt/benchmark/benchmark.c
+/*
+double current_time(int reset)
+{
+	double time_now;
+	double current_s = OS_GetTime() / 1000.0;
+	double current_us = OS_GetTime_us() / 1000000.0;
+	time_now = (double)( current_s + current_us);
+
+	(void) reset;
+
+	return time_now;
+}*/
+double current_time(int reset)
+{
+	portTickType tickCount;
+
+	(void) reset;
+
+	/* tick count == ms, if configTICK_RATE_HZ is set to 1000 */
+	tickCount = xTaskGetTickCount();
+	return (double)tickCount / 1000;
+}
 
 static void consoleCommTask(void * prm);
 
@@ -87,6 +113,8 @@ static Aes aes;
 static byte key[16] = {0x02, 0x01, 0x05, 0x10, 0x02, 0x01, 0x05, 0x10,0x02, 0x01, 0x05, 0x10,0x02, 0x01, 0x05, 0x10};
 		// iv and key must be 16 bytes
 static byte iv[16] = {0x02, 0x01, 0x05, 0x10, 0x02, 0x01, 0x05, 0x10,0x02, 0x01, 0x05, 0x10,0x02, 0x01, 0x05, 0x10};
+
+
 
 void writeDroneData(char * str, int len) {
   if((currBufferLen + len) > 1024){
@@ -221,6 +249,7 @@ void consoleCommPflush(char * str)
 }
 
 void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
+	double start, total;
 	if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE)
 	  {
 		if (messageToPrint.size > 0){
@@ -243,13 +272,22 @@ void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
 				memcpy(plainData, str+counter, messageToPrint.size);
 			}
 			counter = counter + 16;
+			start = current_time(1);
 		    wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData, 16);
+		    total = current_time(0) - start;
 		    memcpy(messageToPrint.data, encryptedData, 16);
 		    memcpy(messageToPrint.data+16, "\0BadBadBadBad", 14);
 		    crtpSendPacket(&messageToPrint);
 		    encryptSent++;
 		}
 	    encrypt = 0;
+		messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
+	    sprintf(messageToPrint.data, "ET:{%.10f}", total);
+	    messageToPrint.size = 0;
+	    while (messageToPrint.data[messageToPrint.size] != '}' && messageToPrint.size <= 30){
+	    	messageToPrint.size++;
+	    }
+	    crtpSendPacket(&messageToPrint);
 	    xSemaphoreGive(consoleLock);
 	  }
 }
