@@ -88,6 +88,16 @@ static byte key[16] = {0x02, 0x01, 0x05, 0x10, 0x02, 0x01, 0x05, 0x10,0x02, 0x01
 		// iv and key must be 16 bytes
 static byte iv[16] = {0x02, 0x01, 0x05, 0x10, 0x02, 0x01, 0x05, 0x10,0x02, 0x01, 0x05, 0x10,0x02, 0x01, 0x05, 0x10};
 
+double current_time(int reset)
+{
+	portTickType tickCount;
+
+	(void) reset;
+
+	tickCount = xTaskGetTickCount();
+	return (double)tickCount / 1000;
+}
+
 void writeDroneData(char * str, int len) {
   if((currBufferLen + len) > 1024){
     currBufferLen = 0;
@@ -221,6 +231,7 @@ void consoleCommPflush(char * str)
 }
 
 void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
+	double start = 0, total = 0;
 	if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE)
 	  {
 		if (messageToPrint.size > 0){
@@ -243,13 +254,57 @@ void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
 				memcpy(plainData, str+counter, messageToPrint.size);
 			}
 			counter = counter + 16;
+			start = current_time(1);
 		    wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData, 16);
+		    total = current_time(0) - start;
 		    memcpy(messageToPrint.data, encryptedData, 16);
 		    memcpy(messageToPrint.data+16, "\0BadBadBadBad", 14);
 		    crtpSendPacket(&messageToPrint);
 		    encryptSent++;
 		}
 	    encrypt = 0;
+		messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
+	    total = current_time(0) - start;
+	    //convert double to str.
+	    //SPRINTF WILL CHANGE CF2.MAP AND IT WILL ALWAYS ERROR.
+	    //YOU HAVE BEEN WARNED.
+	    //The following is very messy but it's not used in practice, and it works.
+			double x = total;
+			unsigned long long int intx = (unsigned long long int)x;
+			int count = 0;
+			int digitsBeforeDecimal = 0;
+			int precision = 6;
+			int i = 0;
+			char message[30];
+			while (intx > 0){
+				digitsBeforeDecimal++;
+				intx /= 10;
+			}
+			message[digitsBeforeDecimal] = '.';
+			digitsBeforeDecimal += precision;
+			for (i = 0; i  < precision; i++){
+				x *= 10;
+			}
+			while (digitsBeforeDecimal > 0){
+				intx = (unsigned long long int)x;
+				digitsBeforeDecimal--;
+				//forget exponentials
+				for (i = 0; i < digitsBeforeDecimal; i++){
+					intx /= 10;
+				}
+				intx = intx % 10;
+				if (message[count] == '.'){
+					count++;
+				}
+				message[count] = intx + '0';
+				count++;
+			}
+			message[count++] = 0;
+		//end of psuedo sprintf
+		memcpy(messageToPrint.data, message, count);
+		messageToPrint.size = count;
+	    crtpSendPacket(&messageToPrint);
+	    messageToPrint.size = 0;
 	    xSemaphoreGive(consoleLock);
 	  }
 }
