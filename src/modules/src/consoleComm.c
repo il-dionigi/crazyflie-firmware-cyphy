@@ -87,7 +87,7 @@ static Aes aes;
 static byte key[16] = {0x02, 0x01, 0x05, 0x10, 0x02, 0x01, 0x05, 0x10,0x02, 0x01, 0x05, 0x10,0x02, 0x01, 0x05, 0x10};
 		// iv and key must be 16 bytes
 static byte iv[16] = {0x02, 0x01, 0x05, 0x10, 0x02, 0x01, 0x05, 0x10,0x02, 0x01, 0x05, 0x10,0x02, 0x01, 0x05, 0x10};
-
+/*
 double current_time(int reset)
 {
 	portTickType tickCount;
@@ -96,6 +96,15 @@ double current_time(int reset)
 
 	tickCount = xTaskGetTickCount();
 	return (double)tickCount / 1000;
+}
+*/
+#include "usec_time.h"
+double current_time(int reset)
+{
+	if (reset){
+		initUsecTimer();
+	}
+	return (double)usecTimestamp()/1000; //returns in ms
 }
 
 void writeDroneData(char * str, int len) {
@@ -130,6 +139,7 @@ static bool consoleCommSendMessage(void)
 
 bool consoleCommTest(void)
 {
+  current_time(1);
   return isInit;
 }
 
@@ -231,7 +241,7 @@ void consoleCommPflush(char * str)
 }
 
 void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
-	double start = 0, total = 0;
+	//double start = 0, total = 0;
 	if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE)
 	  {
 		if (messageToPrint.size > 0){
@@ -254,9 +264,9 @@ void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
 				memcpy(plainData, str+counter, messageToPrint.size);
 			}
 			counter = counter + 16;
-			start = current_time(1);
+			//start = current_time(1);
 		    wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData, 16);
-		    total = current_time(0) - start;
+		    //total = current_time(0) - start;
 		    memcpy(messageToPrint.data, encryptedData, 16);
 		    memcpy(messageToPrint.data+16, "\0BadBadBadBad", 14);
 		    crtpSendPacket(&messageToPrint);
@@ -264,7 +274,7 @@ void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
 		}
 	    encrypt = 0;
 		messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
-	    total = current_time(0) - start;
+	    /*total = current_time(0) - start;
 	    //convert double to str.
 	    //SPRINTF WILL CHANGE CF2.MAP AND IT WILL ALWAYS ERROR.
 	    //YOU HAVE BEEN WARNED.
@@ -273,7 +283,7 @@ void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
 			unsigned long long int intx = (unsigned long long int)x;
 			int count = 0;
 			int digitsBeforeDecimal = 0;
-			int precision = 6;
+			int precision = 12;
 			int i = 0;
 			char message[30];
 			while (intx > 0){
@@ -305,6 +315,7 @@ void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
 		messageToPrint.size = count;
 		messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 1);
 	    crtpSendPacket(&messageToPrint);
+	    */
 		messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
 	    messageToPrint.size = 0;
 	    xSemaphoreGive(consoleLock);

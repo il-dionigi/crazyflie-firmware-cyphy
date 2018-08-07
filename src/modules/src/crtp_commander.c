@@ -54,9 +54,11 @@ static void commanderCrtpCB(CRTPPacket* pk)
   static setpoint_t setpoint;
 
   if(pk->port == CRTP_PORT_SETPOINT && pk->channel == 0) {
+	consoleCommPflush("SP\n");
     crtpCommanderRpytDecodeSetpoint(&setpoint, pk);
+    //pk->data[15] = 0;
+    //consoleCommPflush((char*)pk->data);
     commanderSetSetpoint(&setpoint, COMMANDER_PRIORITY_CRTP);
-    //consoleCommPflush("BGB\n");
   } else if (pk->port == CRTP_PORT_SETPOINT_GENERIC && pk->channel == 0) {
     crtpCommanderGenericDecodeSetpoint(&setpoint, pk);
     commanderSetSetpoint(&setpoint, COMMANDER_PRIORITY_CRTP);
