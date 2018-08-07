@@ -303,7 +303,9 @@ void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
 		//end of psuedo sprintf
 		memcpy(messageToPrint.data, message, count);
 		messageToPrint.size = count;
+		messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 1);
 	    crtpSendPacket(&messageToPrint);
+		messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
 	    messageToPrint.size = 0;
 	    xSemaphoreGive(consoleLock);
 	  }
@@ -338,17 +340,14 @@ void consoleCommTask(void * prm)
 	char temp;
 	while(1) {
 		crtpReceivePacketBlock(CRTP_PORT_CONSOLE, &messageReceived);
-		consoleCommPuts("got msg from pc; data/channel:");
+		consoleCommPuts("got msg:");
 		consoleCommPflush((char*)(messageReceived.data));
-		temp = messageReceived.channel + '0';
-		consoleCommPutchar(temp);
-		consoleCommFlush();
 
     switch (messageReceived.channel) {
       case C2RTP_CHANNEL_TEXT:
-        displayRadioAddress();
-        displayRadioChannel();
-        displayRadioDatarate();
+        //displayRadioAddress();
+        //displayRadioChannel();
+        //displayRadioDatarate();
         consoleCommFlush();
         if (messageReceived.data[0] == '?'){
           consoleCommPflush("Current data in droneData:");
@@ -368,6 +367,7 @@ void consoleCommTask(void * prm)
 
         }
         else if (messageReceived.data[0] == '^'){
+        	consoleCommPflush("got^z");
         	consoleCommEncflush("Test Encryption Messagexxx",23);
         }
         break;
