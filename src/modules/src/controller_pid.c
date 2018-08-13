@@ -10,6 +10,8 @@
 #include "log.h"
 #include "param.h"
 
+#include "consoleComm.h"
+
 #define ATTITUDE_UPDATE_DT    (float)(1.0f/ATTITUDE_RATE)
 
 static bool tiltCompensationEnabled = false;
@@ -38,6 +40,9 @@ void controllerPid(control_t *control, setpoint_t *setpoint,
                                          const state_t *state,
                                          const uint32_t tick)
 {
+
+  consoleCommPflush("msg");
+
   if (RATE_DO_EXECUTE(ATTITUDE_RATE, tick)) {
     // Rate-controled YAW is moving YAW angle setpoint
     if (setpoint->mode.yaw == modeVelocity) {

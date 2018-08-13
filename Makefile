@@ -36,7 +36,7 @@ SENSORS 					 ?= cf2
 FATFS_DISKIO_TESTS  ?= 0	# Set to 1 to enable FatFS diskio function tests. Erases card.
 
 ifeq ($(PLATFORM), CF2)
-OPENOCD_TARGET    ?= target/stm32f4x_stlink.cfg
+OPENOCD_TARGET    ?= target/stm32f4x.cfg
 USE_FPU           ?= 1
 endif
 

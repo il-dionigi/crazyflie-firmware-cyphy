@@ -75,6 +75,18 @@ void commInit(void)
 #ifdef USE_RADIOLINK_CRTP
   writeDroneData("RADIO\0", 6);
   crtpSetLink(radiolinkGetLink());
+
+  // CYPHY DRONE TEST
+  CRTPPacket test;
+  test.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
+  test.size = 4;
+  test.data[0] = "l";
+  test.data[1] = "o";
+  test.data[2] = "l";
+  test.data[3] = "\0";
+  crtpSendPacket(&test);
+
+
 #elif defined(USE_ESKYLINK)
   writeDroneData("ESKY\0", 5);
   crtpSetLink(eskylinkGetLink());
