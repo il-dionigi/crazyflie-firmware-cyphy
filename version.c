@@ -33,15 +33,15 @@
 #include "param.h"
 
 const char * V_SLOCAL_REVISION="0";
-const char * V_SREVISION="998ad8371906";
+const char * V_SREVISION="09af83f36127";
 const char * V_STAG="ci-build";
 const char * V_BRANCH="temp";
 const char * V_PROFILE=P_NAME;
 const bool V_MODIFIED=true;
 
 /* Version recoverable from the ground */
-const uint32_t V_REVISION_0=0x998ad837;
-const uint16_t V_REVISION_1=0x1906;
+const uint32_t V_REVISION_0=0x09af83f3;
+const uint16_t V_REVISION_1=0x6127;
 
 PARAM_GROUP_START(firmware)
 PARAM_ADD(PARAM_UINT32 | PARAM_RONLY, revision0, &V_REVISION_0)

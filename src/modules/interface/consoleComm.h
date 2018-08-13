@@ -87,6 +87,10 @@ void consoleCommFlush(void);
 //puts + flush
 void consoleCommPflush(char *);
 
+//message to channel 3, guarantees via locks.
+void consoleCommGuaranteedMsg(char * str, int strsz);
+
+
 /**
  * Macro implementing consoleCommPrintf with eprintf
  *

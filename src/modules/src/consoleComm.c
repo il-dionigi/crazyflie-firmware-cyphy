@@ -107,6 +107,8 @@ double current_time(int reset)
 	return (double)usecTimestamp()/1000; //returns in ms
 }
 
+double lastSent = 0;
+
 void writeDroneData(char * str, int len) {
   if((currBufferLen + len) > 1024){
     currBufferLen = 0;
@@ -240,6 +242,29 @@ void consoleCommPflush(char * str)
 	consoleCommFlush();
 }
 
+void consoleCommGuaranteedMsg(char * str, int strsz){
+	double nowTime = current_time(0);
+	if (nowTime - lastSent < 1000){
+		return;
+		//at least one second
+	}
+	if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE)
+	{
+		if (messageToPrint.size > 0){
+			crtpSendPacket(&messageToPrint); //no error checking for now!!
+			messageToPrint.size = 0;
+		}
+		messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 3);
+		memcpy(messageToPrint.data, str, strsz);
+		messageToPrint.size = strsz;
+	    crtpSendPacket(&messageToPrint);
+	    messageToPrint.size = 0;
+		messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
+		lastSent = current_time(0);
+	    xSemaphoreGive(consoleLock);
+	}
+}
+
 void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
 	//double start = 0, total = 0;
 	if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE)
@@ -326,6 +351,7 @@ void consoleCommInit()
 {
   if (isInit)
     return;
+  lastSent = current_time(1);
   droneData[0] = 0;
   droneData[9] = 0;
   messageToPrint.size = 0;
