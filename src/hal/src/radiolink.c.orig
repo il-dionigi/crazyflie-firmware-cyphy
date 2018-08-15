@@ -43,9 +43,6 @@
 #include "ledseq.h"
 #include "queuemonitor.h"
 
-// CYPHY
-#include "consoleComm.h"
-
 #define RADIOLINK_TX_QUEUE_SIZE (1)
 
 static xQueueHandle  txQueue;
@@ -87,6 +84,11 @@ void radiolinkInit(void)
   radiolinkSetChannel(configblockGetRadioChannel());
   radiolinkSetDatarate(configblockGetRadioSpeed());
   radiolinkSetAddress(configblockGetRadioAddress());
+<<<<<<< HEAD
+=======
+
+  writeDroneData("Test\0", 5);
+>>>>>>> 8b440a51101a3fdd8d155976a9b885a06067e4c6
 
   isInit = true;
 }
