@@ -43,9 +43,6 @@
 #include "ledseq.h"
 #include "queuemonitor.h"
 
-// CYPHY
-#include "consoleComm.h"
-
 #define RADIOLINK_TX_QUEUE_SIZE (1)
 
 static xQueueHandle  txQueue;
@@ -84,14 +81,9 @@ void radiolinkInit(void)
 
   syslinkInit();
 
-  // radiolinkSetChannel(configblockGetRadioChannel());
-  // radiolinkSetDatarate(configblockGetRadioSpeed());
-  // radiolinkSetAddress(configblockGetRadioAddress());
-  radiolinkSetChannel(80);
-  radiolinkSetDatarate(2);
-  radiolinkSetAddress(996028180456ULL);
-
-  writeDroneData("Test\0", 5);
+  radiolinkSetChannel(configblockGetRadioChannel());
+  radiolinkSetDatarate(configblockGetRadioSpeed());
+  radiolinkSetAddress(configblockGetRadioAddress());
 
   isInit = true;
 }
@@ -103,7 +95,7 @@ bool radiolinkTest(void)
 
 void radiolinkSetChannel(uint8_t channel)
 {
-  saveRadioChannel(channel);
+  //saveRadioChannel(channel);
 
   SyslinkPacket slp;
 
@@ -115,7 +107,7 @@ void radiolinkSetChannel(uint8_t channel)
 
 void radiolinkSetDatarate(uint8_t datarate)
 {
-  saveRadioDatarate(datarate);
+  //saveRadioDatarate(datarate);
 
   SyslinkPacket slp;
 
@@ -127,7 +119,7 @@ void radiolinkSetDatarate(uint8_t datarate)
 
 void radiolinkSetAddress(uint64_t address)
 {
-  saveRadioAddress(address);
+  //saveRadioAddress(address);
 
   SyslinkPacket slp;
 
@@ -139,13 +131,9 @@ void radiolinkSetAddress(uint64_t address)
 
 static void radiolinkSetTarget(uint64_t address, uint8_t channel, uint8_t datarate)
 {
-  consoleCommPflush("In set target");
   radiolinkSetAddress(address);
-  consoleCommPflush("set address");
   radiolinkSetChannel(channel);
-  consoleCommPflush("set channel");
   radiolinkSetDatarate(datarate);
-  consoleCommPflush("set datarate");
 }
 
 void radiolinkSetPowerDbm(int8_t powerDbm)
