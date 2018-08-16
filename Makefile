@@ -7,6 +7,8 @@
 # Make a copy of tools/make/config.mk.example to get you started
 -include tools/make/config.mk
 
+EXTRA_CFLAGS=-DTDMA_NSLOTS_BITS=1 -DTDMA_SLOT=0
+
 CFLAGS += $(EXTRA_CFLAGS)
 
 ######### JTAG and environment configuration ##########
@@ -22,7 +24,7 @@ CLOAD_SCRIPT      ?= python3 -m cfloader
 CLOAD_CMDS        ?=
 CLOAD_ARGS        ?=
 PLATFORM					?= CF2
-LPS_TDMA_ENABLE   ?= 0
+LPS_TDMA_ENABLE   ?= 1
 LPS_TDOA_ENABLE   ?= 0
 
 ######### Stabilizer configuration ##########
