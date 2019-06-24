@@ -51,6 +51,7 @@
 #define RANGING_HISTORY_LENGTH 32
 #define OUTLIER_TH 4
 #define LPS_MAX_DATA_SIZE 30
+#define KEY_DELTA 106 // the key, anchor adds this to t3 when data is sent
 
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
@@ -157,6 +158,14 @@ static uint32_t rxcallback(dwDevice_t *dev) {
   switch(rxPacket.payload[LPS_TWR_TYPE]) {
     // Tag received messages
     case LPS_TWR_ANSWER:
+		//Add delay of delta ~cyphy~, received answer, sending final
+		//uint32_t delay = 100;
+		//for (uint16_t ii = 0; ii < delay; ii++){
+			//each instruction has a few nanosec delay(?)
+		//}
+		//uint32_t ticks = 1; // each tick is 1 ms
+		//vTaskDelay(ticks);
+
       if (rxPacket.payload[LPS_TWR_SEQ] != curr_seq) {
         return 0;
       }
@@ -205,7 +214,7 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       memcpy(&poll_rx, &report->pollRx, 5);
       memcpy(&answer_tx, &report->answerTx, 5);
       memcpy(&final_rx, &report->finalRx, 5);
-
+	answer_tx.low32 -= KEY_DELTA;
       tround1 = answer_rx.low32 - poll_tx.low32;
       treply1 = answer_tx.low32 - poll_rx.low32;
       tround2 = final_rx.low32 - answer_tx.low32;
