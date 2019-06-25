@@ -51,7 +51,7 @@
 #define RANGING_HISTORY_LENGTH 32
 #define OUTLIER_TH 4
 #define LPS_MAX_DATA_SIZE 30
-#define KEY_DELTA 106 // the key, anchor adds this to t3 when data is sent
+#define KEY_DELTA 0 // the key, anchor adds this to t3 when data is sent
 
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
@@ -267,7 +267,7 @@ static uint32_t rxcallback(dwDevice_t *dev) {
     {
     	beaconAnalyzePayload((char*)rxPacket.payload);
     	ranging_complete = true;
-    	consoleCommPflush("6! ranGING comPLEte;RELAY");
+    	consoleCommPflush("6! ranging complete;RELAY");
     	messageToSend = 0;
     	messageExpected = 0;      
     	return 0;
