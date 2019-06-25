@@ -52,6 +52,7 @@
 #define OUTLIER_TH 4
 #define LPS_MAX_DATA_SIZE 30
 #define KEY_DELTA 0 // the key, anchor adds this to t3 when data is sent
+uint32_t last_send_time = 0;
 
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
@@ -210,11 +211,17 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       if (rxPacket.payload[LPS_TWR_SEQ] != curr_seq) {
         return 0;
       }
-
+	if (last_send_time + 500 < xTaskGetTickCount()){
+		consoleCommPflush("Got message, removing delta from t3");
+	}
       memcpy(&poll_rx, &report->pollRx, 5);
       memcpy(&answer_tx, &report->answerTx, 5);
       memcpy(&final_rx, &report->finalRx, 5);
 	answer_tx.low32 -= KEY_DELTA;
+	if (last_send_time + 500 < xTaskGetTickCount()){
+		consoleCommPflush("Removed delta successfully");
+		last_send_time = xTaskGetTickCount();
+	}
       tround1 = answer_rx.low32 - poll_tx.low32;
       treply1 = answer_tx.low32 - poll_rx.low32;
       tround2 = final_rx.low32 - answer_tx.low32;
