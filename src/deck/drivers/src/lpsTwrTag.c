@@ -350,12 +350,15 @@ static void initiateRanging(dwDevice_t *dev)
 	  memcpy(txPacket.payload, message, LPS_MAX_DATA_SIZE);
 	  txPacket.payload[LPS_TWR_TYPE] =  LPS_TWR_RELAY_D2B;
 	  if (message[2] == 'K' && message[3] == 'D'){
+		if (last_send_time[14] + ticksPerMsg < xTaskGetTickCount()){
+			last_send_time[14] = xTaskGetTickCount();
+		
 		  KEY_DELTA = message[4];
-		  consoleCommPuts("(drone) key now: ");
+		  consoleCommPuts("(drone14) key now: ");
 		  consoleCommPutchar(KEY_DELTA);
 		  consoleCommFlush();
+		}
 	  }
-	  consoleCommPflush("4! Sending message now!");
 
   }
   else{
