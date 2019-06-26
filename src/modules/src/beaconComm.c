@@ -103,7 +103,9 @@ void testMsg(void){
 		  consoleCommPflush("beacon bad init");
 	  }
 	  //Change key to 'a'
-	  //beaconCommPflush("KDa");
+	  char keyMsg[4] = "KDa\0";
+	  keyMsg[2] = 'a';
+	  beaconCommPflush(keyMsg);
 }
 
 static bool beaconCommSendMessage(void)

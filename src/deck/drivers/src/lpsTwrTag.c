@@ -129,8 +129,9 @@ static void txcallback(dwDevice_t *dev)
 static uint32_t rxcallback(dwDevice_t *dev) {
 	if (last_send_time[current_anchor] + ticksPerMsg < xTaskGetTickCount()){
 		char chAnchor = current_anchor + '0';
-		consoleCommPflush("Rx from anchor:");
+		consoleCommPuts("Rx from anchor:");
 		consoleCommPutchar(chAnchor);
+		consoleCommFlush();
 		last_send_time[current_anchor] = xTaskGetTickCount();
 	}
 
@@ -330,12 +331,12 @@ static void initiateRanging(dwDevice_t *dev)
     }
 
     current_anchor ++;
-	if (last_send_time[current_anchor] + ticksPerMsg < xTaskGetTickCount()){
+	/* if (last_send_time[current_anchor] + ticksPerMsg < xTaskGetTickCount()){
 		char chAnchor = current_anchor + '0';
 		consoleCommPflush("Current anchor is");
 		consoleCommPutchar(chAnchor);
 		last_send_time[current_anchor] = xTaskGetTickCount();
-	}
+	}*/
     if (current_anchor >= LOCODECK_NR_OF_ANCHORS) {
       current_anchor = 0;
     }
@@ -348,6 +349,12 @@ static void initiateRanging(dwDevice_t *dev)
 	  messageExpected = 1;
 	  memcpy(txPacket.payload, message, LPS_MAX_DATA_SIZE);
 	  txPacket.payload[LPS_TWR_TYPE] =  LPS_TWR_RELAY_D2B;
+	  if (message[3] == 'K' && message[3] == 'D'){
+		  KEY_DELTA = message[4];
+		  consoleCommPuts("(drone) key now: ");
+		  consoleCommPutchar(KEY_DELTA);
+		  consoleCommFlush();
+	  }
 	  consoleCommPflush("4! Sending message now!");
 
   }
