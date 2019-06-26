@@ -95,18 +95,6 @@ static xSemaphoreHandle beaconLock;
 
 static bool isInit;
 
-void testMsg(void){
-	if (true){
-		  consoleCommPflush("TWR init success!");
-	  }
-	  else{
-		  consoleCommPflush("beacon bad init");
-	  }
-	  //Change key to 'a'
-	  char keyMsg[4] = "KDa\0";
-	  keyMsg[2] = 'a';
-	  beaconCommPflush(keyMsg);
-}
 
 static bool beaconCommSendMessage(void)
 {
@@ -215,6 +203,19 @@ void beaconCommPflush(char * str)
 {
 	beaconCommPuts(str);
 	beaconCommFlush();
+}
+
+void testMsg(void){
+	if (true){
+		  consoleCommPflush("TWR init success!");
+	  }
+	  else{
+		  consoleCommPflush("beacon bad init");
+	  }
+	  //Change key to 'a'
+	  char keyMsg[4] = "KDa\0";
+	  keyMsg[2] = 'a';
+	  beaconCommPflush(keyMsg);
 }
 
 //SEND CODE ABOVE. RECEIVES IN lpsTwrTag AND ANALYZE BELOW
