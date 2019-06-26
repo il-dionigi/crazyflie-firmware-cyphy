@@ -54,7 +54,7 @@
 
 //cyphy
 #define KEY_DELTA 0 // the key, anchor adds this to t3 when data is sent
-uint32_t last_send_time[LOCODECK_NR_OF_ANCHORS] = { 0 };
+static uint32_t last_send_time[LOCODECK_NR_OF_ANCHORS] = { 0 };
 
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
@@ -122,6 +122,14 @@ static void txcallback(dwDevice_t *dev)
 
 //CYPHY changed
 static uint32_t rxcallback(dwDevice_t *dev) {
+	if (last_send_time[current_anchor] + 500 < xTaskGetTickCount()){
+		char chAnchor = current_anchor + '0';
+		consoleCommPflush("Rx from anchor:");
+		consoleCommPutchar(chAnchor);
+		last_send_time[current_anchor] = xTaskGetTickCount();
+	}
+
+
   dwTime_t arival = { .full=0 };
   int dataLength = dwGetDataLength(dev);
 
