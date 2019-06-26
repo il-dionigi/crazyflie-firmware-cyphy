@@ -54,7 +54,7 @@
 
 //cyphy
 #define KEY_DELTA 0 // the key, anchor adds this to t3 when data is sent
-static uint32_t last_send_time[LOCODECK_NR_OF_ANCHORS] = { 0 };
+static uint32_t last_send_time[20] = { 0 };
 
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
@@ -106,6 +106,10 @@ void sendMessageToBeacon(char * msg){
 
 static void txcallback(dwDevice_t *dev)
 {
+	if (last_send_time[9] + 500 < xTaskGetTickCount()){
+		consoleCommPflush("tx callback (9)");
+		last_send_time[9] = 0
+	}
   dwTime_t departure;
   dwGetTransmitTimestamp(dev, &departure);
   departure.full += (options->antennaDelay / 2);
@@ -122,7 +126,6 @@ static void txcallback(dwDevice_t *dev)
 
 //CYPHY changed
 static uint32_t rxcallback(dwDevice_t *dev) {
-	  consoleCommPflush("rx callback(2)");
 	if (last_send_time[current_anchor] + 500 < xTaskGetTickCount()){
 		char chAnchor = current_anchor + '0';
 		consoleCommPflush("Rx from anchor:");
@@ -390,7 +393,11 @@ static void sendLppShort(dwDevice_t *dev, lpsLppShortPacket_t *packet)
 static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
 {
   static uint32_t statisticStartTick = 0;
-  consoleCommPflush("got event(1)");
+
+  if (last_send_time[10] + 500 < xTaskGetTickCount()){
+		consoleCommPflush("got event (10)");
+		last_send_time[10] = xTaskGetTickCount();
+  }
 
   if (statisticStartTick == 0) {
     statisticStartTick = xTaskGetTickCount();
