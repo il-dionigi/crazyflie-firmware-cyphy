@@ -106,20 +106,6 @@ static bool beaconCommSendMessage(void)
   return true;
 }
 
-void beaconCommInit()
-{
-  if (isInit)
-    return;
-
-  messageLength = 2;
-  message[0] = LPS_TWR_RELAY_D2B;
-  message[1] = LPS_TWR_RELAY_D2B;
-  vSemaphoreCreateBinary(beaconLock);
-  //xTaskCreate(beaconCommTask, BEACON_COMM_TASK_NAME,BEACON_COMM_TASK_STACKSIZE, NULL, BEACON_COMM_TASK_PRI, NULL);
-  isInit = true;
-  testMsg();
-}
-
 bool beaconCommTest(void)
 {
   return isInit;
@@ -217,6 +203,22 @@ void testMsg(void){
 	  keyMsg[2] = 'a';
 	  beaconCommPflush(keyMsg);
 }
+
+
+void beaconCommInit()
+{
+  if (isInit)
+    return;
+
+  messageLength = 2;
+  message[0] = LPS_TWR_RELAY_D2B;
+  message[1] = LPS_TWR_RELAY_D2B;
+  vSemaphoreCreateBinary(beaconLock);
+  //xTaskCreate(beaconCommTask, BEACON_COMM_TASK_NAME,BEACON_COMM_TASK_STACKSIZE, NULL, BEACON_COMM_TASK_PRI, NULL);
+  isInit = true;
+  testMsg();
+}
+
 
 //SEND CODE ABOVE. RECEIVES IN lpsTwrTag AND ANALYZE BELOW
 
