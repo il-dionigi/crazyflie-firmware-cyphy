@@ -122,6 +122,7 @@ static void txcallback(dwDevice_t *dev)
 
 //CYPHY changed
 static uint32_t rxcallback(dwDevice_t *dev) {
+	  consoleCommPflush("rx callback(2)");
 	if (last_send_time[current_anchor] + 500 < xTaskGetTickCount()){
 		char chAnchor = current_anchor + '0';
 		consoleCommPflush("Rx from anchor:");
@@ -389,6 +390,7 @@ static void sendLppShort(dwDevice_t *dev, lpsLppShortPacket_t *packet)
 static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
 {
   static uint32_t statisticStartTick = 0;
+  consoleCommPflush("got event(1)");
 
   if (statisticStartTick == 0) {
     statisticStartTick = xTaskGetTickCount();
@@ -497,7 +499,7 @@ static void twrTagInit(dwDevice_t *dev, lpsAlgoOptions_t* algoOptions)
   dwCommitConfiguration(dev);
 
   rangingOk = false;
-  consoleCommPflush("lpsTwrTag init success");
+  consoleCommPflush("lpsTwrTag init success0");
 }
 
 static bool isRangingOk()
