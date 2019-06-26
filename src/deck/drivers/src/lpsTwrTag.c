@@ -51,6 +51,8 @@
 #define RANGING_HISTORY_LENGTH 32
 #define OUTLIER_TH 4
 #define LPS_MAX_DATA_SIZE 30
+
+//cyphy
 #define KEY_DELTA 0 // the key, anchor adds this to t3 when data is sent
 uint32_t last_send_time[LOCODECK_NR_OF_ANCHORS] = { 0 };
 
@@ -316,6 +318,12 @@ static void initiateRanging(dwDevice_t *dev)
     }
 
     current_anchor ++;
+	if (last_send_time[current_anchor] + 500 < xTaskGetTickCount()){
+		char chAnchor = current_anchor + '0';
+		consoleCommPflush("Current anchor is");
+		consoleCommPutchar(chAnchor);
+		last_send_time[current_anchor] = xTaskGetTickCount();
+	}
     if (current_anchor >= LOCODECK_NR_OF_ANCHORS) {
       current_anchor = 0;
     }
@@ -481,6 +489,7 @@ static void twrTagInit(dwDevice_t *dev, lpsAlgoOptions_t* algoOptions)
   dwCommitConfiguration(dev);
 
   rangingOk = false;
+  consoleCommPflush("lpsTwrTag init success");
 }
 
 static bool isRangingOk()

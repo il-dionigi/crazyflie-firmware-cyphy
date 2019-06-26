@@ -97,7 +97,7 @@ static bool isInit;
 
 void testMsg(void){
 	if (true){
-		  consoleCommPflush("TWR init success! beacons online");
+		  consoleCommPflush("TWR init success!");
 	  }
 	  else{
 		  consoleCommPflush("beacon bad init");
