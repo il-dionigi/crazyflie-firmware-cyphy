@@ -55,7 +55,7 @@
 //cyphy
 uint32_t KEY_DELTA = 0; // the key, anchor adds this to t3 when data is sent
 static uint32_t last_send_time[20] = { 0 };
-uint16_t ticksPerMsg = 2000;
+uint16_t ticksPerMsg = 3500;
 
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
@@ -100,17 +100,17 @@ static char message[LPS_MAX_DATA_SIZE];
 
 void sendMessageToBeacon(char * msg){
 	messageToSend = 1;
-	consoleCommPflush("3! About to send this to beacon:");
+	consoleCommPflush("3! About to send this to all beacons:");
 	consoleCommPflush(msg);
 	memcpy(message, msg, LPS_MAX_DATA_SIZE);
 }
 
 static void txcallback(dwDevice_t *dev)
 {
-	if (last_send_time[9] + ticksPerMsg < xTaskGetTickCount()){
+	/*if (last_send_time[9] + ticksPerMsg < xTaskGetTickCount()){
 		consoleCommPflush("tx callback (9)");
 		last_send_time[9] = xTaskGetTickCount();
-	}
+	}*/
   dwTime_t departure;
   dwGetTransmitTimestamp(dev, &departure);
   departure.full += (options->antennaDelay / 2);
@@ -349,7 +349,7 @@ static void initiateRanging(dwDevice_t *dev)
 	  messageExpected = 1;
 	  memcpy(txPacket.payload, message, LPS_MAX_DATA_SIZE);
 	  txPacket.payload[LPS_TWR_TYPE] =  LPS_TWR_RELAY_D2B;
-	  if (message[3] == 'K' && message[3] == 'D'){
+	  if (message[2] == 'K' && message[3] == 'D'){
 		  KEY_DELTA = message[4];
 		  consoleCommPuts("(drone) key now: ");
 		  consoleCommPutchar(KEY_DELTA);
@@ -401,10 +401,10 @@ static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
 {
   static uint32_t statisticStartTick = 0;
 
-  if (last_send_time[10] + ticksPerMsg < xTaskGetTickCount()){
+  /*if (last_send_time[10] + ticksPerMsg < xTaskGetTickCount()){
 		consoleCommPflush("got event (10)");
 		last_send_time[10] = xTaskGetTickCount();
-  }
+  }*/
 
   if (statisticStartTick == 0) {
     statisticStartTick = xTaskGetTickCount();
@@ -420,17 +420,17 @@ static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
       if (lpp_transaction) {
         return 0;
       }
-	  if (last_send_time[11] + ticksPerMsg < xTaskGetTickCount()){
+	  /*if (last_send_time[11] + ticksPerMsg < xTaskGetTickCount()){
 		consoleCommPflush("packet sent timeout (11)");
 		last_send_time[11] = xTaskGetTickCount();
-  	  }
+	  }*/
       return MAX_TIMEOUT;
       break;
     case eventTimeout:  // Comes back to timeout after each ranging attempt
-	if (last_send_time[12] + ticksPerMsg < xTaskGetTickCount()){
+	/*if (last_send_time[12] + ticksPerMsg < xTaskGetTickCount()){
 		consoleCommPflush("event timeout (12)");
 		last_send_time[12] = xTaskGetTickCount();
-    }
+	}*/
       if (!ranging_complete && !lpp_transaction) {
         options->rangingState &= ~(1<<current_anchor);
         if (options->failedRanging[current_anchor] < options->rangingFailedThreshold) {
