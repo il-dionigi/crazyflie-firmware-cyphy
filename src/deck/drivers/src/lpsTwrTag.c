@@ -413,9 +413,17 @@ static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
       if (lpp_transaction) {
         return 0;
       }
+	  if (last_send_time[11] + 500 < xTaskGetTickCount()){
+		consoleCommPflush("packet sent timeout (11)");
+		last_send_time[11] = xTaskGetTickCount();
+  	  }
       return MAX_TIMEOUT;
       break;
     case eventTimeout:  // Comes back to timeout after each ranging attempt
+	if (last_send_time[12] + 500 < xTaskGetTickCount()){
+		consoleCommPflush("event timeout (12)");
+		last_send_time[12] = xTaskGetTickCount();
+    }
       if (!ranging_complete && !lpp_transaction) {
         options->rangingState &= ~(1<<current_anchor);
         if (options->failedRanging[current_anchor] < options->rangingFailedThreshold) {
