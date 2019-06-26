@@ -108,7 +108,7 @@ static void txcallback(dwDevice_t *dev)
 {
 	if (last_send_time[9] + 500 < xTaskGetTickCount()){
 		consoleCommPflush("tx callback (9)");
-		last_send_time[9] = 0;
+		last_send_time[9] = xTaskGetTickCount();
 	}
   dwTime_t departure;
   dwGetTransmitTimestamp(dev, &departure);
