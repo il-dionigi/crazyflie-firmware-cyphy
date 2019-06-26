@@ -102,6 +102,8 @@ void testMsg(void){
 	  else{
 		  consoleCommPflush("beacon bad init");
 	  }
+	  //Change key to 'a'
+	  //beaconCommPflush("KDa");
 }
 
 static bool beaconCommSendMessage(void)
@@ -218,7 +220,7 @@ void beaconCommPflush(char * str)
 void beaconAnalyzePayload(char * data)
 {
 	//for now, send this data through consoleComm
-	consoleCommPflush("5! Received msg from beacon:");
+	consoleCommPflush("5! Received msg from beacon (key?):");
 	consoleCommPflush(data);
 	//consoleCommPflush("Sending this to beacon:");
 	//consoleCommPuts("message:num:");

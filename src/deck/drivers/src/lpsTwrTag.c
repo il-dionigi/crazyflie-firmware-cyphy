@@ -53,8 +53,9 @@
 #define LPS_MAX_DATA_SIZE 30
 
 //cyphy
-#define KEY_DELTA 0 // the key, anchor adds this to t3 when data is sent
+uint32_t KEY_DELTA = 0; // the key, anchor adds this to t3 when data is sent
 static uint32_t last_send_time[20] = { 0 };
+uint16_t ticksPerMsg = 2000;
 
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
@@ -106,7 +107,7 @@ void sendMessageToBeacon(char * msg){
 
 static void txcallback(dwDevice_t *dev)
 {
-	if (last_send_time[9] + 500 < xTaskGetTickCount()){
+	if (last_send_time[9] + ticksPerMsg < xTaskGetTickCount()){
 		consoleCommPflush("tx callback (9)");
 		last_send_time[9] = xTaskGetTickCount();
 	}
@@ -126,7 +127,7 @@ static void txcallback(dwDevice_t *dev)
 
 //CYPHY changed
 static uint32_t rxcallback(dwDevice_t *dev) {
-	if (last_send_time[current_anchor] + 500 < xTaskGetTickCount()){
+	if (last_send_time[current_anchor] + ticksPerMsg < xTaskGetTickCount()){
 		char chAnchor = current_anchor + '0';
 		consoleCommPflush("Rx from anchor:");
 		consoleCommPutchar(chAnchor);
@@ -225,16 +226,16 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       if (rxPacket.payload[LPS_TWR_SEQ] != curr_seq) {
         return 0;
       }
-	if (last_send_time[current_anchor] + 500 < xTaskGetTickCount()){
+	/* if (last_send_time[current_anchor] + ticksPerMsg < xTaskGetTickCount()){
 		char chAnchor = current_anchor + '0';
 		consoleCommPflush("Current anchor is");
 		consoleCommPutchar(chAnchor);
-	}
+	}*/
       memcpy(&poll_rx, &report->pollRx, 5);
       memcpy(&answer_tx, &report->answerTx, 5);
       memcpy(&final_rx, &report->finalRx, 5);
 	answer_tx.low32 -= KEY_DELTA;
-	if (last_send_time[current_anchor] + 500 < xTaskGetTickCount()){
+	if (last_send_time[current_anchor] + ticksPerMsg < xTaskGetTickCount()){
 		consoleCommPflush("Removed delta successfully");
 		last_send_time[current_anchor] = xTaskGetTickCount();
 	}
@@ -281,7 +282,6 @@ static uint32_t rxcallback(dwDevice_t *dev) {
         tdmaSynchronized = true;
       }
       ranging_complete = true;
-      consoleCommPflush("!Test\0"); // D2D Test
       return 0;
       break;
     }
@@ -330,7 +330,7 @@ static void initiateRanging(dwDevice_t *dev)
     }
 
     current_anchor ++;
-	if (last_send_time[current_anchor] + 500 < xTaskGetTickCount()){
+	if (last_send_time[current_anchor] + ticksPerMsg < xTaskGetTickCount()){
 		char chAnchor = current_anchor + '0';
 		consoleCommPflush("Current anchor is");
 		consoleCommPutchar(chAnchor);
@@ -394,7 +394,7 @@ static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
 {
   static uint32_t statisticStartTick = 0;
 
-  if (last_send_time[10] + 500 < xTaskGetTickCount()){
+  if (last_send_time[10] + ticksPerMsg < xTaskGetTickCount()){
 		consoleCommPflush("got event (10)");
 		last_send_time[10] = xTaskGetTickCount();
   }
@@ -413,14 +413,14 @@ static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
       if (lpp_transaction) {
         return 0;
       }
-	  if (last_send_time[11] + 500 < xTaskGetTickCount()){
+	  if (last_send_time[11] + ticksPerMsg < xTaskGetTickCount()){
 		consoleCommPflush("packet sent timeout (11)");
 		last_send_time[11] = xTaskGetTickCount();
   	  }
       return MAX_TIMEOUT;
       break;
     case eventTimeout:  // Comes back to timeout after each ranging attempt
-	if (last_send_time[12] + 500 < xTaskGetTickCount()){
+	if (last_send_time[12] + ticksPerMsg < xTaskGetTickCount()){
 		consoleCommPflush("event timeout (12)");
 		last_send_time[12] = xTaskGetTickCount();
     }
