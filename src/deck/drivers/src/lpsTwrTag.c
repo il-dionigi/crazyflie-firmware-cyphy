@@ -138,7 +138,7 @@ static uint32_t rxcallback(dwDevice_t *dev) {
 		consoleCommPuts(anchors);
 		consoleCommFlush();
 		last_send_time[15] = xTaskGetTickCount();
-		uint16_t ii = 0
+		uint16_t ii = 0;
 		for (ii = 0; ii < 8; ii++){
 			anchors[ii] = 'x';
 		}
