@@ -135,7 +135,7 @@ static uint32_t rxcallback(dwDevice_t *dev) {
 	}
 	if (last_send_time[15] + 2*ticksPerMsg < xTaskGetTickCount()){
 		consoleCommPuts("(15)Anchors:");
-		consoleCommPuts(&anchors);
+		consoleCommPuts(anchors);
 		consoleCommFlush();
 		last_send_time[15] = xTaskGetTickCount();
 		uint16_t ii = 0
