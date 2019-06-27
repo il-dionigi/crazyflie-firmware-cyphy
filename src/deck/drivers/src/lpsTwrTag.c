@@ -130,7 +130,7 @@ static void txcallback(dwDevice_t *dev)
 static uint32_t rxcallback(dwDevice_t *dev) {
 	if (last_send_time[current_anchor] + ticksPerMsg < xTaskGetTickCount()){
 		char chAnchor = current_anchor + '0';
-		anchors[current_anchor] = chAnchor
+		anchors[current_anchor] = chAnchor;
 		last_send_time[current_anchor] = xTaskGetTickCount();
 	}
 	if (last_send_time[15] + 2*ticksPerMsg < xTaskGetTickCount()){
