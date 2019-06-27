@@ -56,6 +56,7 @@
 uint32_t KEY_DELTA = 0; // the key, anchor adds this to t3 when data is sent
 static uint32_t last_send_time[20] = { 0 };
 uint16_t ticksPerMsg = 3500;
+char anchors[9] = "xxxxxxxx\0";
 
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
@@ -129,12 +130,19 @@ static void txcallback(dwDevice_t *dev)
 static uint32_t rxcallback(dwDevice_t *dev) {
 	if (last_send_time[current_anchor] + ticksPerMsg < xTaskGetTickCount()){
 		char chAnchor = current_anchor + '0';
-		consoleCommPuts("Rx from anchor:");
-		consoleCommPutchar(chAnchor);
-		consoleCommFlush();
+		anchors[current_anchor] = chAnchor
 		last_send_time[current_anchor] = xTaskGetTickCount();
 	}
-
+	if (last_send_time[15] + 2*ticksPerMsg < xTaskGetTickCount()){
+		consoleCommPuts("(15)Anchors:");
+		consoleCommPuts(&anchors);
+		consoleCommFlush();
+		last_send_time[15] = xTaskGetTickCount();
+		uint16_t ii = 0
+		for (ii = 0; ii < 8; ii++){
+			anchors[ii] = 'x';
+		}
+	}
 
   dwTime_t arival = { .full=0 };
   int dataLength = dwGetDataLength(dev);
