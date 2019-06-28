@@ -66,6 +66,11 @@ The implementation must handle
 
 #define TDOA3_RECEIVE_TIMEOUT 10000
 
+//cyphy
+static uint32_t last_send_time[20] = { 0 };
+uint16_t ticksPerMsg = 3500;
+char anchors[9] = "xxxxxxxx\0";
+
 typedef struct {
   uint8_t type;
   uint8_t seq;
@@ -186,7 +191,21 @@ static void rxcallback(dwDevice_t *dev) {
 
   dwGetData(dev, (uint8_t*)&rxPacket, dataLength);
   const uint8_t anchorId = rxPacket.sourceAddress & 0xff;
-
+	if (last_send_time[anchorId] + ticksPerMsg < xTaskGetTickCount()){
+		char chAnchor = anchorId + '0';
+		anchors[anchorId] = chAnchor;
+		last_send_time[anchorId] = xTaskGetTickCount();
+	}
+	if (last_send_time[15] + 2*ticksPerMsg < xTaskGetTickCount()){
+		consoleCommPuts("(TDOA)Anchors:");
+		consoleCommPuts(anchors);
+		consoleCommFlush();
+		last_send_time[15] = xTaskGetTickCount();
+		uint16_t ii = 0;
+		for (ii = 0; ii < 8; ii++){
+			anchors[ii] = 'x';
+		}
+	}
   dwTime_t arrival = {.full = 0};
   dwGetReceiveTimestamp(dev, &arrival);
   const int64_t rxAn_by_T_in_cl_T = arrival.full;
