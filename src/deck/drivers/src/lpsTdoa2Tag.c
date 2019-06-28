@@ -44,6 +44,10 @@
 #define STATS_INTERVAL 500
 #define ANCHOR_OK_TIMEOUT 1500
 
+//cyphy
+static uint32_t last_send_time[20] = { 0 };
+uint16_t ticksPerMsg = 3500;
+char anchors[9] = "xxxxxxxx\0";
 
 // State
 typedef struct {
@@ -257,7 +261,21 @@ static bool rxcallback(dwDevice_t *dev) {
 
   dwGetData(dev, (uint8_t*)&rxPacket, dataLength);
   const uint8_t anchor = rxPacket.sourceAddress & 0xff;
-
+	if (last_send_time[anchor] + ticksPerMsg < xTaskGetTickCount()){
+		char chAnchor = anchor + '0';
+		anchors[anchor] = chAnchor;
+		last_send_time[anchor] = xTaskGetTickCount();
+	}
+	if (last_send_time[15] + 2*ticksPerMsg < xTaskGetTickCount()){
+		consoleCommPuts("(TDOA2)Anchors:");
+		consoleCommPuts(anchors);
+		consoleCommFlush();
+		last_send_time[15] = xTaskGetTickCount();
+		uint16_t ii = 0;
+		for (ii = 0; ii < 8; ii++){
+			anchors[ii] = 'x';
+		}
+	}
   // Check if we need to send the current LPP packet
   bool lppSent = false;
   if (lppPacketToSend && lppPacket.dest == anchor) {
