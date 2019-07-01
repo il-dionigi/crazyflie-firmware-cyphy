@@ -55,8 +55,8 @@
 //cyphy
 uint32_t KEY_DELTA = 0; // the key, anchor adds this to t3 when data is sent
 static uint32_t last_send_time[20] = { 0 };
-uint16_t ticksPerMsg = 3500;
-char anchors[9] = "xxxxxxxx\0";
+static uint16_t ticksPerMsg = 3500;
+static char anchors[9] = "xxxxxxxx\0";
 
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
