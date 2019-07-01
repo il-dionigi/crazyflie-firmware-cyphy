@@ -56,6 +56,9 @@ The implementation must handle
 #include "cfassert.h"
 
 
+#include "consoleComm.h"
+
+
 // Positions for sent LPP packets
 #define LPS_TDOA3_TYPE 0
 #define LPS_TDOA3_SEND_LPP_PAYLOAD 1
