@@ -2,4 +2,5 @@ make
 cp cf2.bin ~/Desktop/cf2-2018.01.1.bin
 cd ~/Desktop
 zip crazyflie-2018.01.zip cf2-2018.01.1.bin manifest.json cf2_nrf-2018.01.bin
+cp crazyflie-2018.01.zip cyphy/crazyflie-firmware-cyphy/
 cd cyphy/crazyflie-firmware-cyphy
