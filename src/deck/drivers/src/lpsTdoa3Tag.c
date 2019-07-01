@@ -57,6 +57,8 @@ The implementation must handle
 
 
 #include "consoleComm.h"
+#include "task.h"
+
 
 
 // Positions for sent LPP packets
