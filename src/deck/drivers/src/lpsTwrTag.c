@@ -95,12 +95,15 @@ static dwTime_t frameStart;
 
 static bool rangingOk;
 
-static int messageExpected = 0;
-static int messageToSend = 0;
+static int messageExpected[LOCODECK_NR_OF_ANCHORS] = {0};
+static int messageToSend[LOCODECK_NR_OF_ANCHORS] = {0};
 static char message[LPS_MAX_DATA_SIZE];
 
 void sendMessageToBeacon(char * msg){
-	messageToSend = 1;
+	int ii = 0;
+	for (ii = 0; ii < LOCODECK_NR_OF_ANCHORS; ii++){
+		messageToSend[ii] = 1;
+	}
 	consoleCommPflush("3! About to send this to all beacons:");
 	consoleCommPflush(msg);
 	memcpy(message, msg, LPS_MAX_DATA_SIZE);
@@ -128,8 +131,9 @@ static void txcallback(dwDevice_t *dev)
 
 //CYPHY changed
 static uint32_t rxcallback(dwDevice_t *dev) {
+	char chAnchor = current_anchor + '0';
 	if (last_send_time[current_anchor] + ticksPerMsg < xTaskGetTickCount()){
-		char chAnchor = current_anchor + '0';
+		
 		anchors[current_anchor] = chAnchor;
 		last_send_time[current_anchor] = xTaskGetTickCount();
 	}
@@ -171,8 +175,10 @@ static uint32_t rxcallback(dwDevice_t *dev) {
   hdr[1] = '\0';
   //consoleCommPflush("beaconDataHeader:");
   //consoleCommPflush(hdr);
-  if (messageExpected && (rxPacket.payload[LPS_TWR_TYPE] != LPS_TWR_RELAY_B2D)){
-	  consoleCommPflush("expected B2D(5)");
+  if (messageExpected[current_anchor] && (rxPacket.payload[LPS_TWR_TYPE] != LPS_TWR_RELAY_B2D)){
+	  consoleCommPuts("expected B2D(5), anchor:");
+	  consoleCommPutchar(chAnchor);
+	  consoleCommFlush();
 	  return 0;
   }
   else if (hdr[0] > 4){
@@ -299,9 +305,11 @@ static uint32_t rxcallback(dwDevice_t *dev) {
     {
     	beaconAnalyzePayload((char*)rxPacket.payload);
     	ranging_complete = true;
-    	consoleCommPflush("6! ranging complete;RELAY");
-    	messageToSend = 0;
-    	messageExpected = 0;      
+    	consoleCommPuts("msg sent to: A");
+		consoleCommPutchar(chAnchor);
+		consoleCommFlush();
+    	messageToSend[current_anchor] = 0;
+    	messageExpected[current_anchor] = 0;      
     	return 0;
     	break;
     }
@@ -353,8 +361,8 @@ static void initiateRanging(dwDevice_t *dev)
   }
 
   dwIdle(dev);
-  if (messageToSend){
-	  messageExpected = 1;
+  if (messageToSend[current_anchor]){
+	  messageExpected[current_anchor] = 1;
 	  memcpy(txPacket.payload, message, LPS_MAX_DATA_SIZE);
 	  txPacket.payload[LPS_TWR_TYPE] =  LPS_TWR_RELAY_D2B;
 	  if (message[2] == 'K' && message[3] == 'D'){
