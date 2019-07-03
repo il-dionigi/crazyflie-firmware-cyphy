@@ -564,6 +564,11 @@ uwbAlgorithm_t uwbTwrTagAlgorithm = {
 
 
 LOG_GROUP_START(twr)
+LOG_ADD(LOG_UINT32,  t2, &ts[1])
+LOG_ADD(LOG_UINT32,  t3, &ts[2])
+LOG_ADD(LOG_UINT32,  t4, &ts[3])
+LOG_ADD(LOG_UINT32,  t5, &ts[4])
+/* 
 LOG_ADD(LOG_UINT8, rangingSuccessRate0, &rangingSuccessRate[0])
 LOG_ADD(LOG_UINT8, rangingPerSec0, &rangingPerSec[0])
 LOG_ADD(LOG_UINT8, rangingSuccessRate1, &rangingSuccessRate[1])
@@ -575,9 +580,10 @@ LOG_ADD(LOG_UINT8, rangingPerSec3, &rangingPerSec[3])
 LOG_ADD(LOG_UINT8, rangingSuccessRate4, &rangingSuccessRate[4])
 LOG_ADD(LOG_UINT8, rangingPerSec4, &rangingPerSec[4])
 LOG_ADD(LOG_UINT8, rangingSuccessRate5, &rangingSuccessRate[5])
-LOG_ADD(LOG_UINT8, rangingPerSec5, &rangingPerSec[5])
+LOG_ADD(LOG_UINT8, rangingPerSec5, &rangingPerSec[5])*/
 LOG_GROUP_STOP(twr)
 
+/*
 LOG_GROUP_START(twr_time)
 LOG_ADD(LOG_UINT32,  t1, &ts[0])
 LOG_ADD(LOG_UINT32,  t2, &ts[1])
@@ -586,3 +592,4 @@ LOG_ADD(LOG_UINT32,  t4, &ts[3])
 LOG_ADD(LOG_UINT32,  t5, &ts[4])
 LOG_ADD(LOG_UINT32,  t6, &ts[5])
 LOG_GROUP_STOP(twr_time)
+*/
