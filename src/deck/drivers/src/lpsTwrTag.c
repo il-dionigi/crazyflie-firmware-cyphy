@@ -260,13 +260,14 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       treply1 = answer_tx.low32 - poll_rx.low32;
       tround2 = final_rx.low32 - answer_tx.low32;
       treply2 = final_tx.low32 - answer_rx.low32;
-	  ts[0] =  poll_tx.low32;
-	  ts[1] =  poll_rx.low32;
-	  ts[2] =  answer_tx.low32;
-	  ts[3] =  answer_rx.low32;
-	  ts[4] = final_tx.low32;
-	  ts[5] = final_rx.low32;
-
+	  if (current_anchor == 0){
+		ts[0] =  poll_tx.low32;
+		ts[1] =  poll_rx.low32;
+		ts[2] =  answer_tx.low32;
+		ts[3] =  answer_rx.low32;
+		ts[4] = final_tx.low32;
+		ts[5] = final_rx.low32;
+	  }
       tprop_ctn = ((tround1*tround2) - (treply1*treply2)) / (tround1 + tround2 + treply1 + treply2);
 
       tprop = tprop_ctn / LOCODECK_TS_FREQ;
