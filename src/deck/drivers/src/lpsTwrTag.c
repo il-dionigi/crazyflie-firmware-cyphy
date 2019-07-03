@@ -53,7 +53,7 @@
 #define LPS_MAX_DATA_SIZE 30
 
 //cyphy
-uint32_t KEY_DELTA = 2000; // the key, anchor adds this to t3 when data is sent
+uint32_t KEY_DELTA = -2000; // the key, anchor adds this to t3 when data is sent
 static uint32_t last_send_time[20] = { 0 };
 static uint16_t ticksPerMsg = 3500;
 static char anchors[9] = "xxxxxxxx\0";
