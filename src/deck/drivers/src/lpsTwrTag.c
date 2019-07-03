@@ -568,7 +568,7 @@ LOG_ADD(LOG_UINT8, rangingPerSec4, &rangingPerSec[4])
 LOG_ADD(LOG_UINT8, rangingSuccessRate5, &rangingSuccessRate[5])
 LOG_ADD(LOG_UINT8, rangingPerSec5, &rangingPerSec[5])
 LOG_GROUP_STOP(twr)
-/*
+
 LOG_GROUP_START(twr_time)
 LOG_ADD(LOG_INT32,  t1, &poll_tx.low32)
 LOG_ADD(LOG_INT32,  t2, &poll_rx.low32)
@@ -577,4 +577,3 @@ LOG_ADD(LOG_INT32,  t4, &answer_rx.low32)
 LOG_ADD(LOG_INT32,  t5, &final_tx.low32)
 LOG_ADD(LOG_INT32,  t6, &final_rx.low32)
 LOG_GROUP_STOP(twr_time)
-*/
