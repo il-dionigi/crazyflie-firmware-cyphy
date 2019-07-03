@@ -252,21 +252,21 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       memcpy(&answer_tx, &report->answerTx, 5);
       memcpy(&final_rx, &report->finalRx, 5);
 	answer_tx.low32 -= KEY_DELTA;
-	if (last_send_time[current_anchor] + ticksPerMsg < xTaskGetTickCount()){
-		consoleCommPflush("Removed delta successfully");
-		last_send_time[current_anchor] = xTaskGetTickCount();
-	}
       tround1 = answer_rx.low32 - poll_tx.low32;
       treply1 = answer_tx.low32 - poll_rx.low32;
       tround2 = final_rx.low32 - answer_tx.low32;
       treply2 = final_tx.low32 - answer_rx.low32;
 	  if (current_anchor == 0){
-		ts[0] =  poll_tx.low32;
+		  if (last_send_time[16] + ticksPerMsg < xTaskGetTickCount()){
+				consoleCommPflush("Anchor0 Ts updated!");
+				last_send_time[16] = xTaskGetTickCount();
+		  }
+		ts[0] =  treply1;
 		ts[1] =  poll_rx.low32;
 		ts[2] =  answer_tx.low32;
 		ts[3] =  answer_rx.low32;
 		ts[4] = final_tx.low32;
-		ts[5] = final_rx.low32;
+		ts[5] = treply2;
 	  }
       tprop_ctn = ((tround1*tround2) - (treply1*treply2)) / (tround1 + tround2 + treply1 + treply2);
 
