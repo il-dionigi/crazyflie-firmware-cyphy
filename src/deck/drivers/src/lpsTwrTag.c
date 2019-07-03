@@ -78,6 +78,8 @@ static dwTime_t answer_rx;
 static dwTime_t final_tx;
 static dwTime_t final_rx;
 
+static uint32_t ts[8] = {0};
+
 static packet_t txPacket;
 static volatile uint8_t curr_seq = 0;
 static int current_anchor = 0;
@@ -258,6 +260,12 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       treply1 = answer_tx.low32 - poll_rx.low32;
       tround2 = final_rx.low32 - answer_tx.low32;
       treply2 = final_tx.low32 - answer_rx.low32;
+	  ts[0] =  poll_tx.low32;
+	  ts[1] =  poll_rx.low32;
+	  ts[2] =  answer_tx.low32;
+	  ts[3] =  answer_rx.low32;
+	  ts[4] = final_tx.low32;
+	  ts[5] = final_rx.low32;
 
       tprop_ctn = ((tround1*tround2) - (treply1*treply2)) / (tround1 + tround2 + treply1 + treply2);
 
@@ -570,13 +578,11 @@ LOG_ADD(LOG_UINT8, rangingSuccessRate5, &rangingSuccessRate[5])
 LOG_ADD(LOG_UINT8, rangingPerSec5, &rangingPerSec[5])
 LOG_GROUP_STOP(twr)
 
-/* 
 LOG_GROUP_START(twr_time)
-LOG_ADD(LOG_INT32,  t1, &poll_tx.low32)
-LOG_ADD(LOG_INT32,  t2, &poll_rx.low32)
-LOG_ADD(LOG_INT32,  t3, &answer_tx.low32)
-LOG_ADD(LOG_INT32,  t4, &answer_rx.low32)
-LOG_ADD(LOG_INT32,  t5, &final_tx.low32)
-LOG_ADD(LOG_INT32,  t6, &final_rx.low32)
+LOG_ADD(LOG_UINT32,  t1, &ts[0])
+LOG_ADD(LOG_UINT32,  t2, &ts[1])
+LOG_ADD(LOG_UINT32,  t3, &ts[2])
+LOG_ADD(LOG_UINT32,  t4, &ts[3])
+LOG_ADD(LOG_UINT32,  t5, &ts[4])
+LOG_ADD(LOG_UINT32,  t6, &ts[5])
 LOG_GROUP_STOP(twr_time)
-*/
