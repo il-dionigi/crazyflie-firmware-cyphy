@@ -59,6 +59,7 @@ static uint16_t ticksPerMsg = 3500;
 static char anchors[9] = "xxxxxxxx\0";
 static uint32_t ts[8] = {0};
 static uint32_t delta_p = 1234;
+static uint32_t delta_bs[8] = {0};
 
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
@@ -261,7 +262,8 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       treply1 = answer_tx.low32 - poll_rx.low32;
       tround2 = final_rx.low32 - answer_tx.low32;
       treply2 = final_tx.low32 - answer_rx.low32;
-	  if (current_anchor == 1){
+	  delta_bs[current_anchor] = treply1;
+	  if (current_anchor == 0){
 		  //if (last_send_time[16] + 500 < xTaskGetTickCount()){
 			delta_p = poll_tx.low32 - ts[7]; //new t1 - old t8
 			ts[0] =  poll_tx.low32;
@@ -570,6 +572,15 @@ uwbAlgorithm_t uwbTwrTagAlgorithm = {
   .isRangingOk = isRangingOk,
 };
 
+
+LOG_GROUP_START(twrBeacons)
+LOG_ADD(LOG_UINT32,  delta_b0, &delta_bs[0])
+LOG_ADD(LOG_UINT32,  delta_b1, &delta_bs[1])
+LOG_ADD(LOG_UINT32,  delta_b2, &delta_bs[2])
+LOG_ADD(LOG_UINT32,  delta_b3, &delta_bs[3])
+LOG_ADD(LOG_UINT32,  delta_b4, &delta_bs[4])
+LOG_ADD(LOG_UINT32,  delta_b5, &delta_bs[5])
+LOG_GROUP_STOP(twrBeacons)
 
 LOG_GROUP_START(twr)
 LOG_ADD(LOG_UINT32,  t1, &ts[0])
