@@ -316,7 +316,11 @@ static uint32_t rxcallback(dwDevice_t *dev) {
         frameStart.full = TDMA_LAST_FRAME(final_rx.full) + offset.full;
         tdmaSynchronized = true;
       }
+	  delta_delay_counter = xTaskGetTickCount();
       ranging_complete = true;
+	  while (xTaskGetTickCount < delta_delay + delta_delay_counter){
+		  
+	  }
       return 0;
       break;
     }
@@ -360,14 +364,6 @@ static dwTime_t transmitTimeForSlot(int slot)
 //CYPHY changed
 static void initiateRanging(dwDevice_t *dev)
 {
-  //Cyphy: Change delta p, increase by delta_delay millisecsonds
-  if (current_anchor == 0){
-	delta_delay_counter = xTaskGetTickCount();
-	while (delta_delay_counter + delta_delay > xTaskGetTickCount() ){
-		//do nothing
-	}
-  }
-  
 
   if (!options->useTdma || tdmaSynchronized) {
     if (options->useTdma) {
