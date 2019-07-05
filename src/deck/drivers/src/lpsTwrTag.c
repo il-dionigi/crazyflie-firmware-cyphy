@@ -59,7 +59,7 @@ static uint16_t ticksPerMsg = 3500;
 static char anchors[9] = "xxxxxxxx\0";
 static uint32_t ts[8] = {0};
 static uint32_t delta_p = 1234;
-static uint8_t delta_delay = 15;
+static uint8_t delta_delay = 10;
 //static uint32_t delta_delay_counter = 0;
 static uint32_t delta_bs[8] = {0};
 
