@@ -78,7 +78,7 @@ static dwTime_t answer_rx;
 static dwTime_t final_tx;
 static dwTime_t final_rx;
 
-static double ts[8] = {0};
+static uint32_t ts[8] = {0};
 
 static packet_t txPacket;
 static volatile uint8_t curr_seq = 0;
@@ -565,12 +565,12 @@ uwbAlgorithm_t uwbTwrTagAlgorithm = {
 
 
 LOG_GROUP_START(twr)
-LOG_ADD(LOG_FLOAT,  t1, &ts[0])
-LOG_ADD(LOG_FLOAT,  t2, &ts[1])
-LOG_ADD(LOG_FLOAT,  t3, &ts[2])
-LOG_ADD(LOG_FLOAT,  t4, &ts[3])
-LOG_ADD(LOG_FLOAT,  t5, &ts[4])
-LOG_ADD(LOG_FLOAT,  t6, &ts[6])
+LOG_ADD(LOG_UINT32,  t1, &ts[0])
+LOG_ADD(LOG_UINT32,  t2, &ts[1])
+LOG_ADD(LOG_UINT32,  t3, &ts[2])
+LOG_ADD(LOG_UINT32,  t4, &ts[3])
+LOG_ADD(LOG_UINT32,  t5, &ts[4])
+LOG_ADD(LOG_UINT32,  t6, &ts[6])
 LOG_GROUP_STOP(twr)
 
 /* 
