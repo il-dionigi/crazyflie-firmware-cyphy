@@ -318,8 +318,8 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       }
 	  delta_delay_counter = xTaskGetTickCount();
       ranging_complete = true;
-	  while (xTaskGetTickCount < delta_delay + delta_delay_counter){
-		  
+	  while (xTaskGetTickCount() < delta_delay + delta_delay_counter){
+
 	  }
       return 0;
       break;
