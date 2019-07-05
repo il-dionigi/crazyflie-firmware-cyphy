@@ -316,7 +316,7 @@ static uint32_t rxcallback(dwDevice_t *dev) {
         frameStart.full = TDMA_LAST_FRAME(final_rx.full) + offset.full;
         tdmaSynchronized = true;
       }
-	  vTaskDelay(delta_delay);
+	  //vTaskDelay(delta_delay);
       ranging_complete = true;
       return 0;
       break;
