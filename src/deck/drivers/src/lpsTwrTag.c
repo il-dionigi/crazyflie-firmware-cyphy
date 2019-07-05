@@ -262,7 +262,7 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       tround2 = final_rx.low32 - answer_tx.low32;
       treply2 = final_tx.low32 - answer_rx.low32;
 	  if (current_anchor == 0){
-		  if (last_send_time[16] + 500 < xTaskGetTickCount()){
+		  //if (last_send_time[16] + 500 < xTaskGetTickCount()){
 			delta_p = poll_tx.low32 - ts[7]; //new t1 - old t8
 			ts[0] =  poll_tx.low32;
 			ts[1] =  poll_rx.low32;
@@ -272,8 +272,8 @@ static uint32_t rxcallback(dwDevice_t *dev) {
 			ts[5] =  final_rx.low32;
 			ts[6] =  final_rx.low32 + (answer_tx.low32 - poll_rx.low32); //report_tx.low32 = t7 = t6 + delta_b
 			ts[7] =  report_rx.low32;
-			last_send_time[16] = xTaskGetTickCount();
-		  }
+			//last_send_time[16] = xTaskGetTickCount();
+		  //}
 	  }
       tprop_ctn = ((tround1*tround2) - (treply1*treply2)) / (tround1 + tround2 + treply1 + treply2);
 
