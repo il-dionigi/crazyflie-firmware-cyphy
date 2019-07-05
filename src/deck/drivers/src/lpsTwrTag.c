@@ -60,7 +60,7 @@ static char anchors[9] = "xxxxxxxx\0";
 static uint32_t ts[8] = {0};
 static uint32_t delta_p = 1234;
 static uint8_t delta_delay = 13;
-static uint32_t delta_delay_counter = 0;
+//static uint32_t delta_delay_counter = 0;
 static uint32_t delta_bs[8] = {0};
 
 static struct {
@@ -316,11 +316,8 @@ static uint32_t rxcallback(dwDevice_t *dev) {
         frameStart.full = TDMA_LAST_FRAME(final_rx.full) + offset.full;
         tdmaSynchronized = true;
       }
-	  delta_delay_counter = xTaskGetTickCount();
+	  vTaskDelay(delta_delay);
       ranging_complete = true;
-	  while (xTaskGetTickCount() < delta_delay + delta_delay_counter){
-
-	  }
       return 0;
       break;
     }
