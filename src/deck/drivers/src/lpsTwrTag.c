@@ -377,6 +377,7 @@ static void initiateRanging(dwDevice_t *dev)
 	}*/
     if (current_anchor >= LOCODECK_NR_OF_ANCHORS) {
       current_anchor = 0;
+	  xTaskDelay(1);
     }
   } else {
     current_anchor = 0;
