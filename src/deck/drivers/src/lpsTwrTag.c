@@ -365,9 +365,9 @@ static void initiateRanging(dwDevice_t *dev)
 	delta_delay_counter = xTaskGetTickCount();
 	while (delta_delay_counter + delta_delay > xTaskGetTickCount() ){
 		//do nothing
-		}
 	}
   }
+  
 
   if (!options->useTdma || tdmaSynchronized) {
     if (options->useTdma) {
