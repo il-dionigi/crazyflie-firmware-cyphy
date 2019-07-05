@@ -55,10 +55,12 @@
 //cyphy
 uint32_t KEY_DELTA = 2000; // the key, anchor adds this to t3 when data is sent
 static uint32_t last_send_time[20] = { 0 };
+static uint32_t delta_delay_counter = 0;
 static uint16_t ticksPerMsg = 3500;
 static char anchors[9] = "xxxxxxxx\0";
 static uint32_t ts[8] = {0};
 static uint32_t delta_p = 1234;
+static uint8_t delta_delay = 130;
 static uint32_t delta_bs[8] = {0};
 
 static struct {
@@ -265,6 +267,7 @@ static uint32_t rxcallback(dwDevice_t *dev) {
 	  delta_bs[current_anchor] = treply1;
 	  if (current_anchor == 0){
 		  //if (last_send_time[16] + 500 < xTaskGetTickCount()){
+			delta_delay_counter = xTaskGetTickCount();
 			delta_p = poll_tx.low32 - ts[7]; //new t1 - old t8
 			ts[0] =  poll_tx.low32;
 			ts[1] =  poll_rx.low32;
@@ -358,6 +361,14 @@ static dwTime_t transmitTimeForSlot(int slot)
 //CYPHY changed
 static void initiateRanging(dwDevice_t *dev)
 {
+  //Cyphy: Change delta p, increase by delta_delay millisecsonds
+  if (current_anchor == 0){
+	while ( delta_delay_counter + delta_delay < xTaskGetTickCount() ){
+		// do nothing
+		return
+	}
+  }
+
   if (!options->useTdma || tdmaSynchronized) {
     if (options->useTdma) {
       // go to next TDMA frame
