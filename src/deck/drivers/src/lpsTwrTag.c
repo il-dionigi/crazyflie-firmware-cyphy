@@ -62,7 +62,6 @@ static uint32_t delta_p = 1234;
 static uint8_t delta_delay = 13;
 static uint32_t delta_delay_counter = 0;
 static uint32_t delta_bs[8] = {0};
-char spin_str[10] = "123456789\0";
 
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
@@ -114,7 +113,6 @@ void sendMessageToBeacon(char * msg){
 	}
 	consoleCommPflush("3! About to send this to all beacons:");
 	consoleCommPflush(msg);
-	consoleCommPflush(spin_str);
 	memcpy(message, msg, LPS_MAX_DATA_SIZE);
 }
 
@@ -367,14 +365,6 @@ static void initiateRanging(dwDevice_t *dev)
 	delta_delay_counter = xTaskGetTickCount();
 	while (delta_delay_counter + delta_delay > xTaskGetTickCount() ){
 		//do nothing
-		uint16_t spin_count = 0;
-		for (spin_count = 0; spin_count < 100; spin_count++ ){
-			if (spin_count < 50){
-				spin_str[0] = '0'+spin_count;
-			}
-			else {
-				spin_str[3] = '0'+(spin_count-50);
-			}
 		}
 	}
   }
