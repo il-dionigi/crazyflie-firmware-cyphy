@@ -57,6 +57,8 @@ uint32_t KEY_DELTA = 2000; // the key, anchor adds this to t3 when data is sent
 static uint32_t last_send_time[20] = { 0 };
 static uint16_t ticksPerMsg = 3500;
 static char anchors[9] = "xxxxxxxx\0";
+static uint32_t ts[8] = {0};
+static uint32_t delta_p = 1234;
 
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
@@ -77,8 +79,8 @@ static dwTime_t answer_tx;
 static dwTime_t answer_rx;
 static dwTime_t final_tx;
 static dwTime_t final_rx;
+static dwTime_t report_rx;
 
-static uint32_t ts[8] = {0};
 
 static packet_t txPacket;
 static volatile uint8_t curr_seq = 0;
@@ -248,25 +250,30 @@ static uint32_t rxcallback(dwDevice_t *dev) {
 		consoleCommPflush("Current anchor is");
 		consoleCommPutchar(chAnchor);
 	}*/
+	  dwGetReceiveTimestamp(dev, &arival);
+      arival.full -= (options->antennaDelay / 2);
+      report_rx = arival;
       memcpy(&poll_rx, &report->pollRx, 5);
       memcpy(&answer_tx, &report->answerTx, 5);
       memcpy(&final_rx, &report->finalRx, 5);
-	answer_tx.low32 -= KEY_DELTA;
+	  answer_tx.low32 -= KEY_DELTA;
       tround1 = answer_rx.low32 - poll_tx.low32;
       treply1 = answer_tx.low32 - poll_rx.low32;
       tround2 = final_rx.low32 - answer_tx.low32;
       treply2 = final_tx.low32 - answer_rx.low32;
 	  if (current_anchor == 0){
-		  if (last_send_time[16] + ticksPerMsg < xTaskGetTickCount()){
-				consoleCommPflush("Anchor0 Ts updated!");
-				last_send_time[16] = xTaskGetTickCount();
+		  if (last_send_time[16] + 500 < xTaskGetTickCount()){
+			delta_p = poll_tx.low32 - ts[7]; //new t1 - old t8
+			ts[0] =  poll_tx.low32;
+			ts[1] =  poll_rx.low32;
+			ts[2] =  answer_tx.low32;
+			ts[3] =  answer_rx.low32;
+			ts[4] =  final_tx.low32;
+			ts[5] =  final_rx.low32;
+			ts[6] =  final_rx.low32 + (answer_tx.low32 - poll_rx.low32); //report_tx.low32 = t7 = t6 + delta_b
+			ts[7] =  report_rx.low32;
+			last_send_time[16] = xTaskGetTickCount();
 		  }
-		ts[0] =  treply1;
-		ts[1] =  poll_rx.low32;
-		ts[2] =  answer_tx.low32;
-		ts[3] =  answer_rx.low32;
-		ts[4] = final_tx.low32;
-		ts[5] = treply2;
 	  }
       tprop_ctn = ((tround1*tround2) - (treply1*treply2)) / (tround1 + tround2 + treply1 + treply2);
 
@@ -570,7 +577,7 @@ LOG_ADD(LOG_UINT32,  t2, &ts[1])
 LOG_ADD(LOG_UINT32,  t3, &ts[2])
 LOG_ADD(LOG_UINT32,  t4, &ts[3])
 LOG_ADD(LOG_UINT32,  t5, &ts[4])
-LOG_ADD(LOG_UINT32,  t6, &ts[6])
+LOG_ADD(LOG_UINT32,  delta_p, &delta_p)
 LOG_GROUP_STOP(twr)
 
 /* 
