@@ -59,7 +59,8 @@ static uint16_t ticksPerMsg = 3500;
 static char anchors[9] = "xxxxxxxx\0";
 static uint32_t ts[8] = {0};
 static uint32_t delta_p = 1234;
-static uint8_t delta_delay = 130;
+static uint8_t delta_delay = 13;
+static uint32_t delta_delay_counter = 0;
 static uint32_t delta_bs[8] = {0};
 
 static struct {
@@ -361,7 +362,20 @@ static void initiateRanging(dwDevice_t *dev)
 {
   //Cyphy: Change delta p, increase by delta_delay millisecsonds
   if (current_anchor == 0){
-	vTaskDelay(delta_delay);
+	delta_delay_counter = xTaskGetTickCount();
+	while (delta_delay_counter + delta_delay > xTaskGetTickCount() ){
+		//do nothing
+		uint16_t spin_count = 0;
+		char spin_str[10] = "123456789\0"
+		for (spin_count = 0; spin_count < 100; spin_count++ ){
+			if (spin_count < 50){
+				spin_str[0] = "0"+spin_count;
+			}
+			else {
+				spin_str[3] = "0"+spin_count-50;
+			}
+		}
+	}
   }
 
   if (!options->useTdma || tdmaSynchronized) {
