@@ -62,7 +62,7 @@ static uint32_t delta_p = 1234;
 static uint8_t delta_delay = 13;
 static uint32_t delta_delay_counter = 0;
 static uint32_t delta_bs[8] = {0};
-char spin_str[10] = "123456789\0"
+char spin_str[10] = "123456789\0";
 
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
