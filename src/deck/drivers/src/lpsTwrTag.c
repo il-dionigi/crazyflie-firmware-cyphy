@@ -65,7 +65,7 @@ static uint8_t delta_ph8 = 56;
 static uint32_t delta_bs[8] = {0};
   dwTime_t startTime = {.full = 0};
   dwTime_t endTime;
-
+static uint16_t delta_p_slot = 1;
 
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
@@ -113,7 +113,9 @@ static int messageToSend[LOCODECK_NR_OF_ANCHORS] = {0};
 static char message[LPS_MAX_DATA_SIZE];
 
 void changeTDMAslot(uint8_t slot){
+	consoleCommPflush("Changed slot!"); 
 	options->tdmaSlot = slot*5;
+	delta_p_slot = slot*5;
 }
 
 void sendMessageToBeacon(char * msg){
@@ -597,7 +599,7 @@ static void twrTagInit(dwDevice_t *dev, lpsAlgoOptions_t* algoOptions)
 {
   options = algoOptions;
   options->useTdma = true;
-  options->tdmaSlot = 60;
+  options->tdmaSlot = delta_p_slot;
   // Initialize the packet in the TX buffer
   memset(&txPacket, 0, sizeof(txPacket));
   MAC80215_PACKET_INIT(txPacket, MAC802154_TYPE_DATA);
