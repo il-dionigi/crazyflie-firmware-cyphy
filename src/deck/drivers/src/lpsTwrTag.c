@@ -57,24 +57,29 @@ uint32_t KEY_DELTA = 2000; // the key, anchor adds this to t3 when data is sent
 static uint32_t last_send_time[20] = { 0 };
 static uint16_t ticksPerMsg = 3500;
 static char anchors[9] = "xxxxxxxx\0";
-static uint32_t ts[8] = {0};
+static uint32_t ts[10] = {0};
 static uint32_t delta_p = 1234;
+static uint8_t delta_ph8 = 56;
 //static uint8_t delta_delay = 10;
 //static uint32_t delta_delay_counter = 0;
 static uint32_t delta_bs[8] = {0};
+  dwTime_t startTime = {.full = 0};
+  dwTime_t endTime;
+
 
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
   size_t ptr;
 } rangingStats[LOCODECK_NR_OF_ANCHORS];
 
+/*
 // Rangin statistics
 static uint8_t rangingPerSec[LOCODECK_NR_OF_ANCHORS];
 static uint8_t rangingSuccessRate[LOCODECK_NR_OF_ANCHORS];
 // Used to calculate above values
 static uint8_t succededRanging[LOCODECK_NR_OF_ANCHORS];
 static uint8_t failedRanging[LOCODECK_NR_OF_ANCHORS];
-
+*/
 // Timestamps for ranging
 static dwTime_t poll_tx;
 static dwTime_t poll_rx;
@@ -82,7 +87,8 @@ static dwTime_t answer_tx;
 static dwTime_t answer_rx;
 static dwTime_t final_tx;
 static dwTime_t final_rx;
-static dwTime_t report_rx;
+static dwTime_t report_rx = {.full = 0};
+
 
 
 static packet_t txPacket;
@@ -134,6 +140,7 @@ static void txcallback(dwDevice_t *dev)
       final_tx = departure;
       break;
   }
+
 }
 
 //CYPHY changed
@@ -264,10 +271,14 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       treply1 = answer_tx.low32 - poll_rx.low32;
       tround2 = final_rx.low32 - answer_tx.low32;
       treply2 = final_tx.low32 - answer_rx.low32;
-	  delta_bs[current_anchor] = treply1;
-	  if (current_anchor == 0){
+
+	delta_bs[current_anchor] = treply1;
+	
+	  if (current_anchor == 1){
 		  //if (last_send_time[16] + 500 < xTaskGetTickCount()){
 			delta_p = poll_tx.low32 - ts[7]; //new t1 - old t8
+			delta_ph8 = poll_tx.high8 - ts[8]; 
+			//delta_p =  report_rx.low32 - ts[7]; //new t8 - old t8
 			ts[0] =  poll_tx.low32;
 			ts[1] =  poll_rx.low32;
 			ts[2] =  answer_tx.low32;
@@ -276,6 +287,7 @@ static uint32_t rxcallback(dwDevice_t *dev) {
 			ts[5] =  final_rx.low32;
 			ts[6] =  final_rx.low32 + (answer_tx.low32 - poll_rx.low32); //report_tx.low32 = t7 = t6 + delta_b
 			ts[7] =  report_rx.low32;
+			ts[8] = report_rx.high8;
 			//last_send_time[16] = xTaskGetTickCount();
 		  //}
 	  }
@@ -362,6 +374,19 @@ static dwTime_t transmitTimeForSlot(int slot)
 static void initiateRanging(dwDevice_t *dev)
 {
 
+ 
+/*
+uint32_t i = 0;
+uint32_t sum = 0;
+for ( i = 0; i < 50*1002; i++){
+sum += (current_anchor > 0) ? i*current_anchor/2 : i;
+sum = sum & 65535;
+}
+message[6] = sum % 10;
+*/
+
+ 
+
   if (!options->useTdma || tdmaSynchronized) {
     if (options->useTdma) {
       // go to next TDMA frame
@@ -375,8 +400,13 @@ static void initiateRanging(dwDevice_t *dev)
 		consoleCommPutchar(chAnchor);
 		last_send_time[current_anchor] = xTaskGetTickCount();
 	}*/
-    if (current_anchor >= LOCODECK_NR_OF_ANCHORS) {
+    if (current_anchor >= 8) {
       current_anchor = 0;
+ /* options->rangingState = 0;
+  ranging_complete = false;
+  rangingOk = false;
+  dwCommitConfiguration(dev); */
+
 	}
   } else {
     current_anchor = 0;
@@ -402,6 +432,32 @@ static void initiateRanging(dwDevice_t *dev)
   else{
 	  txPacket.payload[LPS_TWR_TYPE] =  LPS_TWR_POLL;
   }
+/*
+if (current_anchor == 1){
+ dwNewTransmit(dev);
+  dwSetDefaults(dev);
+  dwSetData(dev, (uint8_t*)&txPacket, MAC802154_HEADER_LENGTH+2+28);
+  dwWaitForResponse(dev, false);
+  dwStartTransmit(dev);
+
+  dwGetTransmitTimestamp(dev, &endTime);
+delta_bs[0] = endTime.low32 - startTime.low32;
+
+startTime = endTime;
+	
+}*/
+/*else if (current_anchor == 0){
+ dwNewTransmit(dev);
+  dwSetDefaults(dev);
+  dwSetData(dev, (uint8_t*)&txPacket, MAC802154_HEADER_LENGTH+2+28);
+  dwWaitForResponse(dev, false);
+  dwStartTransmit(dev);
+
+  dwGetTransmitTimestamp(dev, &endTime);
+  
+delta_bs[0] = endTime.low32 - startTime.low32;
+}*/
+
   txPacket.payload[LPS_TWR_SEQ] = ++curr_seq;
 
   txPacket.sourceAddress = options->tagAddress;
@@ -416,7 +472,10 @@ static void initiateRanging(dwDevice_t *dev)
     dwSetTxRxTime(dev, txTime);
   }
 
+ 
+
   dwWaitForResponse(dev, true);
+  
   dwStartTransmit(dev);
 }
 
@@ -471,7 +530,7 @@ static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
 	/*if (last_send_time[12] + ticksPerMsg < xTaskGetTickCount()){
 		consoleCommPflush("event timeout (12)");
 		last_send_time[12] = xTaskGetTickCount();
-	}*/
+	}
       if (!ranging_complete && !lpp_transaction) {
         options->rangingState &= ~(1<<current_anchor);
         if (options->failedRanging[current_anchor] < options->rangingFailedThreshold) {
@@ -504,7 +563,7 @@ static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
           failedRanging[i] = 0;
           succededRanging[i] = 0;
         }
-      }
+      }*/
 
 
       if (lpsGetLppShort(&lppShortPacket)) {
@@ -523,7 +582,8 @@ static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
       return 0;
       break;
     default:
-      configASSERT(false);
+	return MAX_TIMEOUT;
+      //configASSERT(false);
   }
 
   return MAX_TIMEOUT;
@@ -532,7 +592,8 @@ static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
 static void twrTagInit(dwDevice_t *dev, lpsAlgoOptions_t* algoOptions)
 {
   options = algoOptions;
-
+  options->useTdma = true;
+  options->tdmaSlot = 60;
   // Initialize the packet in the TX buffer
   memset(&txPacket, 0, sizeof(txPacket));
   MAC80215_PACKET_INIT(txPacket, MAC802154_TYPE_DATA);
@@ -560,7 +621,6 @@ static void twrTagInit(dwDevice_t *dev, lpsAlgoOptions_t* algoOptions)
   dwSetReceiveWaitTimeout(dev, TWR_RECEIVE_TIMEOUT);
 
   dwCommitConfiguration(dev);
-
   rangingOk = false;
   consoleCommPflush("lpsTwrTag init success0");
 }
@@ -593,6 +653,7 @@ LOG_ADD(LOG_UINT32,  t3, &ts[2])
 LOG_ADD(LOG_UINT32,  t4, &ts[3])
 LOG_ADD(LOG_UINT32,  t5, &ts[4])
 LOG_ADD(LOG_UINT32,  delta_p, &delta_p)
+LOG_ADD(LOG_UINT8,  delta_ph8, &delta_ph8)
 LOG_GROUP_STOP(twr)
 
 /* 

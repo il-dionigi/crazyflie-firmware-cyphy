@@ -55,7 +55,7 @@ typedef enum uwbEvent_e {
 } uwbEvent_t;
 
 #ifndef LOCODECK_NR_OF_ANCHORS
-#define LOCODECK_NR_OF_ANCHORS 8
+#define LOCODECK_NR_OF_ANCHORS 80
 #endif
 
 typedef uint64_t locoAddress_t;
@@ -114,7 +114,7 @@ typedef struct uwbAlgorithm_s {
 
 #include <FreeRTOS.h>
 
-#define MAX_TIMEOUT portMAX_DELAY
+#define MAX_TIMEOUT portMAX_DELAY*10
 
 // Send a short configuration packet to the LPS system
 // Returns true if packet will be send, false instead
