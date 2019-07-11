@@ -242,85 +242,10 @@ void consoleCommTask(void * prm)
 		temp = messageReceived.channel + '0';
 		consoleCommPutchar(temp);
 		consoleCommFlush();
-
-    switch (messageReceived.channel) {
-      case C2RTP_CHANNEL_TEXT:
-        displayRadioAddress();
-        displayRadioChannel();
-        displayRadioDatarate();
-        consoleCommFlush();
-        if (messageReceived.data[0] == '?'){
-          consoleCommPflush("Current data in droneData:");
-          consoleCommPflush(droneData);
-        }
-        else if (messageReceived.data[0] == '~'){
-          consoleCommPflush("1! Sending to beacon; port,message:");
-          consoleCommPutchar(messageReceived.data[1]);
-          consoleCommPutchar(',');
-          consoleCommPflush((char*)(messageReceived.data+2));
-          beaconCommPflush((char*)(messageReceived.data+2));
-        }
-        else if (messageReceived.data[0] == '!') {
-          consoleCommPflush("Putting data in droneData:");
-          consoleCommPflush((char*)(messageReceived.data+1));
-          memcpy(&droneData, messageReceived.data + 1, 9);
-        }
-        break;
-      case C2RTP_CHANNEL_SWITCH:
-        consoleCommPflush((char*)(messageReceived.data+1));
-        memcpy(&droneData, messageReceived.data + 1, 9);
-    //     consoleCommPflush("Currently switching channels");
-    //     if (!slept){
-    //     	consoleCommPflush("Sleeping");
-    //     	slept = 1;
-    //     	break;
-    //     }
-    //     else{
-    //     	consoleCommPflush("Waking");
-    //     }
-    //     int i;
-    //     for (i = 0; i < CRTP_MAX_DATA_SIZE; i++){
-    //       temp = messageReceived.data[i];
-    //       if (temp == ',') {
-    //     	i++;
-    //         break;
-    //       }
-    //       else {
-    //         address *= 10;
-    //         address += temp - '0';
-    //       }
-    //     }
-    //     for (; i < CRTP_MAX_DATA_SIZE; i++){
-		//   temp = messageReceived.data[i];
-		//   if (temp == ',') {
-		// 	i++;
-		// 	break;
-		//   }
-		//   else {
-		// 	channel *= 10;
-		// 	channel += temp - '0';
-		//   }
-		// }
-    //     for (; i < CRTP_MAX_DATA_SIZE; i++){
-		//   temp = messageReceived.data[i];
-		//   if (temp == ',') {
-		// 	i++;
-		// 	break;
-		//   }
-		//   else {
-		// 	dataRate *= 10;
-		// 	dataRate += temp - '0';
-		//   }
-		// }
-        /*crtpSwitchTarget(address, channel, dataRate);
-        while(true) {
-          consoleCommPflush("!d2dWorkd\0");
-        }*/
-        break;
-      default:
-        break;
-    }
-	}
+		if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'T' && messageReceived.data[2] == 'S'){
+			changeTDMAslot(messageReceived.data[3]);
+		}
+	} //while
 }
 
 void saveRadioAddress(uint64_t address) {

@@ -112,6 +112,10 @@ static int messageExpected[LOCODECK_NR_OF_ANCHORS] = {0};
 static int messageToSend[LOCODECK_NR_OF_ANCHORS] = {0};
 static char message[LPS_MAX_DATA_SIZE];
 
+void changeTDMAslot(uint8_t slot){
+	options->tdmaSlot = slot*5;
+}
+
 void sendMessageToBeacon(char * msg){
 	int ii = 0;
 	for (ii = 0; ii < LOCODECK_NR_OF_ANCHORS; ii++){
