@@ -65,21 +65,21 @@ static uint8_t delta_ph8 = 56;
 static uint32_t delta_bs[8] = {0};
   dwTime_t startTime = {.full = 0};
   dwTime_t endTime;
-static uint16_t delta_p_slot = 1;
+static uint16_t delta_p_slot = 0;
 
 static struct {
   float32_t history[RANGING_HISTORY_LENGTH];
   size_t ptr;
 } rangingStats[LOCODECK_NR_OF_ANCHORS];
 
-/*
+
 // Rangin statistics
 static uint8_t rangingPerSec[LOCODECK_NR_OF_ANCHORS];
 static uint8_t rangingSuccessRate[LOCODECK_NR_OF_ANCHORS];
 // Used to calculate above values
 static uint8_t succededRanging[LOCODECK_NR_OF_ANCHORS];
 static uint8_t failedRanging[LOCODECK_NR_OF_ANCHORS];
-*/
+
 // Timestamps for ranging
 static dwTime_t poll_tx;
 static dwTime_t poll_rx;
@@ -113,9 +113,16 @@ static int messageToSend[LOCODECK_NR_OF_ANCHORS] = {0};
 static char message[LPS_MAX_DATA_SIZE];
 
 void changeTDMAslot(uint8_t slot){
-	consoleCommPflush("Changed slot!"); 
 	options->tdmaSlot = slot*5;
 	delta_p_slot = slot*5;
+        if (slot == 0){
+	    options->useTdma = false;
+	    consoleCommPflush("Changed slot! DISABLED TDMA"); 
+	}
+	else {
+	    options->useTdma = true;
+	    consoleCommPflush("Changed slot! USING TDMA"); 
+	}
 }
 
 void sendMessageToBeacon(char * msg){
@@ -407,13 +414,8 @@ message[6] = sum % 10;
 		last_send_time[current_anchor] = xTaskGetTickCount();
 	}*/
     if (current_anchor >= 8) {
-      current_anchor = 0;
- /* options->rangingState = 0;
-  ranging_complete = false;
-  rangingOk = false;
-  dwCommitConfiguration(dev); */
-
-	}
+      current_anchor = 0; 
+    }
   } else {
     current_anchor = 0;
   }
@@ -536,7 +538,7 @@ static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
 	/*if (last_send_time[12] + ticksPerMsg < xTaskGetTickCount()){
 		consoleCommPflush("event timeout (12)");
 		last_send_time[12] = xTaskGetTickCount();
-	}
+	}*/
       if (!ranging_complete && !lpp_transaction) {
         options->rangingState &= ~(1<<current_anchor);
         if (options->failedRanging[current_anchor] < options->rangingFailedThreshold) {
@@ -569,7 +571,7 @@ static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
           failedRanging[i] = 0;
           succededRanging[i] = 0;
         }
-      }*/
+      }
 
 
       if (lpsGetLppShort(&lppShortPacket)) {
@@ -598,7 +600,7 @@ static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
 static void twrTagInit(dwDevice_t *dev, lpsAlgoOptions_t* algoOptions)
 {
   options = algoOptions;
-  options->useTdma = true;
+  options->useTdma = false;
   options->tdmaSlot = delta_p_slot;
   // Initialize the packet in the TX buffer
   memset(&txPacket, 0, sizeof(txPacket));

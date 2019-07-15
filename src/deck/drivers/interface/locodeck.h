@@ -55,7 +55,7 @@ typedef enum uwbEvent_e {
 } uwbEvent_t;
 
 #ifndef LOCODECK_NR_OF_ANCHORS
-#define LOCODECK_NR_OF_ANCHORS 80
+#define LOCODECK_NR_OF_ANCHORS 8
 #endif
 
 typedef uint64_t locoAddress_t;
