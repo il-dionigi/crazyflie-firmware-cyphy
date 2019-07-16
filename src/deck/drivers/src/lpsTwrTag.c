@@ -60,6 +60,18 @@ static char anchors[9] = "xxxxxxxx\0";
 static uint32_t ts[10] = {0};
 static uint32_t delta_p = 1234;
 static uint8_t delta_ph8 = 56;
+static uint32_t singleRanging = 1234;
+static uint32_t allRangings = 1234;
+static uint32_t betweenRounds = 1234;
+static uint32_t betweenRangings = 1234;
+//single ranging: time beacon0 report received - poll sent
+//all rangings: time between beacon7 report received - beacon0 poll sent
+//between rounds: time between beacon0 poll1 - beacon0 poll2
+//between rangings: time between beacon1 poll sent - beacon0 report received
+//delta_p: time beacon0 poll2 - report1
+static uint32_t roundStart = 1234;
+static uint32_t roundEnd = 1234;
+
 //static uint8_t delta_delay = 10;
 //static uint32_t delta_delay_counter = 0;
 static uint32_t delta_bs[8] = {0};
@@ -117,12 +129,29 @@ void changeTDMAslot(uint8_t slot){
 	delta_p_slot = slot*5;
         if (slot == 0){
 	    options->useTdma = false;
-	    consoleCommPflush("Changed slot! DISABLED TDMA"); 
+	    consoleCommPflush("DISABLED TDMA"); 
 	}
 	else {
 	    options->useTdma = true;
-	    consoleCommPflush("Changed slot! USING TDMA"); 
+	    consoleCommPflush("USING TDMA"); 
 	}
+        char slotStr[6];
+	slotStr[0] = '.';
+	slotStr[1] = '.';
+	slotStr[2] = '.';
+	slotStr[3] = '.';
+	slotStr[4] = '.';
+	slotStr[5] = '0';
+	uint8_t tmp_i = 0;
+        uint16_t tmp_slot = delta_p_slot;
+	while (tmp_slot > 0){
+		slotStr[5-tmp_i] = (tmp_slot % 10) + '0';
+		tmp_slot = tmp_slot / 10;
+		tmp_i = tmp_i + 1;
+	}
+	consoleCommPuts("Slot:");
+	consoleCommPuts(slotStr);
+	consoleCommFlush();
 }
 
 void sendMessageToBeacon(char * msg){
@@ -148,6 +177,13 @@ static void txcallback(dwDevice_t *dev)
   switch (txPacket.payload[0]) {
     case LPS_TWR_POLL:
       poll_tx = departure;
+      if (current_anchor == 0){
+        betweenRounds = poll_tx.low32 - roundStart;
+	roundStart = poll_tx.low32;
+      }
+      else if (current_anchor == 1){
+	betweenRangings = poll_tx.low32 - ts[7];
+      }
       break;
     case LPS_TWR_FINAL:
       final_tx = departure;
@@ -276,6 +312,10 @@ static uint32_t rxcallback(dwDevice_t *dev) {
 	  dwGetReceiveTimestamp(dev, &arival);
       arival.full -= (options->antennaDelay / 2);
       report_rx = arival;
+      if (current_anchor == LOCODECK_NR_OF_ANCHORS-1){
+	roundEnd = report_rx.low32;
+	allRangings = roundEnd - roundStart;
+      }
       memcpy(&poll_rx, &report->pollRx, 5);
       memcpy(&answer_tx, &report->answerTx, 5);
       memcpy(&final_rx, &report->finalRx, 5);
@@ -287,7 +327,7 @@ static uint32_t rxcallback(dwDevice_t *dev) {
 
 	delta_bs[current_anchor] = treply1;
 	
-	  if (current_anchor == 1){
+	  if (current_anchor == 0){
 		  //if (last_send_time[16] + 500 < xTaskGetTickCount()){
 			delta_p = poll_tx.low32 - ts[7]; //new t1 - old t8
 			delta_ph8 = poll_tx.high8 - ts[8]; 
@@ -301,6 +341,7 @@ static uint32_t rxcallback(dwDevice_t *dev) {
 			ts[6] =  final_rx.low32 + (answer_tx.low32 - poll_rx.low32); //report_tx.low32 = t7 = t6 + delta_b
 			ts[7] =  report_rx.low32;
 			ts[8] = report_rx.high8;
+                        singleRanging = ts[7] - ts[0];
 			//last_send_time[16] = xTaskGetTickCount();
 		  //}
 	  }
@@ -387,19 +428,6 @@ static dwTime_t transmitTimeForSlot(int slot)
 static void initiateRanging(dwDevice_t *dev)
 {
 
- 
-/*
-uint32_t i = 0;
-uint32_t sum = 0;
-for ( i = 0; i < 50*1002; i++){
-sum += (current_anchor > 0) ? i*current_anchor/2 : i;
-sum = sum & 65535;
-}
-message[6] = sum % 10;
-*/
-
- 
-
   if (!options->useTdma || tdmaSynchronized) {
     if (options->useTdma) {
       // go to next TDMA frame
@@ -453,8 +481,8 @@ delta_bs[0] = endTime.low32 - startTime.low32;
 
 startTime = endTime;
 	
-}*/
-/*else if (current_anchor == 0){
+}
+else if (current_anchor == 0){
  dwNewTransmit(dev);
   dwSetDefaults(dev);
   dwSetData(dev, (uint8_t*)&txPacket, MAC802154_HEADER_LENGTH+2+28);
@@ -645,14 +673,22 @@ uwbAlgorithm_t uwbTwrTagAlgorithm = {
 };
 
 
-LOG_GROUP_START(twrBeacons)
+/*LOG_GROUP_START(twrBeacons)
 LOG_ADD(LOG_UINT32,  delta_b0, &delta_bs[0])
 LOG_ADD(LOG_UINT32,  delta_b1, &delta_bs[1])
 LOG_ADD(LOG_UINT32,  delta_b2, &delta_bs[2])
 LOG_ADD(LOG_UINT32,  delta_b3, &delta_bs[3])
 LOG_ADD(LOG_UINT32,  delta_b4, &delta_bs[4])
 LOG_ADD(LOG_UINT32,  delta_b5, &delta_bs[5])
-LOG_GROUP_STOP(twrBeacons)
+LOG_GROUP_STOP(twrBeacons)*/
+
+LOG_GROUP_START(twrOther)
+LOG_ADD(LOG_UINT32,  singleRanging, &singleRanging)
+LOG_ADD(LOG_UINT32,  allRangings, &allRangings)
+LOG_ADD(LOG_UINT32,  betweenRounds, &betweenRounds)
+LOG_ADD(LOG_UINT32,  betweenRangings, &betweenRangings)
+LOG_GROUP_STOP(twrOther)
+
 
 LOG_GROUP_START(twr)
 LOG_ADD(LOG_UINT32,  t1, &ts[0])
