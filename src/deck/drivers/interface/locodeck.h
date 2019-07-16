@@ -114,7 +114,7 @@ typedef struct uwbAlgorithm_s {
 
 #include <FreeRTOS.h>
 
-#define MAX_TIMEOUT portMAX_DELAY*10
+#define MAX_TIMEOUT portMAX_DELAY
 
 // Send a short configuration packet to the LPS system
 // Returns true if packet will be send, false instead
