@@ -310,7 +310,7 @@ static const DeckDriver gtgps_deck = {
 };
 
 DECK_DRIVER(gtgps_deck);
-
+/*
 LOG_GROUP_START(gps)
 LOG_ADD(LOG_INT32, lat, &m.latitude)
 LOG_ADD(LOG_INT32, lon, &m.longitude)
@@ -319,3 +319,4 @@ LOG_ADD(LOG_FLOAT, hAcc, &b.pdop)
 LOG_ADD(LOG_INT32, nsat, &m.nsat)
 LOG_ADD(LOG_INT32, fix, &b.fix)
 LOG_GROUP_STOP(gps)
+*/

@@ -57,20 +57,24 @@ uint32_t KEY_DELTA = 2000; // the key, anchor adds this to t3 when data is sent
 static uint32_t last_send_time[20] = { 0 };
 static uint16_t ticksPerMsg = 3500;
 static char anchors[9] = "xxxxxxxx\0";
-static uint32_t ts[10] = {0};
+static uint32_t ts[12] = {0};
 static uint32_t delta_p = 1234;
 static uint8_t delta_ph8 = 56;
 static uint32_t singleRanging = 1234;
 static uint32_t allRangings = 1234;
 static uint32_t betweenRounds = 1234;
 static uint32_t betweenRangings = 1234;
+static uint8_t singleRanging_h8 = 56;
+static uint8_t allRangings_h8 = 56;
+static uint8_t betweenRounds_h8 = 56;
+static uint8_t betweenRangings_h8 = 56;
 //single ranging: time beacon0 report received - poll sent
 //all rangings: time between beacon7 report received - beacon0 poll sent
 //between rounds: time between beacon0 poll1 - beacon0 poll2
 //between rangings: time between beacon1 poll sent - beacon0 report received
 //delta_p: time beacon0 poll2 - report1
-static uint32_t roundStart = 1234;
-static uint32_t roundEnd = 1234;
+
+
 
 //static uint8_t delta_delay = 10;
 //static uint32_t delta_delay_counter = 0;
@@ -177,12 +181,9 @@ static void txcallback(dwDevice_t *dev)
   switch (txPacket.payload[0]) {
     case LPS_TWR_POLL:
       poll_tx = departure;
-      if (current_anchor == 0){
-        betweenRounds = poll_tx.low32 - roundStart;
-	roundStart = poll_tx.low32;
-      }
-      else if (current_anchor == 1){
+      if (current_anchor == 1){
 	betweenRangings = poll_tx.low32 - ts[7];
+	betweenRangings_h8 = poll_tx.high8 - ts[8];
       }
       break;
     case LPS_TWR_FINAL:
@@ -313,8 +314,8 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       arival.full -= (options->antennaDelay / 2);
       report_rx = arival;
       if (current_anchor == LOCODECK_NR_OF_ANCHORS-1){
-	roundEnd = report_rx.low32;
-	allRangings = roundEnd - roundStart;
+	allRangings = report_rx.low32 - ts[0];
+	allRangings_h8 = report_rx.high8 - ts[9];
       }
       memcpy(&poll_rx, &report->pollRx, 5);
       memcpy(&answer_tx, &report->answerTx, 5);
@@ -331,6 +332,8 @@ static uint32_t rxcallback(dwDevice_t *dev) {
 		  //if (last_send_time[16] + 500 < xTaskGetTickCount()){
 			delta_p = poll_tx.low32 - ts[7]; //new t1 - old t8
 			delta_ph8 = poll_tx.high8 - ts[8]; 
+			betweenRounds = poll_tx.low32 - ts[0];
+			betweenRounds_h8 = poll_tx.high8 - ts[9];
 			//delta_p =  report_rx.low32 - ts[7]; //new t8 - old t8
 			ts[0] =  poll_tx.low32;
 			ts[1] =  poll_rx.low32;
@@ -341,7 +344,11 @@ static uint32_t rxcallback(dwDevice_t *dev) {
 			ts[6] =  final_rx.low32 + (answer_tx.low32 - poll_rx.low32); //report_tx.low32 = t7 = t6 + delta_b
 			ts[7] =  report_rx.low32;
 			ts[8] = report_rx.high8;
+			ts[9] = poll_tx.high8;
                         singleRanging = ts[7] - ts[0];
+			singleRanging_h8 = ts[8] - poll_tx.high8;
+
+
 			//last_send_time[16] = xTaskGetTickCount();
 		  //}
 	  }
@@ -441,7 +448,7 @@ static void initiateRanging(dwDevice_t *dev)
 		consoleCommPutchar(chAnchor);
 		last_send_time[current_anchor] = xTaskGetTickCount();
 	}*/
-    if (current_anchor >= 8) {
+    if (current_anchor >= LOCODECK_NR_OF_ANCHORS) {
       current_anchor = 0; 
     }
   } else {
@@ -618,8 +625,7 @@ static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
       return 0;
       break;
     default:
-	return MAX_TIMEOUT;
-      //configASSERT(false);
+      configASSERT(false);
   }
 
   return MAX_TIMEOUT;
@@ -628,8 +634,8 @@ static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
 static void twrTagInit(dwDevice_t *dev, lpsAlgoOptions_t* algoOptions)
 {
   options = algoOptions;
-  options->useTdma = false;
-  options->tdmaSlot = delta_p_slot;
+  //options->useTdma = false;
+  //options->tdmaSlot = delta_p_slot;
   // Initialize the packet in the TX buffer
   memset(&txPacket, 0, sizeof(txPacket));
   MAC80215_PACKET_INIT(txPacket, MAC802154_TYPE_DATA);
@@ -687,6 +693,10 @@ LOG_ADD(LOG_UINT32,  singleRanging, &singleRanging)
 LOG_ADD(LOG_UINT32,  allRangings, &allRangings)
 LOG_ADD(LOG_UINT32,  betweenRounds, &betweenRounds)
 LOG_ADD(LOG_UINT32,  betweenRangings, &betweenRangings)
+LOG_ADD(LOG_UINT8,  singleRanging_h8, &singleRanging_h8)
+LOG_ADD(LOG_UINT8,  allRangings_h8, &allRangings_h8)
+LOG_ADD(LOG_UINT8,  betweenRounds_h8, &betweenRounds_h8)
+//LOG_ADD(LOG_UINT8,  betweenRangings_h8, &betweenRangings_h8)
 LOG_GROUP_STOP(twrOther)
 
 
