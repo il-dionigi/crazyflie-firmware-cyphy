@@ -70,6 +70,7 @@ static uint8_t betweenRounds_h8 = 56;
 static uint8_t betweenRangings_h8 = 56;
 static uint8_t anchor_order[LOCODECK_NR_OF_ANCHORS];
 static uint8_t anchor_index = 0;
+static bool fixedOrder = true;
 //single ranging: time beacon0 report received - poll sent
 //all rangings: time between beacon7 report received - beacon0 poll sent
 //between rounds: time between beacon0 poll1 - beacon0 poll2
@@ -132,20 +133,26 @@ static char message[LPS_MAX_DATA_SIZE];
 
 void randomizeOrder(){
 	uint8_t i, j, tmp ;
-	for (i = LOCODECK_NR_OF_ANCHORS-1; i >= 1; i-- ){
-		//generate random number
-		dwNewTransmit(dev);
-		dwSetDefaults(dev);
-		dwSetData(dev, (uint8_t*)&txPacket, MAC802154_HEADER_LENGTH+2+28);
-		dwWaitForResponse(dev, false);
-		dwStartTransmit(dev);
-		dwGetTransmitTimestamp(dev, &startTime);
-		j = (startTime.low32 % 10) % (i+1);
-		tmp = anchor_order[j];
-		anchor_order[j] = anchor_order[i];
-		anchor_order[i] = tmp;
+	if (fixedOrder){
+		for (i = 0; i < LOCODECK_NR_OF_ANCHORS; i++){
+	  		anchor_order[i] = i;
+  		}
 	}
-	
+	else{
+		for (i = LOCODECK_NR_OF_ANCHORS-1; i >= 1; i-- ){
+			//generate random number
+			dwNewTransmit(dev);
+			dwSetDefaults(dev);
+			dwSetData(dev, (uint8_t*)&txPacket, MAC802154_HEADER_LENGTH+2+28);
+			dwWaitForResponse(dev, false);
+			dwStartTransmit(dev);
+			dwGetTransmitTimestamp(dev, &startTime);
+			j = (startTime.low32 % 10) % (i+1);
+			tmp = anchor_order[j];
+			anchor_order[j] = anchor_order[i];
+			anchor_order[i] = tmp;
+		}
+	}
 }
 
 void changeTDMAslot(uint8_t slot){
@@ -176,6 +183,16 @@ void changeTDMAslot(uint8_t slot){
 	consoleCommPuts("Slot:");
 	consoleCommPuts(slotStr);
 	consoleCommFlush();
+}
+
+void changeOrder(bool fixed){
+	fixedOrder = fixed;
+	if (fixed){
+		consoleCommPflush("Fixed beacon order");
+	}
+	else {
+		consoleCommPflush("Random beacon order");
+	}
 }
 
 void sendMessageToBeacon(char * msg){

@@ -26,6 +26,7 @@
 
 extern uwbAlgorithm_t uwbTwrTagAlgorithm;
 
+void changeOrder(bool fixed);
 void changeTDMAslot(uint8_t slot);
 void sendMessageToBeacon(char * msg);
 
