@@ -68,6 +68,8 @@ static uint8_t singleRanging_h8 = 56;
 static uint8_t allRangings_h8 = 56;
 static uint8_t betweenRounds_h8 = 56;
 static uint8_t betweenRangings_h8 = 56;
+static uint8_t anchor_order[LOCODECK_NR_OF_ANCHORS];
+static uint8_t anchor_index = 0;
 //single ranging: time beacon0 report received - poll sent
 //all rangings: time between beacon7 report received - beacon0 poll sent
 //between rounds: time between beacon0 poll1 - beacon0 poll2
@@ -127,6 +129,24 @@ static bool rangingOk;
 static int messageExpected[LOCODECK_NR_OF_ANCHORS] = {0};
 static int messageToSend[LOCODECK_NR_OF_ANCHORS] = {0};
 static char message[LPS_MAX_DATA_SIZE];
+
+void randomizeOrder(){
+	uint8_t i, j, tmp ;
+	for (i = LOCODECK_NR_OF_ANCHORS-1; i >= 1; i-- ){
+		//generate random number
+		dwNewTransmit(dev);
+		dwSetDefaults(dev);
+		dwSetData(dev, (uint8_t*)&txPacket, MAC802154_HEADER_LENGTH+2+28);
+		dwWaitForResponse(dev, false);
+		dwStartTransmit(dev);
+		dwGetTransmitTimestamp(dev, &startTime);
+		j = (startTime.low32 % 10) % (i+1);
+		tmp = anchor_order[j];
+		anchor_order[j] = anchor_order[i];
+		anchor_order[i] = tmp;
+	}
+	
+}
 
 void changeTDMAslot(uint8_t slot){
 	options->tdmaSlot = slot*5;
@@ -441,20 +461,25 @@ static void initiateRanging(dwDevice_t *dev)
       frameStart.full += TDMA_FRAME_LEN;
     }
 
-    current_anchor ++;
+    //current_anchor ++;
+	anchor_index++;
 	/* if (last_send_time[current_anchor] + ticksPerMsg < xTaskGetTickCount()){
 		char chAnchor = current_anchor + '0';
 		consoleCommPflush("Current anchor is");
 		consoleCommPutchar(chAnchor);
 		last_send_time[current_anchor] = xTaskGetTickCount();
 	}*/
-    if (current_anchor >= LOCODECK_NR_OF_ANCHORS) {
+    /*if (current_anchor >= LOCODECK_NR_OF_ANCHORS) {
       current_anchor = 0; 
-    }
+    }*/
+	if (anchor_index >= LOCODECK_NR_OF_ANCHORS) {
+		anchor_index = 0; 
+		randomizeOrder();
+	}
   } else {
     current_anchor = 0;
   }
-
+  current_anchor = anchor_order[anchor_index];
   dwIdle(dev);
   if (messageToSend[current_anchor]){
 	  messageExpected[current_anchor] = 1;
@@ -633,6 +658,10 @@ static uint32_t twrTagOnEvent(dwDevice_t *dev, uwbEvent_t event)
 
 static void twrTagInit(dwDevice_t *dev, lpsAlgoOptions_t* algoOptions)
 {
+  uint8_t i = 0;
+  for (i = 0; i < LOCODECK_NR_OF_ANCHORS; i++){
+	  anchor_order[i] = i;
+  }
   options = algoOptions;
   //options->useTdma = false;
   //options->tdmaSlot = delta_p_slot;
