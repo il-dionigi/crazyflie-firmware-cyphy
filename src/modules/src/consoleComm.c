@@ -245,7 +245,7 @@ void consoleCommTask(void * prm)
 		if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'T' && messageReceived.data[2] == 'S'){
 			changeTDMAslot(messageReceived.data[3]);
 		}
-		else if (messageReceived.data[0] = '%' && messageReceived.data[1] == 'O'){
+		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'O'){
 			changeOrder( (messageReceived.data[2] == 'F')  );
 		}
 	} //while

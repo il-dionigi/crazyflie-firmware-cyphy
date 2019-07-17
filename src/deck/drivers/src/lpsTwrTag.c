@@ -131,7 +131,7 @@ static int messageExpected[LOCODECK_NR_OF_ANCHORS] = {0};
 static int messageToSend[LOCODECK_NR_OF_ANCHORS] = {0};
 static char message[LPS_MAX_DATA_SIZE];
 
-void randomizeOrder(){
+void randomizeOrder(dwDevice_t *dev){
 	uint8_t i, j, tmp ;
 	if (fixedOrder){
 		for (i = 0; i < LOCODECK_NR_OF_ANCHORS; i++){
@@ -491,7 +491,7 @@ static void initiateRanging(dwDevice_t *dev)
     }*/
 	if (anchor_index >= LOCODECK_NR_OF_ANCHORS) {
 		anchor_index = 0; 
-		randomizeOrder();
+		randomizeOrder(dev);
 	}
   } else {
     current_anchor = 0;
