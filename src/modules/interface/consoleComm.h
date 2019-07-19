@@ -43,6 +43,7 @@ void displayRadioAddress(void);
 void displayRadioChannel(void);
 void displayRadioDatarate(void);
 void writeDroneData(char * str, int len);
+void consoleCommSendPos(float x, float y, float z);
 
 /**
  * Initialize the consoleComm

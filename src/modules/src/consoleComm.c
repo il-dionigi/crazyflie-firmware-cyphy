@@ -209,6 +209,39 @@ void consoleCommPflush(char * str)
 	consoleCommFlush();
 }
 
+void consoleCommSendPos(float x, float y, float z)
+{
+	if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE)
+  	{
+		//get bits of floats, send bits, and reinterpret on other side
+		uint32_t* ptrx;
+		ptrx = (uint32_t *)&x;
+		uint32_t* ptry;
+		ptry = (uint32_t *)&y;
+		uint32_t* ptrz;
+		ptrz = (uint32_t *)&z;
+		messageToPrint.data[0] = '=';
+
+		int i = 0;
+		for (i = 0; i < 4; i++){
+			messageToPrint.data[i+1] = *ptrx & 0xFF;
+			*ptrx = *ptrx >> 8;
+			messageToPrint.data[i+5] = *ptry & 0xFF;
+			*ptry = *ptry >> 8;
+			messageToPrint.data[i+9] = *ptrz & 0xFF;
+			*ptrz = *ptrz >> 8;
+		}
+
+		messageToPrint.size = 13;
+		messageToPrint.data[13] = '\0';
+		messageToPrint.header= CRTP_HEADER(CRTP_PORT_CONSOLE, 3);
+		consoleCommFlush();
+		messageToPrint.size = 0;
+		messageToPrint.header= CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
+		xSemaphoreGive(consoleLock);
+	}
+}
+
 void consoleCommInit()
 {
   if (isInit)
@@ -247,6 +280,9 @@ void consoleCommTask(void * prm)
 		}
 		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'O'){
 			changeOrder( (messageReceived.data[2] == 'F')  );
+		}
+		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'S' && messageReceived.data[2] == 'F'){
+			consoleCommSendPos(3.1415, 0, -31.5); //test vals
 		}
 	} //while
 }
