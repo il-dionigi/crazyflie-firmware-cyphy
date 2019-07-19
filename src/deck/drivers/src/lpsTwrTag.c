@@ -57,7 +57,7 @@ uint32_t KEY_DELTA = 2000; // the key, anchor adds this to t3 when data is sent
 static uint32_t last_send_time[20] = { 0 };
 static uint16_t ticksPerMsg = 3500;
 static char anchors[9] = "xxxxxxxx\0";
-static uint32_t ts[12] = {0};
+static uint32_t ts[20] = {0};
 static uint32_t delta_p = 1234;
 static uint8_t delta_ph8 = 56;
 static uint32_t singleRanging = 1234;
@@ -76,7 +76,13 @@ static bool fixedOrder = true;
 //between rounds: time between beacon0 poll1 - beacon0 poll2
 //between rangings: time between beacon1 poll sent - beacon0 report received
 //delta_p: time beacon0 poll2 - report1
-
+static float est_tof_add = 0; // eve guess of 2*TOF = (t10-t6)-delta_b
+static float est_tof_mult = 0;
+static float actual_tof_add = 0; //actual TOF using addition formula
+static float actual_tof_mult = 0; //actual TOF using multiplication formula
+static double DELTA_D_CONST = 0.00051219576;
+static double DELTA_B_CONST = 0.00056281076;
+static double DELTA_P_CONST = 0.06530620845;
 
 
 //static uint8_t delta_delay = 10;
@@ -362,11 +368,24 @@ static uint32_t rxcallback(dwDevice_t *dev) {
       treply1 = answer_tx.low32 - poll_rx.low32;
       tround2 = final_rx.low32 - answer_tx.low32;
       treply2 = final_tx.low32 - answer_rx.low32;
+      tprop_ctn = ((tround1*tround2) - (treply1*treply2)) / (tround1 + tround2 + treply1 + treply2);
 
+      tprop = tprop_ctn / LOCODECK_TS_FREQ;
 	delta_bs[current_anchor] = treply1;
 	
 	  if (current_anchor == 0){
 		  //if (last_send_time[16] + 500 < xTaskGetTickCount()){
+			//t6 is old ts[5], t10 is new ts[1]=poll_rx.low32,
+			est_tof_add = (float)( (poll_rx.low32 - ts[6])/LOCODECK_TS_FREQ - DELTA_P_CONST)/2;
+                        ////est_tof_mult 
+			  tround1 = answer_rx.low32-(DELTA_P_CONST+ts[7]);
+			  treply1 = (poll_rx.low32+DELTA_B_CONST) - poll_rx.low32;
+      			  tround2 = final_rx.low32 - (poll_rx.low32+DELTA_B_CONST);
+      			  treply2 = (answer_rx.low32+DELTA_D_CONST) - answer_rx.low32;
+			  tprop_ctn = ((tround1*tround2) - (treply1*treply2)) / (tround1 + tround2 + treply1 + treply2);
+			est_tof_mult = (float)(tprop_ctn / LOCODECK_TS_FREQ);
+			////
+			actual_tof_mult = tprop;
 			delta_p = poll_tx.low32 - ts[7]; //new t1 - old t8
 			delta_ph8 = poll_tx.high8 - ts[8]; 
 			betweenRounds = poll_tx.low32 - ts[0];
@@ -380,18 +399,16 @@ static uint32_t rxcallback(dwDevice_t *dev) {
 			ts[5] =  final_rx.low32;
 			ts[6] =  final_rx.low32 + (answer_tx.low32 - poll_rx.low32); //report_tx.low32 = t7 = t6 + delta_b
 			ts[7] =  report_rx.low32;
-			ts[8] = report_rx.high8;
-			ts[9] = poll_tx.high8;
+			ts[8] =  report_rx.high8;
+			ts[9] =  poll_tx.high8;
                         singleRanging = ts[7] - ts[0];
 			singleRanging_h8 = ts[8] - poll_tx.high8;
 
-
+			actual_tof_add = ((ts[1]-ts[0]) + (ts[3]-ts[2]) + (ts[5]-ts[4]) + (ts[7]-ts[6]))/4.0/LOCODECK_TS_FREQ;
 			//last_send_time[16] = xTaskGetTickCount();
 		  //}
 	  }
-      tprop_ctn = ((tround1*tround2) - (treply1*treply2)) / (tround1 + tround2 + treply1 + treply2);
 
-      tprop = tprop_ctn / LOCODECK_TS_FREQ;
       options->distance[current_anchor] = SPEED_OF_LIGHT * tprop;
       options->pressures[current_anchor] = report->asl;
 
@@ -755,6 +772,15 @@ LOG_ADD(LOG_UINT32,  t5, &ts[4])
 LOG_ADD(LOG_UINT32,  delta_p, &delta_p)
 LOG_ADD(LOG_UINT8,  delta_ph8, &delta_ph8)
 LOG_GROUP_STOP(twr)
+
+
+//what does eve know? assume receive times known. compare est TOF to real TOF
+LOG_GROUP_START(twr_eve)
+LOG_ADD(LOG_FLOAT,  est_tof_add, &est_tof_add)
+LOG_ADD(LOG_FLOAT,  est_tof_mult, &est_tof_mult)
+LOG_ADD(LOG_FLOAT,  actual_tof_add, &actual_tof_add)
+LOG_ADD(LOG_FLOAT,  actual_tof_mult, &actual_tof_mult)
+LOG_GROUP_STOP(twr_eve)
 
 /* 
 LOG_ADD(LOG_UINT8, rangingSuccessRate0, &rangingSuccessRate[0])
