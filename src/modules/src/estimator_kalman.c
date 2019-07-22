@@ -285,6 +285,23 @@ static uint32_t lastFlightCmd;
 static uint32_t takeoffTime;
 static uint32_t tdoaCount;
 
+
+//CYPHY
+static float encState[3] = {0,0,0};
+static uint8_t bitK = 0; 
+static uint32_t lastTicks = xTaskGetTickCount();
+static uint32_t sampleTime = 500;
+void setEncState(){
+	encState[0] = S[STATE_X];
+	encState[1] = S[STATE_Y];
+	encState[2] = S[STATE_Z];
+	if (bitK){
+		//mirror by x->-x, y->-y, z->z
+		encState[0] = -encState[0];
+		encState[1] = -encState[1];
+	}
+}
+
 /**
  * Supporting and utility functions
  */
@@ -525,6 +542,12 @@ void estimatorKalman(state_t *state, sensorData_t *sensors, control_t *control, 
 
 static void stateEstimatorPredict(float cmdThrust, Axis3f *acc, Axis3f *gyro, float dt)
 {
+	//CYPHY
+	if (xTaskGetTickCount() > lastTicks + sampleTime){
+		lastTicks = xTaskGetTickCount();
+		bitK = (S[STATE_X] *10000) %10
+		setEncState();
+	}
   /* Here we discretize (euler forward) and linearise the quadrocopter dynamics in order
    * to push the covariance forward.
    *
@@ -1451,11 +1474,19 @@ LOG_GROUP_START(kalman_pred)
 LOG_GROUP_STOP(kalman_pred)
 
 // Stock log groups
+
+
 LOG_GROUP_START(kalman)
   LOG_ADD(LOG_UINT8, inFlight, &quadIsFlying)
   LOG_ADD(LOG_FLOAT, stateX, &S[STATE_X])
   LOG_ADD(LOG_FLOAT, stateY, &S[STATE_Y])
   LOG_ADD(LOG_FLOAT, stateZ, &S[STATE_Z])
+  LOG_ADD(LOG_FLOAT, encX, &encState[0])
+  LOG_ADD(LOG_FLOAT, encY, &encState[1])
+  LOG_ADD(LOG_FLOAT, encZ, &encState[2])
+  LOG_ADD(LOG_UINT8, bitK, &bitK)
+
+/* 
   LOG_ADD(LOG_FLOAT, statePX, &S[STATE_PX])
   LOG_ADD(LOG_FLOAT, statePY, &S[STATE_PY])
   LOG_ADD(LOG_FLOAT, statePZ, &S[STATE_PZ])
@@ -1477,6 +1508,7 @@ LOG_GROUP_START(kalman)
   LOG_ADD(LOG_FLOAT, q1, &q[1])
   LOG_ADD(LOG_FLOAT, q2, &q[2])
   LOG_ADD(LOG_FLOAT, q3, &q[3])
+*/
 LOG_GROUP_STOP(kalman)
 
 PARAM_GROUP_START(kalman)
