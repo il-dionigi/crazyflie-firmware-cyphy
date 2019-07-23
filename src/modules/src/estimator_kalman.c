@@ -289,17 +289,24 @@ static uint32_t tdoaCount;
 //CYPHY
 static float encState[3] = {0,0,0};
 static uint8_t bitK = 0; 
-static uint32_t lastTicks = xTaskGetTickCount();
-static uint32_t sampleTime = 500;
+static uint32_t lastTicks = 0;
+static uint32_t sampleTime = 10;
 void setEncState(){
 	encState[0] = S[STATE_X];
 	encState[1] = S[STATE_Y];
 	encState[2] = S[STATE_Z];
-	if (bitK){
-		//mirror by x->-x, y->-y, z->z
+	if (bitK&1){
+		//mirror by x->-x, y->-y, z->3-z (middle of room is 0,0,1.5)
 		encState[0] = -encState[0];
 		encState[1] = -encState[1];
+		encState[2] = 3-encState[2];
 	}
+	if (bitK&2){
+		//mirror by x->x, y->-y, z->-z 
+		encState[0] = encState[0];
+		encState[1] = -encState[1];
+		encState[2] = -encState[2];
+	} 
 }
 
 /**
@@ -545,7 +552,19 @@ static void stateEstimatorPredict(float cmdThrust, Axis3f *acc, Axis3f *gyro, fl
 	//CYPHY
 	if (xTaskGetTickCount() > lastTicks + sampleTime){
 		lastTicks = xTaskGetTickCount();
-		bitK = (S[STATE_X] *10000) %10
+		if (S[STATE_X] > 0){
+			bitK = ((int)(S[STATE_X] *100000)) %2;
+		}
+		else{
+			bitK = ((int)(-S[STATE_X] *100000)) %2;		
+		}
+		
+		/*if (S[STATE_Y] > 0){
+			bitK += 2* (((int)(S[STATE_Y] *100000)) %2);
+		}
+		else{
+			bitK += 2* (((int)(-S[STATE_Y] *100000)) %2);		
+		}*/
 		setEncState();
 	}
   /* Here we discretize (euler forward) and linearise the quadrocopter dynamics in order
@@ -1486,7 +1505,7 @@ LOG_GROUP_START(kalman)
   LOG_ADD(LOG_FLOAT, encZ, &encState[2])
   LOG_ADD(LOG_UINT8, bitK, &bitK)
 
-/* 
+
   LOG_ADD(LOG_FLOAT, statePX, &S[STATE_PX])
   LOG_ADD(LOG_FLOAT, statePY, &S[STATE_PY])
   LOG_ADD(LOG_FLOAT, statePZ, &S[STATE_PZ])
@@ -1508,7 +1527,7 @@ LOG_GROUP_START(kalman)
   LOG_ADD(LOG_FLOAT, q1, &q[1])
   LOG_ADD(LOG_FLOAT, q2, &q[2])
   LOG_ADD(LOG_FLOAT, q3, &q[3])
-*/
+
 LOG_GROUP_STOP(kalman)
 
 PARAM_GROUP_START(kalman)
