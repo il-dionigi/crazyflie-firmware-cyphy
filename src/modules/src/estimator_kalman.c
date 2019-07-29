@@ -290,7 +290,7 @@ static uint32_t tdoaCount;
 static float encState[3] = {0,0,0};
 static uint8_t bitK = 0; 
 static uint32_t lastTicks = 0;
-static uint32_t sampleTime = 10;
+static uint32_t sampleTime = 1;
 void setEncState(){
 	encState[0] = S[STATE_X];
 	encState[1] = S[STATE_Y];
@@ -301,12 +301,21 @@ void setEncState(){
 		encState[1] = -encState[1];
 		encState[2] = 3-encState[2];
 	}
+	/*
 	if (bitK&2){
 		//mirror by x->x, y->-y, z->-z 
 		encState[0] = encState[0];
 		encState[1] = -encState[1];
 		encState[2] = -encState[2];
-	} 
+	}
+	if (bitK&4){
+		//mirror by x->1-x, y->1-y, z->z 
+		encState[0] = 1-encState[0];
+		encState[1] = 1-encState[1];
+		encState[2] = encState[2];
+	}
+	*/
+	
 }
 
 /**
@@ -558,13 +567,20 @@ static void stateEstimatorPredict(float cmdThrust, Axis3f *acc, Axis3f *gyro, fl
 		else{
 			bitK = ((int)(-S[STATE_X] *100000)) %2;		
 		}
-		
-		/*if (S[STATE_Y] > 0){
+		/*
+		if (S[STATE_Y] > 0){
 			bitK += 2* (((int)(S[STATE_Y] *100000)) %2);
 		}
 		else{
 			bitK += 2* (((int)(-S[STATE_Y] *100000)) %2);		
-		}*/
+		}
+		if (S[STATE_Z] > 0){
+			bitK += 4* (((int)(S[STATE_Z] *100000)) %2);
+		}
+		else{
+			bitK += 4* (((int)(-S[STATE_Z] *100000)) %2);		
+		}
+		*/
 		setEncState();
 	}
   /* Here we discretize (euler forward) and linearise the quadrocopter dynamics in order
