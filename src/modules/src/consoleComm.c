@@ -223,6 +223,16 @@ void consoleCommInit()
   			CONSOLE_COMM_TASK_STACKSIZE, NULL, CONSOLE_COMM_TASK_PRI, NULL);
   isInit = true;
   consoleCommPflush("console comm init!");
+  if (configGENERATE_RUN_TIME_STATS == 1){
+	  consoleCommPflush("cGRTS: True");
+  }
+  else{
+	  consoleCommPflush("cGRTS: False");
+  }
+consoleCommPflush("Pname: F");
+consoleCommPflush(P_NAME);
+
+
 }
 
 

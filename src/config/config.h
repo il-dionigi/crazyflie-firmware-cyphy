@@ -48,6 +48,11 @@
 
 #define PROTOCOL_VERSION 3
 
+//CYPHY
+#ifndef STM32F4XX
+#define STM32F4XX 1
+#endif
+
 #ifdef STM32F4XX
   #define P_NAME "Crazyflie 2.0"
   #define QUAD_FORMATION_X
@@ -73,6 +78,7 @@
   #define FREERTOS_MCU_CLOCK_HZ   72000000
 #endif
 
+#define SECRET_BIT_K 0
 
 // Task priorities. Higher number higher priority
 #define STABILIZER_TASK_PRI     4

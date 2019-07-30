@@ -597,6 +597,25 @@ void logRunBlock(void * arg)
         valuei = v;
         break;
       }
+	  case LOG_ENC_POS:
+      {
+        float v;
+        memcpy(&v, ops->variable, sizeof(v));
+		//ENCRYPT HERE: value v must be encrypted if flag true
+		if (SECRET_BIT_K&1){
+			if ( memcmp(logs[blk->id].name, "encX", 4) == 0  ){
+				v = -v;
+			}
+			else if ( memcmp(logs[blk->id].name, "encY", 4) == 0  ){
+				v = -v;
+			}
+			else { // if ( memcmp(logs[blk->id].name, "encZ", 4) == 0  ){
+				v = 3-v;
+			}
+		}
+        valuei = v;
+        break;
+      }
     }
 
     if (ops->logType == LOG_FLOAT || ops->logType == LOG_FP16)
@@ -817,6 +836,9 @@ int logGetInt(int varid)
       break;
     case LOG_FLOAT:
       valuei = *(float *)logs[varid].address;
+      break;
+	case LOG_ENC_POS:
+	  valuei = *(float *)logs[varid].address;
       break;
   }
 

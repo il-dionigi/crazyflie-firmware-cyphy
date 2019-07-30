@@ -70,6 +70,8 @@
 #include "math.h"
 #include "arm_math.h"
 
+#include "config.h"
+
 //#define KALMAN_USE_BARO_UPDATE
 //#define KALMAN_NAN_CHECK
 
@@ -288,19 +290,14 @@ static uint32_t tdoaCount;
 
 //CYPHY
 static float encState[3] = {0,0,0};
-static uint8_t bitK = 0; 
+static uint8_t bitK = SECRET_BIT_K;
 static uint32_t lastTicks = 0;
 static uint32_t sampleTime = 1;
+
 void setEncState(){
 	encState[0] = S[STATE_X];
 	encState[1] = S[STATE_Y];
 	encState[2] = S[STATE_Z];
-	if (bitK&1){
-		//mirror by x->-x, y->-y, z->3-z (middle of room is 0,0,1.5)
-		encState[0] = -encState[0];
-		encState[1] = -encState[1];
-		encState[2] = 3-encState[2];
-	}
 	/*
 	if (bitK&2){
 		//mirror by x->x, y->-y, z->-z 
@@ -558,31 +555,9 @@ void estimatorKalman(state_t *state, sensorData_t *sensors, control_t *control, 
 
 static void stateEstimatorPredict(float cmdThrust, Axis3f *acc, Axis3f *gyro, float dt)
 {
-	//CYPHY
-	if (xTaskGetTickCount() > lastTicks + sampleTime){
-		lastTicks = xTaskGetTickCount();
-		if (S[STATE_X] > 0){
-			bitK = ((int)(S[STATE_X] *100000)) %2;
-		}
-		else{
-			bitK = ((int)(-S[STATE_X] *100000)) %2;		
-		}
-		/*
-		if (S[STATE_Y] > 0){
-			bitK += 2* (((int)(S[STATE_Y] *100000)) %2);
-		}
-		else{
-			bitK += 2* (((int)(-S[STATE_Y] *100000)) %2);		
-		}
-		if (S[STATE_Z] > 0){
-			bitK += 4* (((int)(S[STATE_Z] *100000)) %2);
-		}
-		else{
-			bitK += 4* (((int)(-S[STATE_Z] *100000)) %2);		
-		}
-		*/
-		setEncState();
-	}
+	
+	setEncState();
+	
   /* Here we discretize (euler forward) and linearise the quadrocopter dynamics in order
    * to push the covariance forward.
    *
@@ -1516,9 +1491,9 @@ LOG_GROUP_START(kalman)
   LOG_ADD(LOG_FLOAT, stateX, &S[STATE_X])
   LOG_ADD(LOG_FLOAT, stateY, &S[STATE_Y])
   LOG_ADD(LOG_FLOAT, stateZ, &S[STATE_Z])
-  LOG_ADD(LOG_FLOAT, encX, &encState[0])
-  LOG_ADD(LOG_FLOAT, encY, &encState[1])
-  LOG_ADD(LOG_FLOAT, encZ, &encState[2])
+  LOG_ADD(LOG_ENC_POS, encX, &encState[0])
+  LOG_ADD(LOG_ENC_POS, encY, &encState[1])
+  LOG_ADD(LOG_ENC_POS, encZ, &encState[2])
   LOG_ADD(LOG_UINT8, bitK, &bitK)
 
 
