@@ -231,6 +231,7 @@ void consoleCommInit()
   }
 consoleCommPflush("Pname: F");
 consoleCommPflush(P_NAME);
+int numTasks = uxTaskGetNumberOfTasks();
 
 
 }

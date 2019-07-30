@@ -291,8 +291,8 @@ static uint32_t tdoaCount;
 //CYPHY
 static float encState[3] = {0,0,0};
 static uint8_t bitK = SECRET_BIT_K;
-static uint32_t lastTicks = 0;
-static uint32_t sampleTime = 1;
+//static uint32_t lastTicks = 0;
+//static uint32_t sampleTime = 1;
 
 void setEncState(){
 	encState[0] = S[STATE_X];

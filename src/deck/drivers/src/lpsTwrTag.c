@@ -245,14 +245,14 @@ static uint32_t rxcallback(dwDevice_t *dev) {
 		last_send_time[current_anchor] = xTaskGetTickCount();
 	}
 	if (last_send_time[15] + 2*ticksPerMsg < xTaskGetTickCount()){
-		consoleCommPuts("(TWR)Anchors:");
+		/*consoleCommPuts("(TWR)Anchors:");
 		consoleCommPuts(anchors);
 		consoleCommFlush();
 		last_send_time[15] = xTaskGetTickCount();
 		uint16_t ii = 0;
 		for (ii = 0; ii < 8; ii++){
 			anchors[ii] = 'x';
-		}
+		}*/
 	}
 
   dwTime_t arival = { .full=0 };
