@@ -67,6 +67,7 @@ static const uint8_t typeLength[] = {
   [LOG_INT32]  = 4,
   [LOG_FLOAT]  = 4,
   [LOG_FP16]   = 2,
+  [LOG_ENC_POS]  = 4,
 };
 
 // Maximum log payload length (4 bytes are used for block id and timestamp)
@@ -594,13 +595,6 @@ void logRunBlock(void * arg)
       {
         float v;
         memcpy(&v, ops->variable, sizeof(v));
-        valuei = v;
-        break;
-      }
-	  case LOG_ENC_POS:
-      {
-        float v;
-        memcpy(&v, ops->variable, sizeof(v));
 		//ENCRYPT HERE: value v must be encrypted if flag true
 		if (SECRET_BIT_K&1){
 			if ( memcmp(logs[blk->id].name, "encX", 4) == 0  ){
@@ -616,9 +610,31 @@ void logRunBlock(void * arg)
         valuei = v;
         break;
       }
+	  case LOG_ENC_POS:
+      {
+	ops->logType = LOG_FLOAT;
+	ops->storageType = LOG_FLOAT;
+        float v;
+        memcpy(&v, ops->variable, sizeof(v));
+		//ENCRYPT HERE: value v must be encrypted if flag true
+		if (SECRET_BIT_K&1){
+			v = -v;
+			if ( memcmp(logs[blk->id].name, "encX", 4) == 0  ){
+				v = -v;
+			}
+			else if ( memcmp(logs[blk->id].name, "encY", 4) == 0  ){
+				v = -v;
+			}
+			else { // if ( memcmp(logs[blk->id].name, "encZ", 4) == 0  ){
+				v = 3-v;
+			}
+		}
+        valuei = v;
+        break;
+      }
     }
 
-    if (ops->logType == LOG_FLOAT || ops->logType == LOG_FP16)
+    if (ops->logType == LOG_FLOAT || ops->logType == LOG_FP16 )
     {
       if (ops->storageType == LOG_FLOAT)
       {
@@ -837,8 +853,8 @@ int logGetInt(int varid)
     case LOG_FLOAT:
       valuei = *(float *)logs[varid].address;
       break;
-	case LOG_ENC_POS:
-	  valuei = *(float *)logs[varid].address;
+    case LOG_ENC_POS:
+      valuei = *(float *)logs[varid].address;
       break;
   }
 

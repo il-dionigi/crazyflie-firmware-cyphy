@@ -69,6 +69,7 @@ static CRTPPacket messageReceived;
 CRTPPacket messageToPrint;
 static int currBufferLen = 0;
 static char droneData[1024];
+char taskBuf[1000];
 static xSemaphoreHandle consoleLock;
 
 static const char fullMsg[] = "<F>\n";
@@ -231,9 +232,19 @@ void consoleCommInit()
   }
 consoleCommPflush("Pname: F");
 consoleCommPflush(P_NAME);
-int numTasks = uxTaskGetNumberOfTasks();
-
-
+  if (configUSE_STATS_FORMATTING_FUNCTIONS == 1){
+	  consoleCommPflush("cUSFF: True");
+  }
+  else{
+	  consoleCommPflush("cUSFF: False");
+  }
+  if (SECRET_BIT_K == 1){
+	  consoleCommPflush("ENCK: True");
+  }
+  else{
+	  consoleCommPflush("ENCK: False");
+  }
+	
 }
 
 
@@ -259,6 +270,16 @@ void consoleCommTask(void * prm)
 		}
 		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'O'){
 			changeOrder( (messageReceived.data[2] == 'F')  );
+		}
+		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'P' && messageReceived.data[2] == 'D'){
+			int numTasks = uxTaskGetNumberOfTasks();
+			consoleCommPflush("****START****");
+
+			memset(taskBuf, 0, 1000);
+			vTaskGetRunTimeStats(taskBuf);
+			taskBuf[numTasks*45] = '\0';
+			consoleCommPflush(taskBuf);
+			consoleCommPflush("****END****");
 		}
 	} //while
 }

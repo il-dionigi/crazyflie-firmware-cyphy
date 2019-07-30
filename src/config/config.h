@@ -78,7 +78,7 @@
   #define FREERTOS_MCU_CLOCK_HZ   72000000
 #endif
 
-#define SECRET_BIT_K 0
+#define SECRET_BIT_K 1
 
 // Task priorities. Higher number higher priority
 #define STABILIZER_TASK_PRI     4
@@ -150,7 +150,7 @@
 #define LOG_TASK_STACKSIZE            configMINIMAL_STACK_SIZE
 #define MEM_TASK_STACKSIZE            configMINIMAL_STACK_SIZE
 #define PARAM_TASK_STACKSIZE          configMINIMAL_STACK_SIZE
-#define CONSOLE_COMM_TASK_STACKSIZE   configMINIMAL_STACK_SIZE //~CYPHY~
+#define CONSOLE_COMM_TASK_STACKSIZE   (5 * configMINIMAL_STACK_SIZE) //~CYPHY~
 #define SENSORS_TASK_STACKSIZE        (2 * configMINIMAL_STACK_SIZE)
 #define STABILIZER_TASK_STACKSIZE     (3 * configMINIMAL_STACK_SIZE)
 #define NRF24LINK_TASK_STACKSIZE      configMINIMAL_STACK_SIZE

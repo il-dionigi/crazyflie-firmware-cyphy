@@ -158,10 +158,7 @@ static void stabilizerTask(void* param)
     } else {
       powerDistribution(&control);
     }
-	int numTasks = uxTaskGetNumberOfTasks();
-	char * taskStatBuf = (char*)malloc(sizeof(char)*40*numTasks);
-	vTaskGetRunTimeStats(taskStatBuf);
-	consoleCommPflush(taskStatBuf);
+
     tick++;
   }
 }

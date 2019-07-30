@@ -123,6 +123,7 @@ void systemInit(void)
   beaconCommInit();
 
   isInit = true;
+
 }
 
 bool systemTest()

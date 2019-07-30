@@ -731,8 +731,9 @@ extern "C" {
 	#define configUSE_NEWLIB_REENTRANT 0
 #endif
 
+//CYPHY
 #ifndef configUSE_STATS_FORMATTING_FUNCTIONS
-	#define configUSE_STATS_FORMATTING_FUNCTIONS 0
+	#define configUSE_STATS_FORMATTING_FUNCTIONS 1 
 #endif
 
 #ifndef portASSERT_IF_INTERRUPT_PRIORITY_INVALID

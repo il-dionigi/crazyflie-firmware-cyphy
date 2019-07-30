@@ -281,7 +281,7 @@ static uint32_t gyroAccumulatorCount;
 static uint32_t baroAccumulatorCount;
 static bool quadIsFlying = false;
 static int32_t lastTDOAUpdate;
-static float stateSkew;
+//static float stateSkew;
 static float varSkew;
 static uint32_t lastFlightCmd;
 static uint32_t takeoffTime;
@@ -1496,7 +1496,7 @@ LOG_GROUP_START(kalman)
   LOG_ADD(LOG_ENC_POS, encZ, &encState[2])
   LOG_ADD(LOG_UINT8, bitK, &bitK)
 
-
+/*
   LOG_ADD(LOG_FLOAT, statePX, &S[STATE_PX])
   LOG_ADD(LOG_FLOAT, statePY, &S[STATE_PY])
   LOG_ADD(LOG_FLOAT, statePZ, &S[STATE_PZ])
@@ -1518,7 +1518,7 @@ LOG_GROUP_START(kalman)
   LOG_ADD(LOG_FLOAT, q1, &q[1])
   LOG_ADD(LOG_FLOAT, q2, &q[2])
   LOG_ADD(LOG_FLOAT, q3, &q[3])
-
+*/
 LOG_GROUP_STOP(kalman)
 
 PARAM_GROUP_START(kalman)

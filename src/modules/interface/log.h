@@ -60,7 +60,7 @@ struct log_s {
 #define LOG_INT32  6
 #define LOG_FLOAT  7
 #define LOG_FP16   8
-#define LOG_ENC_POS   15
+#define LOG_ENC_POS 9
 
 /* Internal defines */
 #define LOG_GROUP 0x80
