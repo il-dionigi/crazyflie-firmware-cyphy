@@ -818,7 +818,7 @@ static void stateEstimatorPredict(float cmdThrust, Axis3f *acc, Axis3f *gyro, fl
   float norm = arm_sqrt(tmpq0*tmpq0 + tmpq1*tmpq1 + tmpq2*tmpq2 + tmpq3*tmpq3);
   q[0] = tmpq0/norm; q[1] = tmpq1/norm; q[2] = tmpq2/norm; q[3] = tmpq3/norm;
   stateEstimatorAssertNotNaN();
-  setEncState()
+  setEncState();
 }
 
 static void stateEstimatorAddProcessNoise(float dt)

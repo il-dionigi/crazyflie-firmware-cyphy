@@ -72,7 +72,7 @@ static char droneData[1024];
 char taskBuf[1000];
 static xSemaphoreHandle consoleLock;
 
-static const char fullMsg[] = "<F>\n";
+//static const char fullMsg[] = "<F>\n";
 static bool isInit;
 
 static char radioAddress[16] = "XXXXXXXXXXXXXXX\0";
@@ -169,14 +169,17 @@ int consoleCommPutchar(int ch)
     }
     if (ch == '\n' || messageToPrint.size >= CRTP_MAX_DATA_SIZE)
     {
-      if (crtpGetFreeTxQueuePackets() == 1)
+	  while (crtpGetFreeTxQueuePackets() == 1){
+		  vTaskDelay(1);
+	  }
+      /*if (crtpGetFreeTxQueuePackets() == 1)
       {
         for (i = 0; i < sizeof(fullMsg) && (messageToPrint.size - i) > 0; i++)
         {
           messageToPrint.data[messageToPrint.size - i] =
               (uint8_t)fullMsg[sizeof(fullMsg) - i - 1];
         }
-      }
+	  }*/
       consoleCommSendMessage();
     }
     xSemaphoreGive(consoleLock);
