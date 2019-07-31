@@ -142,7 +142,7 @@ int consoleCommPutchar(int ch)
 	//motorsPlayTone(A6, EIGHTS);
 
 
-  int i;
+  //int i;
   bool isInInterrupt = (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) != 0;
 
   if (!isInit) {

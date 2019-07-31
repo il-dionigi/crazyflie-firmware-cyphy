@@ -292,7 +292,8 @@ CFLAGS += -Wdouble-promotion
 
 
 ASFLAGS = $(PROCESSOR) $(INCLUDES)
-LDFLAGS = --specs=nano.specs $(PROCESSOR) -Wl,-Map=$(PROG).map,--cref,--gc-sections,--undefined=uxTopUsedPriority
+#CYPHY added -specs=nosys.specs to avoid _sbrk  undefined ref
+LDFLAGS = --specs=nano.specs -specs=nosys.specs $(PROCESSOR) -Wl,-Map=$(PROG).map,--cref,--gc-sections,--undefined=uxTopUsedPriority
 
 #Flags required by the ST library
 ifeq ($(CLOAD), 1)
