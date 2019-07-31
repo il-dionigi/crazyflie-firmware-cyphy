@@ -109,8 +109,8 @@ static char radioAddress[16] = "XXXXXXXXXXXXXXX\0";
 static char radioChannel[3] = "XX\0";
 static char radioDatarate[2] = "X\0";
 
-static uint64_t mirr_time = 0;
-static uint64_t aes_time = 0;
+static float mirr_time = 101;
+static float aes_time = 101;
 static uint64_t end_time = 0;
 static uint64_t start_time = 0;
 
@@ -332,7 +332,7 @@ consoleCommPflush(P_NAME);
   else{
 	  consoleCommPflush("ENCK: False");
   }
-	
+  wc_AesSetKey(&aes, key, 16, iv, AES_ENCRYPTION);
 }
 
 
@@ -370,24 +370,18 @@ void consoleCommTask(void * prm)
 			consoleCommPflush("****END****");
 		} // drone profile 
 		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'T' && messageReceived.data[2] == 'A'){
-			if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE){
+				consoleCommPflush("Recorded AES time!");
 				memcpy(plainData, "padpadpadpadpadpad", 16); // 16 bytes to encrypt
 				start_time = usecTimestamp();
 				wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData, 16);
 				end_time = usecTimestamp();			
-				aes_time = (end_time - start_time);
-				sprintf((char*)messageToPrint.data, "ET:{%d}", aes_time);
-				messageToPrint.size = 0;
-				while (messageToPrint.data[messageToPrint.size] != '}' && messageToPrint.size <= 30){
-					messageToPrint.size++;
-				}
-				crtpSendPacket(&messageToPrint);		
-				xSemaphoreGive(consoleLock);
-			}  // if get-lock
+				aes_time = (end_time - start_time)/1000/1000; // in sec
+						
+
+
 		} // time AES
 		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'T' && messageReceived.data[2] == 'M'){
-			if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE){
-
+				consoleCommPflush("Recorded mirror time!");
 				float encx = 1.23;
 				float ency = -0.23;
 				float encz = 0.51515;
@@ -398,18 +392,12 @@ void consoleCommTask(void * prm)
 				encz = 3-encz;
 				
 				end_time = usecTimestamp();			
-				mirr_time = (end_time - start_time);
+				mirr_time = (end_time - start_time)/1000/1000; // in sec
 				//send
-				sprintf((char*)messageToPrint.data, "MT:{%d}", mirr_time);
-				messageToPrint.size = 0;
-				while (messageToPrint.data[messageToPrint.size] != '}' && messageToPrint.size <= 30){
-					messageToPrint.size++;
-				}
-				crtpSendPacket(&messageToPrint);
 				start_time = (int)(encx + ency + encz) ; // to disable make error (unused variable)
-				sprintf((char*)encryptedData, "MT:{%d}", mirr_time); // disable make error
-				xSemaphoreGive(consoleLock);
-			} //if get-lock
+				sprintf((char*)encryptedData, "MT:{%f}.", (double)(mirr_time)); // disable make error
+
+
 		} // time MIRROR
 		else {
 			consoleCommPflush("Unrecognized Command.");
