@@ -53,6 +53,9 @@
 #include "crtp.h"
 #include "crc.h"
 #include "config.h"
+#include "log.h"
+#include "aes.h"
+
 
 #ifdef STM32F40_41xxx
 #include "stm32f4xx.h"
@@ -62,6 +65,33 @@
 #define SCB_ICSR_VECTACTIVE_Msk 0x1FFUL
 #endif
 #endif
+
+#define ENCRYPTED_CHANNEL 2
+#define PLAINTEXT_CHANNEL 0
+
+
+//#include "RTOS.h"
+//from Wolfssl/wolfcrypt/benchmark/benchmark.c
+/*
+double current_time(int reset)
+{
+	double time_now;
+	double current_s = OS_GetTime() / 1000.0;
+	double current_us = OS_GetTime_us() / 1000000.0;
+	time_now = (double)( current_s + current_us);
+	(void) reset;
+	return time_now;
+}*/
+double current_time(int reset)
+{
+	portTickType tickCount;
+
+	(void) reset;
+
+	/* tick count == ms, if configTICK_RATE_HZ is set to 1000 */
+	tickCount = xTaskGetTickCount();
+	return (double)tickCount / 1000;
+}
 
 static void consoleCommTask(void * prm);
 
@@ -78,6 +108,21 @@ static bool isInit;
 static char radioAddress[16] = "XXXXXXXXXXXXXXX\0";
 static char radioChannel[3] = "XX\0";
 static char radioDatarate[2] = "X\0";
+
+static uint64_t mirr_time = 0;
+static uint64_t aes_time = 0;
+static uint64_t end_time = 0;
+static uint64_t start_time = 0;
+
+static bool encrypt = false;
+static int encryptSent = 0;
+static char encryptedData[CRTP_MAX_DATA_SIZE*2];
+static char plainData[CRTP_MAX_DATA_SIZE*2];
+static Aes aes;
+static byte key[16] = {0x02, 0x01, 0x05, 0x10, 0x02, 0x01, 0x05, 0x10,0x02, 0x01, 0x05, 0x10,0x02, 0x01, 0x05, 0x10};
+		// iv and key must be 16 bytes
+static byte iv[16] = {0x02, 0x01, 0x05, 0x10, 0x02, 0x01, 0x05, 0x10,0x02, 0x01, 0x05, 0x10,0x02, 0x01, 0x05, 0x10};
+
 
 
 void writeDroneData(char * str, int len) {
@@ -213,6 +258,46 @@ void consoleCommPflush(char * str)
 	consoleCommFlush();
 }
 
+void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
+	if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE)
+	  {
+		if (messageToPrint.size > 0){
+			crtpSendPacket(&messageToPrint); //no error checking for now!!
+			messageToPrint.size = 0;
+		}
+		encrypt = 1;
+		encryptSent = 0;
+		messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, ENCRYPTED_CHANNEL);
+		uint8_t counter = 0;
+		while (counter < lengthOfMessage){
+			if (lengthOfMessage - counter < 16){
+				messageToPrint.size = lengthOfMessage-counter;
+				memcpy(plainData, str+counter, messageToPrint.size);
+			    memcpy(plainData+messageToPrint.size, "padpadpadpadpadpad", 16-messageToPrint.size); // fill it to size 16
+			    messageToPrint.size = 16;
+			}
+			else{
+				messageToPrint.size = 16;
+				memcpy(plainData, str+counter, messageToPrint.size);
+			}
+			counter = counter + 16;
+		    wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData, 16);
+		    memcpy(messageToPrint.data, encryptedData, 16);
+		    memcpy(messageToPrint.data+16, "\0BadBadBadBad", 14);
+		    crtpSendPacket(&messageToPrint);
+		    encryptSent++;
+		}
+	    encrypt = 0;
+		messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, PLAINTEXT_CHANNEL);
+	    //sprintf((char*)messageToPrint.data, "ET:{%.10f}", total);
+	    //messageToPrint.size = 0;
+	    //while (messageToPrint.data[messageToPrint.size] != '}' && messageToPrint.size <= 30){
+	    //	messageToPrint.size++;
+	    //}
+	    crtpSendPacket(&messageToPrint);
+	    xSemaphoreGive(consoleLock);
+	  }
+}
 
 void consoleCommInit()
 {
@@ -221,7 +306,7 @@ void consoleCommInit()
   droneData[0] = 0;
   droneData[9] = 0;
   messageToPrint.size = 0;
-  messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, 0);
+  messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, PLAINTEXT_CHANNEL);
   vSemaphoreCreateBinary(consoleLock);
   xTaskCreate(consoleCommTask, CONSOLE_COMM_TASK_NAME,
   			CONSOLE_COMM_TASK_STACKSIZE, NULL, CONSOLE_COMM_TASK_PRI, NULL);
@@ -270,10 +355,10 @@ void consoleCommTask(void * prm)
 		consoleCommFlush();
 		if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'T' && messageReceived.data[2] == 'S'){
 			changeTDMAslot(messageReceived.data[3]);
-		}
+		} // change beacon send times
 		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'O'){
 			changeOrder( (messageReceived.data[2] == 'F')  );
-		}
+		} // change beacon order
 		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'P' && messageReceived.data[2] == 'D'){
 			int numTasks = uxTaskGetNumberOfTasks();
 			consoleCommPflush("****START****");
@@ -283,8 +368,53 @@ void consoleCommTask(void * prm)
 			taskBuf[numTasks*45] = '\0';
 			consoleCommPflush(taskBuf);
 			consoleCommPflush("****END****");
-		}
-	} //while
+		} // drone profile 
+		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'T' && messageReceived.data[2] == 'A'){
+			if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE){
+				memcpy(plainData, "padpadpadpadpadpad", 16); // 16 bytes to encrypt
+				start_time = usecTimestamp();
+				wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData, 16);
+				end_time = usecTimestamp();			
+				aes_time = (end_time - start_time);
+				sprintf((char*)messageToPrint.data, "ET:{%d}", aes_time);
+				messageToPrint.size = 0;
+				while (messageToPrint.data[messageToPrint.size] != '}' && messageToPrint.size <= 30){
+					messageToPrint.size++;
+				}
+				crtpSendPacket(&messageToPrint);		
+				xSemaphoreGive(consoleLock);
+			}  // if get-lock
+		} // time AES
+		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'T' && messageReceived.data[2] == 'M'){
+			if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE){
+
+				float encx = 1.23;
+				float ency = -0.23;
+				float encz = 0.51515;
+
+				start_time = usecTimestamp();
+				encx = -encx;
+				ency = -ency;
+				encz = 3-encz;
+				
+				end_time = usecTimestamp();			
+				mirr_time = (end_time - start_time);
+				//send
+				sprintf((char*)messageToPrint.data, "MT:{%d}", mirr_time);
+				messageToPrint.size = 0;
+				while (messageToPrint.data[messageToPrint.size] != '}' && messageToPrint.size <= 30){
+					messageToPrint.size++;
+				}
+				crtpSendPacket(&messageToPrint);
+				start_time = (int)(encx + ency + encz) ; // to disable make error (unused variable)
+				sprintf((char*)encryptedData, "MT:{%d}", mirr_time); // disable make error
+				xSemaphoreGive(consoleLock);
+			} //if get-lock
+		} // time MIRROR
+		else {
+			consoleCommPflush("Unrecognized Command.");
+		} // unrecognized command
+	} //while 
 }
 
 void saveRadioAddress(uint64_t address) {
@@ -320,3 +450,8 @@ void displayRadioDatarate(void) {
   consoleCommPflush("Radio datarate: ");
   consoleCommPflush(radioDatarate);
 }
+
+LOG_GROUP_START(enc_time)
+LOG_ADD(LOG_FLOAT,  mirr, &mirr_time)
+LOG_ADD(LOG_FLOAT,  aes, &aes_time)
+LOG_GROUP_STOP(enc_time)
