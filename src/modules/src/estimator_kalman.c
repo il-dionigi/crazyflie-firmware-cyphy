@@ -291,27 +291,37 @@ static uint32_t tdoaCount;
 //CYPHY
 static float encState[3] = {0,0,0};
 static uint8_t bitK = SECRET_BIT_K;
-//static uint32_t lastTicks = 0;
-//static uint32_t sampleTime = 1;
+static uint32_t lastTicks = 0;
+static uint32_t sampleTime = 10; // every _ ms, update position
 
 void setEncState(){
-	encState[0] = S[STATE_X];
-	encState[1] = S[STATE_Y];
-	encState[2] = S[STATE_Z];
-	/*
-	if (bitK&2){
-		//mirror by x->x, y->-y, z->-z 
-		encState[0] = encState[0];
-		encState[1] = -encState[1];
-		encState[2] = -encState[2];
+	if (xTaskGetTickCount() > sampleTime + lastTicks){
+		encState[0] = S[STATE_X];
+		encState[1] = S[STATE_Y];
+		encState[2] = S[STATE_Z];
+		if (bitK&1){
+			//mirror by x->-x, y->-y, z->3-z 
+			encState[0] = -encState[0];
+			encState[1] = -encState[1];
+			encState[2] = 3-encState[2];
+		}
+		/*
+		if (bitK&2){
+			//mirror by x->x, y->-y, z->-z 
+			encState[0] = encState[0];
+			encState[1] = -encState[1];
+			encState[2] = -encState[2];
+		}
+		if (bitK&4){
+			//mirror by x->1-x, y->1-y, z->z 
+			encState[0] = 1-encState[0];
+			encState[1] = 1-encState[1];
+			encState[2] = encState[2];
+		}
+		*/
+		lastTicks = xTaskGetTickCount();
 	}
-	if (bitK&4){
-		//mirror by x->1-x, y->1-y, z->z 
-		encState[0] = 1-encState[0];
-		encState[1] = 1-encState[1];
-		encState[2] = encState[2];
-	}
-	*/
+	
 	
 }
 
@@ -556,7 +566,6 @@ void estimatorKalman(state_t *state, sensorData_t *sensors, control_t *control, 
 static void stateEstimatorPredict(float cmdThrust, Axis3f *acc, Axis3f *gyro, float dt)
 {
 	
-	setEncState();
 	
   /* Here we discretize (euler forward) and linearise the quadrocopter dynamics in order
    * to push the covariance forward.
@@ -809,6 +818,7 @@ static void stateEstimatorPredict(float cmdThrust, Axis3f *acc, Axis3f *gyro, fl
   float norm = arm_sqrt(tmpq0*tmpq0 + tmpq1*tmpq1 + tmpq2*tmpq2 + tmpq3*tmpq3);
   q[0] = tmpq0/norm; q[1] = tmpq1/norm; q[2] = tmpq2/norm; q[3] = tmpq3/norm;
   stateEstimatorAssertNotNaN();
+  setEncState()
 }
 
 static void stateEstimatorAddProcessNoise(float dt)
@@ -1460,6 +1470,7 @@ void estimatorKalmanSetShift(float deltax, float deltay)
   // Return elevation, used in the optical flow
   S[STATE_X] -= deltax;
   S[STATE_Y] -= deltay;
+  setEncState();
 }
 
 void estimatorKalmanGetEstimatedPos(point_t* pos) {
@@ -1491,9 +1502,9 @@ LOG_GROUP_START(kalman)
   LOG_ADD(LOG_FLOAT, stateX, &S[STATE_X])
   LOG_ADD(LOG_FLOAT, stateY, &S[STATE_Y])
   LOG_ADD(LOG_FLOAT, stateZ, &S[STATE_Z])
-  LOG_ADD(LOG_ENC_POS, encX, &encState[0])
-  LOG_ADD(LOG_ENC_POS, encY, &encState[1])
-  LOG_ADD(LOG_ENC_POS, encZ, &encState[2])
+  LOG_ADD(LOG_FLOAT, encX, &encState[0])
+  LOG_ADD(LOG_FLOAT, encY, &encState[1])
+  LOG_ADD(LOG_FLOAT, encZ, &encState[2])
   LOG_ADD(LOG_UINT8, bitK, &bitK)
 
 /*
