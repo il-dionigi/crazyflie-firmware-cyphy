@@ -370,35 +370,33 @@ void consoleCommTask(void * prm)
 			consoleCommPflush("****END****");
 		} // drone profile 
 		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'T' && messageReceived.data[2] == 'A'){
-				consoleCommPflush("Recorded AES time!");
-				memcpy(plainData, "padpadpadpadpadpad", 16); // 16 bytes to encrypt
-				start_time = usecTimestamp();
-				wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData, 16);
-				end_time = usecTimestamp();			
-				aes_time = (end_time - start_time)/1000/1000; // in sec
-						
-
-
+			consoleCommPflush("Recorded AES time!");
+			memcpy(plainData, "padpadpadpadpadpad", 16); // 16 bytes to encrypt
+			start_time = usecTimestamp();
+			wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData, 16);
+			end_time = usecTimestamp();			
+			aes_time = (end_time - start_time)/1000/1000; // in sec
 		} // time AES
 		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'T' && messageReceived.data[2] == 'M'){
-				consoleCommPflush("Recorded mirror time!");
-				float encx = 1.23;
-				float ency = -0.23;
-				float encz = 0.51515;
+			consoleCommPflush("Recorded mirror time!");
+			float encx = 1.23;
+			float ency = -0.23;
+			float encz = 0.51515;
 
-				start_time = usecTimestamp();
-				encx = -encx;
-				ency = -ency;
-				encz = 3-encz;
-				
-				end_time = usecTimestamp();			
-				mirr_time = (end_time - start_time)/1000/1000; // in sec
-				//send
-				start_time = (int)(encx + ency + encz) ; // to disable make error (unused variable)
-				sprintf((char*)encryptedData, "MT:{%f}.", (double)(mirr_time)); // disable make error
-
-
+			start_time = usecTimestamp();
+			encx = -encx;
+			ency = -ency;
+			encz = 3-encz;
+			
+			end_time = usecTimestamp();			
+			mirr_time = (end_time - start_time)/1000/1000; // in sec
+			start_time = (int)(encx + ency + encz) ; // to disable make error (unused variable)
+			sprintf((char*)encryptedData, "MT:{%f}.", (double)(mirr_time)); // disable make error
 		} // time MIRROR
+		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'S' && messageReceived.data[2] == 'E'){
+			consoleCommPflush("~Sending Encrypted~");
+			consoleCommEncflush("secret msg", 11);
+		} // send encrypted data
 		else {
 			consoleCommPflush("Unrecognized Command.");
 		} // unrecognized command
