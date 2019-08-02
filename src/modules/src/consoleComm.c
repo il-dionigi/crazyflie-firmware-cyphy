@@ -277,6 +277,7 @@ void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
 				memcpy(plainData, str+counter, encryptedMessage.size);
 			}
 			counter = counter + 16;
+  		    wc_AesSetKey(&aes, key, 16, iv, AES_ENCRYPTION); // pure AES
 		    wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData, 16);
 		    memcpy(encryptedMessage.data, encryptedData, 16);
 		    memcpy(encryptedMessage.data+16, "\0BadBadBadBad", 14);
@@ -284,7 +285,7 @@ void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
 		    encryptSent++;
 		}
 	    encrypt = 0;
-		vTaskDelay(1);
+
 	    xSemaphoreGive(consoleLock);
 	  }
 }
@@ -387,9 +388,9 @@ void consoleCommTask(void * prm)
 		} // time MIRROR
 		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'S' && messageReceived.data[2] == 'E'){
 			consoleCommPflush("~Sending Encrypted~");
-			vTaskDelay(1);
+
 			consoleCommEncflush("secret msg", 11);
-			vTaskDelay(1);
+
 		} // send encrypted data
 		else {
 			consoleCommPflush("Unrecognized Command.");
