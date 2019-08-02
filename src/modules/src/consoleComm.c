@@ -97,6 +97,7 @@ static void consoleCommTask(void * prm);
 
 static CRTPPacket messageReceived;
 CRTPPacket messageToPrint;
+CRTPPacket encryptedMessage;
 static int currBufferLen = 0;
 static char droneData[1024];
 char taskBuf[1000];
@@ -261,41 +262,29 @@ void consoleCommPflush(char * str)
 void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
 	if (xSemaphoreTake(consoleLock, portMAX_DELAY) == pdTRUE)
 	  {
-		if (messageToPrint.size > 0){
-			crtpSendPacket(&messageToPrint); //no error checking for now!!
-			messageToPrint.size = 0;
-		}
 		encrypt = 1;
 		encryptSent = 0;
-		messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, ENCRYPTED_CHANNEL);
 		uint8_t counter = 0;
 		while (counter < lengthOfMessage){
 			if (lengthOfMessage - counter < 16){
-				messageToPrint.size = lengthOfMessage-counter;
-				memcpy(plainData, str+counter, messageToPrint.size);
-			    memcpy(plainData+messageToPrint.size, "padpadpadpadpadpad", 16-messageToPrint.size); // fill it to size 16
-			    messageToPrint.size = 16;
+				encryptedMessage.size = lengthOfMessage-counter;
+				memcpy(plainData, str+counter, encryptedMessage.size);
+			    memcpy(plainData+encryptedMessage.size, "padpadpadpadpadpad", 16-encryptedMessage.size); // fill it to size 16
+			    encryptedMessage.size = 16;
 			}
 			else{
-				messageToPrint.size = 16;
-				memcpy(plainData, str+counter, messageToPrint.size);
+				encryptedMessage.size = 16;
+				memcpy(plainData, str+counter, encryptedMessage.size);
 			}
 			counter = counter + 16;
 		    wc_AesCbcEncrypt(&aes, (byte*)encryptedData, (byte*)plainData, 16);
-		    memcpy(messageToPrint.data, encryptedData, 16);
-		    memcpy(messageToPrint.data+16, "\0BadBadBadBad", 14);
-		    crtpSendPacket(&messageToPrint);
+		    memcpy(encryptedMessage.data, encryptedData, 16);
+		    memcpy(encryptedMessage.data+16, "\0BadBadBadBad", 14);
+		    crtpSendPacket(&encryptedMessage);
 		    encryptSent++;
 		}
 	    encrypt = 0;
 		vTaskDelay(1);
-		messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, PLAINTEXT_CHANNEL);
-	    //sprintf((char*)messageToPrint.data, "ET:{%.10f}", total);
-	    //messageToPrint.size = 0;
-	    //while (messageToPrint.data[messageToPrint.size] != '}' && messageToPrint.size <= 30){
-	    //	messageToPrint.size++;
-	    //}
-	    //crtpSendPacket(&messageToPrint);
 	    xSemaphoreGive(consoleLock);
 	  }
 }
@@ -308,6 +297,8 @@ void consoleCommInit()
   droneData[9] = 0;
   messageToPrint.size = 0;
   messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, PLAINTEXT_CHANNEL);
+  encryptedMessage.size = 0;
+  encryptedMessage.header = CRTP_HEADER(CRTP_PORT_CONSOLE, ENCRYPTED_CHANNEL);
   vSemaphoreCreateBinary(consoleLock);
   xTaskCreate(consoleCommTask, CONSOLE_COMM_TASK_NAME,
   			CONSOLE_COMM_TASK_STACKSIZE, NULL, CONSOLE_COMM_TASK_PRI, NULL);
