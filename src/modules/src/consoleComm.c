@@ -288,13 +288,14 @@ void consoleCommEncflush(char * str, uint8_t lengthOfMessage){
 		    encryptSent++;
 		}
 	    encrypt = 0;
+		vTaskDelay(1);
 		messageToPrint.header = CRTP_HEADER(CRTP_PORT_CONSOLE, PLAINTEXT_CHANNEL);
 	    //sprintf((char*)messageToPrint.data, "ET:{%.10f}", total);
 	    //messageToPrint.size = 0;
 	    //while (messageToPrint.data[messageToPrint.size] != '}' && messageToPrint.size <= 30){
 	    //	messageToPrint.size++;
 	    //}
-	    crtpSendPacket(&messageToPrint);
+	    //crtpSendPacket(&messageToPrint);
 	    xSemaphoreGive(consoleLock);
 	  }
 }
@@ -395,7 +396,9 @@ void consoleCommTask(void * prm)
 		} // time MIRROR
 		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'S' && messageReceived.data[2] == 'E'){
 			consoleCommPflush("~Sending Encrypted~");
+			vTaskDelay(1);
 			consoleCommEncflush("secret msg", 11);
+			vTaskDelay(1);
 		} // send encrypted data
 		else {
 			consoleCommPflush("Unrecognized Command.");
