@@ -293,13 +293,26 @@ static float encState[3] = {0,0,0};
 static uint8_t bitK = SECRET_BIT_K;
 static uint32_t lastTicks = 0;
 static uint32_t sampleTime = 10; // every _ ms, update position
-
+// P =  
+double a1 = 1.01;  double b1 = 1;  double c1 = 1;  double d1 = 1; 
+double a2 = 1.001; double b2 = 2;  double c2 = 1;  double d2 = -1.0001;
+double a3 = 1.1;   double b3 = 3;  double c3 = 1;  double d3 = -1;
+//			0				 	0				0				1
+ 
 void setEncState(){
 	if (xTaskGetTickCount() > sampleTime + lastTicks){
 		encState[0] = S[STATE_X];
 		encState[1] = S[STATE_Y];
 		encState[2] = S[STATE_Z];
-		if (bitK&1){
+		if (USE_MATRIX_P){
+			double prevx = S[STATE_X];
+			double prevy = S[STATE_Y];
+			double prevz = S[STATE_Z];
+			encState[0] = prevx*a1+prevy*b1+prevz*c1+d1;
+			encState[1] = prevx*a2+prevy*b2+prevz*c2+d2;
+			encState[2] = prevx*a3+prevy*b3+prevz*c3+d3;
+		}
+		else if (bitK&1){
 			//mirror by x->-x, y->-y, z->3-z 
 			encState[0] = -encState[0];
 			encState[1] = -encState[1];

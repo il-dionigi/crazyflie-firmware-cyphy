@@ -79,6 +79,7 @@
 #endif
 
 #define SECRET_BIT_K 1
+#define USE_MATRIX_P 1
 
 // Task priorities. Higher number higher priority
 #define STABILIZER_TASK_PRI     4

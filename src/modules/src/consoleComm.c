@@ -112,6 +112,7 @@ static char radioDatarate[2] = "X\0";
 
 static float mirr_time = 101;
 static float aes_time = 101;
+static float matrix_time = 101;
 static uint64_t end_time = 0;
 static uint64_t start_time = 0;
 
@@ -386,6 +387,22 @@ void consoleCommTask(void * prm)
 			start_time = (int)(encx + ency + encz) ; // to disable make error (unused variable)
 			sprintf((char*)encryptedData, "MT:{%f}.", (double)(mirr_time)); // disable make error
 		} // time MIRROR
+		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'T' && messageReceived.data[2] == 'A'){
+			consoleCommPflush("Recorded matrix time!");
+			float encx = 1.23;
+			float ency = -0.23;
+			float encz = 0.51515;
+
+			start_time = usecTimestamp();
+			encx = encx*1.1+ency*10+encz*20+1.31;
+			ency = encx*2+ency*20+encz*3+2.23;
+			encz = encx*3+ency*30+encz*300+51.1;
+			
+			end_time = usecTimestamp();			
+			matrix_time = (end_time - start_time)/1000/1000; // in sec
+			start_time = (int)(encx + ency + encz) ; // to disable make error (unused variable)
+			sprintf((char*)encryptedData, "AT:{%f}.", (double)(matrix_time)); // disable make error
+		} // time matrix
 		else if (messageReceived.data[0] == '%' && messageReceived.data[1] == 'S' && messageReceived.data[2] == 'E'){
 			consoleCommPflush("~Sending Encrypted~");
 
@@ -435,4 +452,5 @@ void displayRadioDatarate(void) {
 LOG_GROUP_START(enc_time)
 LOG_ADD(LOG_FLOAT,  mirr, &mirr_time)
 LOG_ADD(LOG_FLOAT,  aes, &aes_time)
+LOG_ADD(LOG_FLOAT,  mat, &matrix_time)
 LOG_GROUP_STOP(enc_time)
